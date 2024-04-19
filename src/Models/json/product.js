@@ -5,20 +5,24 @@ const jsonFilePath = path.resolve(__dirname, './products.json')
 
 class ProductModel {
   //Get all data
-  static async getAll({ sku }) {
+  static async getAll({ sku, name }) {
     let jsonData = await this.readJsonFile()
 
     if (sku) {
-      return jsonData.filter(data => data.sku === parseInt(sku))
+      return jsonData.filter(data => data.stock >= 3 && data.price >= 1000 && data.sku.toLowerCase() === sku.toLowerCase())
     } 
 
-    return jsonData
+    if (name) {
+      return jsonData.filter(data => data.stock >= 3 && data.price >= 1000 && data.name.toLowerCase().includes(name.toLowerCase()))
+    }
+
+    return jsonData.filter(data => data.stock >= 3 && data.price >= 1000)
   }
 
   //Get data by id
   static async getById(id) {
     let jsonData = await this.readJsonFile()
-    return jsonData.filter(data => parseInt(data.id) === parseInt(id) )
+    return jsonData.filter(data => parseInt(data.id) === parseInt(id))
   }
 
   //Get last id
@@ -91,6 +95,33 @@ class ProductModel {
     } 
     catch (error) {
       console.error('Error updating product:', error)
+      throw error
+    }
+  }
+
+  static async addProductView ({ id }) {
+    try {
+      let jsonData = await this.readJsonFile()
+
+      const index = jsonData.findIndex(data => parseInt(data.id) === parseInt(id))
+
+      if(index === -1) {
+        return 'Product not found'
+      }
+
+      const productsViews = jsonData[index].total_views
+
+      jsonData[index] = {
+        ...jsonData[index],
+        total_views: productsViews + 1
+      }
+
+      await this.writeJsonFile(jsonData)
+
+      return jsonData[index]
+    }
+    catch (e){
+      console.error('Error updating product views counter:', error)
       throw error
     }
   }

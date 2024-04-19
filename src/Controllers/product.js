@@ -1,4 +1,5 @@
 const { validatePartialProduct, validateProduct } = require ('../Schemas/product.js')
+const { validateEmail } = require ('../Schemas/email.js')
 const ProductModel = require ('../Models/json/product.js')
 
 class ProductController {
@@ -12,8 +13,8 @@ class ProductController {
     }
 
     try {
-      const { sku } = req.query
-      const products = await ProductModel.getAll({ sku })
+      const { sku, name } = req.query
+      const products = await ProductModel.getAll({ sku, name })
       res.json(products)
     }
     catch (error) {
@@ -62,6 +63,8 @@ class ProductController {
         stock: parseInt(req.body.stock),
         category: req.body.category,
         sub_category: req.body.sub_category,
+        description: req.body.description,
+        total_views: 0,
         brand: req.body.brand,
         ean: req.body.ean,
         img: req.body.img,
@@ -112,6 +115,31 @@ class ProductController {
     } 
     catch (e) {
       console.log('Error updating product: ', e)
+
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  static async addProductView (req, res) {
+    const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar']
+    const origin = req.headers.origin
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin)
+    }
+
+    try {
+      const result = validatePartialProduct(req.body)
+
+      if(!result.success)
+        return res.status(400).json({ error: JSON.parse(result.error.message)})
+
+        const { id } = req.params
+
+        const updatedata = await ProductModel.addProductView({ id })
+        return res.json(updatedata)
+    } 
+    catch (e) {
+      console.log('Error adding view to product: ', e)
 
       return res.status(500).json({ error: "Internal server error" });
     }
