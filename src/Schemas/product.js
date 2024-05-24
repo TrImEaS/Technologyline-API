@@ -17,7 +17,7 @@ const productSchema = z.object({
     required_error: 'Se requiere la marca',
     invalid_type_error: 'La marca debe de ser de tipo string/texto'
   }),
-  img: z.string({
+  img_base: z.string({
     required_error: 'Se requiere la marca',
     invalid_type_error: 'La marca debe de ser de tipo string/texto'
   }),
@@ -26,6 +26,8 @@ const productSchema = z.object({
   sku: z.number().int().positive(),
   price: z.number().int().positive(),
   stock: z.number().int().positive(),
+  status: z.boolean(),
+  admin_status: z.boolean().nullable().default(null)
 })
 
 function validateProduct(object) {

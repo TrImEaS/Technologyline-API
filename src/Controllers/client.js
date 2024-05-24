@@ -6,11 +6,22 @@ class ClientController {
   static async getAll (req, res) {
     try {
       const { id } = req.query
-      const email = await ClientModel.getAll({ id })
-      res.json(email)
+      const clients = await ClientModel.getAll({ id })
+      res.json(clients)
     }
     catch (error) {
       console.error('Error retrieving email', error)
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+
+  static async getPageViews (req, res) {
+    try {
+      const views = await ClientModel.getPageViews()
+      res.json({ views: views.length })
+    }
+    catch (error) {
+      console.error('Error retrieving viwes', error)
       res.status(500).json({ error: 'Internal server error' })
     }
   }
@@ -44,6 +55,24 @@ class ClientController {
       return res.status(500).json({ error: "Internal server error" });
     }
   }
+
+  static async addView(req, res) {
+    try {
+      const ip = req.ip;
+      const viewData = { ip, timestamp: Date.now() };
+
+      const existingData = await ClientModel.addView(viewData);
+      if (!existingData) {
+        return res.status(409).json({ message: 'View not counted' });
+      }
+
+      return res.status(201).json({ message: 'View Counted' });
+    } catch (e) {
+      console.log('Error to create new product: ', e);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
 }
 
 module.exports = ClientController;

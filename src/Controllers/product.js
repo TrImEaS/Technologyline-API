@@ -13,8 +13,8 @@ class ProductController {
     }
 
     try {
-      const { sku, name } = req.query
-      const products = await ProductModel.getAll({ sku, name })
+      const { sku, name, all } = req.query
+      const products = await ProductModel.getAll({ sku, name, all })
       res.json(products)
     }
     catch (error) {

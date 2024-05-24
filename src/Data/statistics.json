@@ -1,5 +1,8 @@
 {
-  "statistics": {
-    "page_views": 5
-  }
+  "views": [
+    {
+      "ip": "::ffff:127.0.0.1",
+      "timestamp": 1716319442077
+    }
+  ]
 }

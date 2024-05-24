@@ -1,11 +1,11 @@
 const fs = require('fs')
 const path = require('path')
 
-const jsonFilePath = path.resolve(__dirname, './products.json')
+const jsonFilePath = path.resolve(__dirname, '../../Data/products.json')
 
 class ProductModel {
   //Get all data
-  static async getAll({ sku, name }) {
+  static async getAll({ sku, name, all }) {
     let jsonData = await this.readJsonFile()
 
     if (sku) {
@@ -14,6 +14,10 @@ class ProductModel {
 
     if (name) {
       return jsonData.filter(data => data.stock >= 3 && data.price >= 1000 && data.name.toLowerCase().includes(name.toLowerCase()))
+    }
+
+    if (all){
+      return jsonData
     }
 
     return jsonData.filter(data => data.stock >= 3 && data.price >= 1000)
