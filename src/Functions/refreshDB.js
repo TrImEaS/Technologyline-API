@@ -2,55 +2,65 @@ const XlsxPopulate = require('xlsx-populate')
 const fs = require('fs')
 const path = require('path')
 
+// const excelPath = path.resolve(__dirname, '../Data/products.xlsx')
 const excelPath = '/home/realcolorweb/public_html/technologyline.com.ar/admin/page/products.xlsx'
 const jsonFilePath = path.resolve(__dirname, '../Data/products.json')
-// const excelPath = path.resolve(__dirname, '../Data/products.xlsx')
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function refreshDB() {
+  // console.time('refreshDB');
+
   const excel = await XlsxPopulate.fromFileAsync(excelPath)
-  if (!excel) {
+
+  if (!excel) 
+  {
     console.error('Error: No se pudo cargar el archivo Excel.')
+    console.timeEnd('refreshDB');
     return false
   }
 
   const excelSheet = excel.sheet(0).usedRange()
 
   const mapColumnNames = (rowData) => ({
-    'id': rowData[31],
+    'id': rowData[28],
     'sku': rowData[0],
     'name': rowData[1],
     'price': cleanPrice(rowData[6]),
-    'stock': rowData[25],
-    'category': rowData[27],
-    'sub_category': rowData[28],
-    'brand': rowData[29],
+    'stock': rowData[22],
+    'category': rowData[24],
+    'sub_category': rowData[25],
+    'brand': rowData[26],
     'img_base': `https://technologyline.com.ar/products-images/${rowData[0]}.jpg`,
-    "discount": rowData[34] || 0
+    "discount": rowData[31] || 0
   })
+
   const productsExcel = excelSheet.value().slice(1).map(rowData => mapColumnNames(rowData))
   const productsJson = await readJsonFile()
 
-  productsExcel.forEach(excelProduct => {
-    const existingProductIndex = productsJson.findIndex(jsonProduct => jsonProduct.id === excelProduct.id);
-    const status = () => {
-      if(productsJson[existingProductIndex] && productsJson[existingProductIndex].stock < 3) {
-        return false
-      }
-      else {
-        return true
-      }
-    }
+  console.log('Cargando datos...')
+
+  const productsMap = new Map(productsJson.map(product => [product.id, product]));
+  
+  // Escribir los datos actualizados en el archivo JSON
+  for (const excelProduct of productsExcel) {
+    const existingProduct = productsMap.get(excelProduct.id);
+    const status = () => { return excelProduct.stock < 3 ? false : true }
 
     // Si el producto ya existe en el JSON, actualiza el stock
-    if (existingProductIndex !== -1) {
-      productsJson[existingProductIndex].stock = excelProduct.stock;
-      productsJson[existingProductIndex].name = excelProduct.name;
-      productsJson[existingProductIndex].price = excelProduct.price;
-      productsJson[existingProductIndex].discount = excelProduct.discount;
-      productsJson[existingProductIndex].status = status()
-    } 
+    if (existingProduct) 
+    {
+      existingProduct.stock = excelProduct.stock;
+      existingProduct.id = excelProduct.id;
+      existingProduct.name = excelProduct.name;
+      existingProduct.price = excelProduct.price;
+      existingProduct.discount = excelProduct.discount;
+      existingProduct.status = status();
+    }
+
     // Si el producto no existe en el JSON, se agrega
-    else {
+    else 
+    {
       productsJson.push({
         id: excelProduct.id,
         sku: excelProduct.sku,
@@ -62,15 +72,20 @@ async function refreshDB() {
         brand: excelProduct.brand,
         img_base: excelProduct.img_base,
         total_views: 0,
+        specifications: 'Este producto no contiene especificaciones',
+        descriptions: 'Este producto no contiene descripcion',
         discount: excelProduct.discount,
         status: status(),
-        admin_status: null
+        adminStatus: true
       });
     }
-  });
 
-  // Escribir los datos actualizados en el archivo JSON
-  await writeJsonFile(productsJson)
+    await writeJsonFile(productsJson);
+    // await delay(3);
+  }
+
+  console.log('Datos cargados!')
+  // console.timeEnd('refreshDB');
 }
 
 // Función para limpiar y convertir el precio

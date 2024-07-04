@@ -9,18 +9,34 @@ class ProductModel {
     let jsonData = await this.readJsonFile()
 
     if (sku) {
-      return jsonData.filter(data => data.stock >= 3 && data.price >= 1000 && data.sku.toLowerCase() === sku.toLowerCase())
+      return jsonData.filter(data => 
+        data.sku.toLowerCase() === sku.toLowerCase())
     } 
 
     if (name) {
-      return jsonData.filter(data => data.stock >= 3 && data.price >= 1000 && data.name.toLowerCase().includes(name.toLowerCase()))
+      return jsonData.filter(data => 
+        data.adminStatus &&
+        (
+          data.stock >= 3 && 
+          data.price >= 1000 && 
+          data.status && 
+          data.name.toLowerCase().includes(name.toLowerCase())
+        )
+      )
     }
 
     if (all){
       return jsonData
     }
 
-    return jsonData.filter(data => data.stock >= 3 && data.price >= 1000)
+    return jsonData.filter(data => 
+      data.adminStatus &&
+      (
+        data.stock >= 3 && 
+        data.price >= 1000 &&
+        data.status
+      )
+    )
   }
 
   //Get data by id

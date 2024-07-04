@@ -17,17 +17,20 @@ const productSchema = z.object({
     required_error: 'Se requiere la marca',
     invalid_type_error: 'La marca debe de ser de tipo string/texto'
   }),
+  specifications: z.string().default('Este producto no contiene especificaciones'),
+  description: z.string().default('Este producto no contiene descripcion'),
   img_base: z.string({
-    required_error: 'Se requiere la marca',
-    invalid_type_error: 'La marca debe de ser de tipo string/texto'
+    required_error: 'Se requiere la ruta de la imagen principal',
+    invalid_type_error: 'La ruta debe de ser de tipo string/texto'
   }),
   images: z.array(z.string()),
-  ean: z.number().int().positive(),
+  ean: z.number().int().positive().default(''),
   sku: z.number().int().positive(),
-  price: z.number().int().positive(),
+  price: z.number().positive(),
+  discount: z.number().positive(),
   stock: z.number().int().positive(),
   status: z.boolean(),
-  admin_status: z.boolean().nullable().default(null)
+  adminStatus: z.boolean().nullable().default(null)
 })
 
 function validateProduct(object) {
