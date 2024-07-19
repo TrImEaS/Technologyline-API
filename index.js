@@ -22,19 +22,23 @@ app.use(cors({
 app.get('/', async (req, res) =>{
   res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/', 'index.html')
 })
-|
+
+app.get('/products', (req, res) => {
+  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/', 'index.html');
+})
+
+app.get('/search', (req, res) => {
+  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/', 'index.html');
+})
+
+app.get('/others', (req, res) => {
+  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/', 'index.html');
+})
+
 app.use('/api', apiRouter)
 
-app.get('/admin/page', async (req, res) => {
-  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/page/', 'index.html');
-});
-
-app.get('/admin/page/products/*', async (req, res) => {
-  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/page/', 'index.html');
-});
-
 app.get('*', (req, res) => {
-  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/', 'index.html');
+  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/', 'error.html');
 })
 
 app.listen(PORT, () => console.log(`Server listening on port http://localhost:${PORT}`))
