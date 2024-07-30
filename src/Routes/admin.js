@@ -7,11 +7,11 @@ adminRouter.get('/jirejfdisbjfi4iwurjknvijioeb49/refresh-data', AdminController.
 adminRouter.post('/login', AdminController.login)
 
 adminRouter.get('/page', async (req, res) => {
-  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/page/', 'index.html')
+  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/page/index.html')
 })
 
 adminRouter.get('/remitos', async (req, res) => {
-  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/remitos/', 'index.html')
+  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/remitos/index.html')
 })
 
 module.exports = adminRouter
