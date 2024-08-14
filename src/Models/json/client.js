@@ -16,12 +16,6 @@ class ClientModel {
     return jsonData
   }
 
-  static async getPageViews() {
-    let jsonData = await this.readJsonFile(statisticsPath);
-
-    return jsonData.views;
-  }
-
   //Get last id
   static async getNextId() {
     let jsonData = await this.readJsonFile(clientPath)
@@ -64,33 +58,11 @@ class ClientModel {
     }
   }
 
-  static async addView(viewData) {
-    try {
-      let jsonData = await this.readJsonFile(statisticsPath);
-      const currentTime = Date.now();
-
-      jsonData.views = jsonData.views.filter(view => (currentTime - view.timestamp) < 1800000);
-      console.log('Filtered JSON data:', jsonData.views)
-
-      const existingView = jsonData.views.find(view => view.ip === viewData.ip);
-      if (existingView) {
-        console.log('Existing view found:', existingView);
-        return false;
-      }
-
-      jsonData.views.push(viewData);
-      console.log('Updated JSON data:', jsonData.views);
-
-      await this.writeJsonFile(statisticsPath, jsonData);
-      console.log('New view counted');
-      return viewData;
-    } catch (error) {
-      console.error('Error pushing view:', error);
-      throw error;
-    }
+  static async getPageViews() {
+    let jsonData = await this.readJsonFile(statisticsPath);
+    return jsonData.views;
   }
 
-  
   //--> --- --- --- --- --- --- --- --- <--//
   //Function for readJsonFile
   static async readJsonFile(path) {

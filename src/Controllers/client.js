@@ -18,7 +18,8 @@ class ClientController {
   static async getPageViews (req, res) {
     try {
       const views = await ClientModel.getPageViews()
-      res.json({ views: views.length })
+      console.log(views)
+      res.json({ views: views })
     }
     catch (error) {
       console.error('Error retrieving viwes', error)
@@ -53,23 +54,6 @@ class ClientController {
       console.log('Error to create new product: ', e)
 
       return res.status(500).json({ error: "Internal server error" });
-    }
-  }
-
-  static async addView(req, res) {
-    try {
-      const ip = req.ip;
-      const viewData = { ip, timestamp: Date.now() };
-
-      const existingData = await ClientModel.addView(viewData);
-      if (!existingData) {
-        return res.status(409).json({ message: 'View not counted' });
-      }
-
-      return res.status(201).json({ message: 'View Counted' });
-    } catch (e) {
-      console.log('Error to create new product: ', e);
-      return res.status(500).json({ error: 'Internal server error' });
     }
   }
 

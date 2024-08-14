@@ -1,6 +1,6 @@
 const { validatePartialProduct, validateProduct } = require ('../Schemas/product.js')
-const { validateEmail } = require ('../Schemas/email.js')
 const ProductModel = require ('../Models/json/product.js')
+// const { validateEmail } = require ('../Schemas/email.js')
 
 class ProductController {
 
