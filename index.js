@@ -63,9 +63,21 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/search', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/products', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/others', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/others/about_us', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/others/garantia', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/others/centros_de_ayuda', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/others/mayoristas', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+
 app.use('/admin/page', express.static('/home/realcolorweb/public_html/technologyline.com.ar/admin/page'));
+
 app.use('/admin/remitos', express.static('/home/realcolorweb/public_html/technologyline.com.ar/admin/remitos'));
+
 app.use('/admin/QRGen-App/app', express.static('/home/realcolorweb/public_html/technologyline.com.ar/admin/QRGen-App/app'));
+
 app.use('/api', apiRouter)
 
 app.get('/admin/page/*', (req, res) => {
