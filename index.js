@@ -63,6 +63,7 @@ app.use((req, res, next) => {
   next();
 });
 
+//Static routes for Technologyline Ecommerce 
 app.use('/', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/search', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/products', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
@@ -70,30 +71,24 @@ app.use('/others', express.static('/home/realcolorweb/public_html/technologyline
 app.use('/others/about_us', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others/garantia', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others/centros_de_ayuda', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
-app.use('/others/mayoristas', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/others/revendedores', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 
+//Static routes for admin-ecommerce
 app.use('/admin/page', express.static('/home/realcolorweb/public_html/technologyline.com.ar/admin/page'));
+app.get('/admin/page/*', (req, res) => { res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/page/index.html'); });
 
+//Static routes for remitos-app
 app.use('/admin/remitos', express.static('/home/realcolorweb/public_html/technologyline.com.ar/admin/remitos'));
+app.get('/admin/remitos/*', (req, res) => { res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/remitos/index.html'); });
 
+//Static routes for QRGen-app
 app.use('/admin/QRGen-App/app', express.static('/home/realcolorweb/public_html/technologyline.com.ar/admin/QRGen-App/app'));
+app.get('/admin/QRGen-App/app/*', (req, res) => { res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/QRGen-App/app/index.html') });
 
-app.use('/api', apiRouter)
+//Api Router
+app.use('/api', apiRouter);
 
-app.get('/admin/page/*', (req, res) => {
-  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/page/index.html');
-});
-
-app.get('/admin/remitos/*', (req, res) => {
-  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/remitos/index.html');
-});
-
-app.get('/admin/QRGen-App/app/*', (req, res) => {
-  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/admin/QRGen-App/app/index.html');
-});
-
-app.get('*', (req, res) => {
-  res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/error.html');
-})
+//Error page
+app.get('*', (req, res) => { res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/error.html'); })
 
 app.listen(PORT, () => console.log(`Server listening on port http://localhost:${PORT}`))
