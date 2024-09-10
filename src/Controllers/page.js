@@ -1,3 +1,5 @@
+const path = require('path')
+const fs = require('fs');
 const PageModel = require("../Models/sql/page");
 const { validateResellers_Form } = require('../Schemas/resellers_form')
 
@@ -103,6 +105,91 @@ class PageController {
       res.status(500).json({ error: 'Error interno del servidor' });
     }
   }
+
+  static async getBanners(req, res) {
+    try {
+      const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
+      const origin = req.headers.origin;
+      if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }
+
+      const data = await PageModel.getBanners();
+
+      res.json(data);
+    } 
+    catch (error) {
+      console.error('Error retrieving products:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  static async uploadImage(req, res) {
+    const { id, name, image, to } = req.body;
+
+    if (!id || !name || !image) {
+      return res.status(400).json({ status: 'error', message: 'Datos incompletos' });
+    }
+
+    try {
+      const imageData = Buffer.from(image, 'base64');
+      const timestamp = Date.now();
+      const fileName = `${name.toLowerCase()}_${id}_${timestamp}.jpg`;
+      const filePath = `/home/realcolorweb/public_html/technologyline.com.ar/banners-images/${fileName}`
+      const fileUrl = `https://technologyline.com.ar/banners-images/${fileName}`
+
+      // Guardar el archivo localmente
+      require('fs').writeFileSync(filePath, imageData);
+
+      // Actualizar la base de datos
+      await PageModel.updateImagePath({ id, fileUrl, to });
+
+      res.json({ status: 'success', message: 'Imagen subida correctamente' });
+    } 
+    catch (error) {
+      console.error('Error al subir la imagen:', error);
+      res.status(500).json({ status: 'error', message: 'Error al subir la imagen' });
+    }
+  }
+
+  static async deleteImage(req, res) {
+    const { id, name } = req.body;
+  
+    if (!id || !name) {
+      return res.status(400).json({ status: 'error', message: 'Datos incompletos' });
+    }
+  
+    try {
+      // Ruta absoluta del directorio
+      const directoryPath = '/home/realcolorweb/public_html/technologyline.com.ar/banners-images/';
+      
+      // Verifica si el directorio existe
+      if (!fs.existsSync(directoryPath)) {
+        console.error('Directorio no encontrado:', directoryPath);
+        return res.status(500).json({ status: 'error', message: 'Directorio no encontrado' });
+      }
+  
+      // Patrón de archivo
+      const filePattern = new RegExp(`${name.toLowerCase()}_${id}_.*\.jpg`);
+      const files = fs.readdirSync(directoryPath).filter(file => filePattern.test(file));
+  
+      // Eliminar los archivos encontrados
+      for (const file of files) {
+        console.log('Eliminando archivo:', path.join(directoryPath, file));
+        fs.unlinkSync(path.join(directoryPath, file));
+      }
+  
+      // Actualizar la base de datos
+      await PageModel.clearImagePath({ id });
+  
+      res.json({ status: 'success', message: 'Imagen eliminada correctamente' });
+    } 
+    catch (error) {
+      console.error('Error al eliminar la imagen:', error);
+      res.status(500).json({ status: 'error', message: 'Error al eliminar la imagen' });
+    }
+  }
+
 }
 
 module.exports = PageController

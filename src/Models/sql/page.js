@@ -57,14 +57,47 @@ class PageModel {
       `, [id]);
   
       if (result.affectedRows === 0) {
-        return false;  // No se encontró o actualizó ninguna fila
+        return false; 
       }
   
-      return true;  // Actualización exitosa
+      return true;
     } 
     catch (e) {
       console.error('Error checking view:', error)
       throw e
+    }
+  }
+
+  static async getBanners() {
+    try {
+      const [results] = await pool.query('SELECT * FROM banners');
+      const data = results;
+
+      return data
+    } 
+    catch (error) {
+      console.error('Error fetching banners:', error);
+      throw error;
+    }
+  }
+
+  static async updateImagePath({ id, fileUrl, to }) {
+    try {
+      const [result] = await pool.query('UPDATE banners SET path = ?, path_to = ? WHERE id = ?', [fileUrl, to, id]);
+      return result.affectedRows > 0;
+    } catch (error) {
+      console.error('Error en la actualización de la ruta de la imagen:', error);
+      throw error;
+    }
+  }
+
+  static async clearImagePath({ id }) {
+    try {
+      const [result] = await pool.query('UPDATE banners SET path = "", path_to = "" WHERE id = ?', [id]);
+      return result.affectedRows > 0;
+    } catch (error) {
+      console.error('Error al limpiar la ruta de la imagen:', error);
+      throw error;
     }
   }
 }
