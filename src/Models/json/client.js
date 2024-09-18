@@ -63,6 +63,33 @@ class ClientModel {
     return jsonData.views;
   }
 
+  static async deleteClient({ id }) {
+    try {
+      let jsonData = await this.readJsonFile(clientPath);
+  
+      // Filtrar los datos para eliminar el cliente con el ID especificado
+      const updatedData = jsonData.filter(data => parseInt(data.id) !== parseInt(id));
+  
+      // Verificar si se eliminó algún cliente
+      if (jsonData.length === updatedData.length) {
+        // No se encontró ningún cliente con el ID proporcionado
+        console.log(`Client with ID ${id} not found.`);
+        return false;
+      }
+  
+      // Escribir los datos actualizados en el archivo JSON
+      await this.writeJsonFile(clientPath, updatedData);
+  
+      console.log(`Client with ID ${id} deleted successfully.`);
+      return true;
+    } 
+    catch (error) {
+      console.error('Error deleting client:', error);
+      throw error;
+    }
+  }
+  
+
   //--> --- --- --- --- --- --- --- --- <--//
   //Function for readJsonFile
   static async readJsonFile(path) {
@@ -86,6 +113,6 @@ class ClientModel {
       throw error
     }
   }
-}
+ }
 
 module.exports = ClientModel

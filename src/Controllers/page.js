@@ -23,7 +23,11 @@ class PageController {
 
       const { id, name } = req.query;
       const data = await PageModel.getResellersData({ id, name });
-
+      
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Expires', '0');
+      res.setHeader('Pragma', 'no-cache');
+      
       res.json(data);
     } 
     catch (error) {
@@ -116,6 +120,10 @@ class PageController {
 
       const data = await PageModel.getBanners();
 
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Expires', '0');
+      res.setHeader('Pragma', 'no-cache');
+      
       res.json(data);
     } 
     catch (error) {

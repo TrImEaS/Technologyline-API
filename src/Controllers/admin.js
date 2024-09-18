@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const refreshDB = require('../Functions/refreshDB.js')
+const AdminModel = require('../Models/sql/admin.js')
 
 const usersFilePath = path.resolve(__dirname, '../Data/users.json')
 
@@ -32,6 +33,30 @@ class AdminController {
       return res.status(500).json({error: 'Server error to login'})
     }
   }
+
+  static async getAllClients(req, res) {
+    try {
+      const { id } = req.query
+      if(!id) { return }
+
+      const result = await AdminModel.getAllClients({ id })
+
+      if(!result) {
+        return res.status(403).json({ message: 'Error al traer clientes' })
+      }
+      
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Expires', '0');
+      res.setHeader('Pragma', 'no-cache');
+
+      res.json(result)
+    } 
+    catch (error) {
+      console.error('Error al actualizar los datos:', error)
+      return res.status(500).json({ message: 'Error del servidor al traer clientes' })
+    }
+  }
+  
 }
 
 module.exports = AdminController

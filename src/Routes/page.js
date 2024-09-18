@@ -8,7 +8,8 @@ pageRouter.get('/getBanners', PageController.getBanners);
 
 pageRouter.post('/uploadBanner', PageController.uploadImage);
 pageRouter.post('/deleteBanner', PageController.deleteImage);
-pageRouter.patch('/check-view/:id', PageController.checkResellerData)
 pageRouter.post('/', PageController.saveResellersData)
+
+pageRouter.patch('/check-view/:id', PageController.checkResellerData)
 
 module.exports = pageRouter

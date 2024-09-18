@@ -7,6 +7,11 @@ class ClientController {
     try {
       const { id } = req.query
       const clients = await ClientModel.getAll({ id })
+
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Expires', '0');
+      res.setHeader('Pragma', 'no-cache');
+      
       res.json(clients)
     }
     catch (error) {
@@ -17,8 +22,13 @@ class ClientController {
 
   static async getPageViews (req, res) {
     try {
+      
       const views = await ClientModel.getPageViews()
-      console.log(views)
+
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Expires', '0');
+      res.setHeader('Pragma', 'no-cache');
+
       res.json({ views: views })
     }
     catch (error) {
@@ -57,6 +67,20 @@ class ClientController {
     }
   }
 
+  static async deleteClient(req, res) {
+    const { id } = req.query
+  
+    if (!id) {
+      return res.status(400).json({ status: 'error', message: 'Falta el id.' });
+    }
+
+    const result = await ClientModel.deleteClient({ id: parseInt(id) })
+    if(!result) {
+      return res.status(403).json({status: 'error', message: 'Error al procesar la solicitud, verifique datos e intente nuevamente.'})
+    }
+
+    res.status(200).json({status: 'success', message: 'Client deleting correctly'})
+  }
 }
 
 module.exports = ClientController;
