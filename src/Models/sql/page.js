@@ -5,10 +5,9 @@ class PageModel {
   static async getResellersData({ id, name }) {
     try {
       const [results] = await pool.query('SELECT * FROM resellers_form');
-      const data = results;
 
-      if (id) { return data.filter(data => parseInt(data.id) === parseInt(id)); }
-      if (name) { return data.filter(data => data.fullname.toLowerCase().includes(name.toLowerCase())) }
+      if (id) { return results.filter(data => parseInt(data.id) === parseInt(id)); }
+      if (name) { return results.filter(data => data.fullname.toLowerCase().includes(name.toLowerCase())) }
 
       return data
     } 
