@@ -15,19 +15,23 @@ class ConceptController {
     }
   }
 
-  static async create (req, res) { 
+  static async create(req, res) { 
     try {
-      const result = validateConcept(req.body)
-      if (result.error){
-        return res.status(422).json({ error: JSON.parse(result.error.message) })
+      const result = validateConcept(req.body);
+      if (result.error) {
+        return res.status(422).json({ error: JSON.parse(result.error.message) });
       }
-    
-      const newConcept = await ConceptModel.create({ input: result.data })
-      res.json(newConcept)
+      
+      const newConcept = await ConceptModel.create({ input: result.data });
+      if (!newConcept) {
+        return res.status(403).json({ error: 'El numero/nombre de concepto ya existe!' });
+      }
+  
+      return res.status(201).json(newConcept);
     } 
     catch (e) {
-      console.log('Error updating concept: ', e)
-      res.status(500).json({ error: "Internal server error" });
+      console.error('Error creating concept: ', e);
+      return res.status(500).json({ error: 'Internal server error' });
     }
   }
 

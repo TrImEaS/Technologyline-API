@@ -11,6 +11,20 @@ async function refreshDB() {
     return false;
   }
 
+  // const excelSheet = excel.sheet('PVP WEB LINK DE PAGO').usedRange();
+  // const mapColumnNames = (rowData) => ({
+  //   'id': rowData[25] ? parseInt(rowData[25]) : '',
+  //   'sku': rowData[0] ? rowData[0].toString() : '',
+  //   'name': rowData[1] ? rowData[1].toString() : '',
+  //   'price': rowData[10] ? cleanPrice(rowData[10]) : '',
+  //   'stock': rowData[26] ? parseInt(rowData[26]) : 0,
+  //   'category': rowData[23] ? cleanCategory(rowData[23].toString()) : '',
+  //   'sub_category': rowData[24] ? rowData[24].toString() : '',
+  //   'brand': rowData[28] ? rowData[28].toString() : '',
+  //   'img_base': `https://technologyline.com.ar/products-images/${rowData[0]}.jpg`,
+  //   "discount": rowData[29] ? parseInt(rowData[29]) || 0 : 0,
+  // });
+
   const excelSheet = excel.sheet(0).usedRange();
   const mapColumnNames = (rowData) => ({
     'id': parseInt(rowData[29]),
@@ -31,6 +45,11 @@ async function refreshDB() {
   // Procesar cada producto
   for (const excelProduct of productsExcel) {
     const { id, sku, name, price, stock, category, sub_category, brand, img_base, discount } = excelProduct;
+    if (!sku) {
+      console.log('No SKU found, stopping process.');
+      break;
+    }
+
     const [existingProduct] = await pool.query('SELECT * FROM products WHERE id = ?', [id]);
 
     if (existingProduct.length > 0) {
@@ -72,4 +91,5 @@ function cleanCategory(category) {
   return category;
 }
 
+// refreshDB()
 module.exports = refreshDB;
