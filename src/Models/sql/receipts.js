@@ -42,17 +42,36 @@ class ReceiptsModel {
 
   static async create({ input }) {
     try {
-      const existingData = await this.getAll({ sku: input.sku });
-      if (existingData.length > 0) {
-        return false; // El producto ya existe
-      }
+      const query = `
+      INSERT INTO receipts (
+        number, 
+        employee_id, 
+        deposit_date, 
+        remunerative_total, 
+        no_remunerative_total, 
+        discount_total, 
+        total, 
+        in_string_total, 
+        payment_place_and_date, 
+        payment_period
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-      const { name, sku, price, stock, category, sub_category, description, brand, ean, img, images } = input;
-      const query = `INSERT INTO products (name, sku, price, stock, category, sub_category, description, brand, ean, img, images)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-      const [result] = await pool.query(query, [name, sku, price, stock, category, sub_category, description, brand, ean, img, images]);
-      return result.insertId;
-    } catch (error) {
+      const [result] = await pool.query(query, [
+        input.number, 
+        input.employee_id, 
+        input.deposit_date, 
+        input.remunerative_total, 
+        input.no_remunerative_total, 
+        input.discount_total, 
+        input.total, 
+        input.in_string_total, 
+        input.payment_place_and_date, 
+        input.payment_period
+      ]);
+
+      return result;
+    } 
+    catch (error) {
       console.error('Error creating product:', error);
       throw error;
     }
