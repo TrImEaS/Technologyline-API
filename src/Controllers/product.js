@@ -1,5 +1,4 @@
 const { validatePartialProduct, validateProduct } = require('../Schemas/product.js');
-// const ProductModel = require('../Models/json/product.js');
 const ProductModel = require('../Models/sql/product.js');
 const refreshDB = require('../Functions/refreshDBSQL.js');
 
@@ -131,15 +130,13 @@ class ProductController {
 
   static async uploadExcel(req, res) {
     try {
-      if (!req.file) {
+      if (!req.file)
         return res.status(400).json({ error: 'No se subió ningún archivo.' });
-      }
 
-      // Llama a la función para refrescar la base de datos
       await refreshDB();
-
       return res.status(200).json({ message: 'Archivo subido y datos actualizados exitosamente.' });
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error al cargar el archivo:', error);
       return res.status(500).json({ error: 'Error interno del servidor' });
     }

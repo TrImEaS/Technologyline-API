@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const refreshDB = require('../Functions/refreshDB.js')
+const refreshDB = require('../Functions/refreshDBSQL.js')
 const AdminModel = require('../Models/sql/admin.js')
 
 const usersFilePath = path.resolve(__dirname, '../Data/users.json')

@@ -3,16 +3,13 @@ const fs = require('fs');
 const PageModel = require("../Models/sql/page");
 const { validateResellers_Form } = require('../Schemas/resellers_form')
 
-// Memoria para almacenar las IPs y su conteo de envíos
 let ipTracking = {};
 
-// Reiniciar el contador cada día a medianoche
 setInterval(() => {
   ipTracking = {};
-}, 24 * 60 * 60 * 1000); // 24 horas en milisegundos
+}, 24 * 60 * 60 * 1000); 
 
 class PageController {  
-  // Get all data
   static async getResellersData (req, res) {
     try {
       const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
@@ -36,7 +33,6 @@ class PageController {
     }
   }
 
-  // Crear nueva data con límite diario por IP
   static async saveResellersData(req, res) {
     const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
     const origin = req.headers.origin;
@@ -133,33 +129,47 @@ class PageController {
   }
 
   static async uploadImage(req, res) {
-    const { id, name, image, to } = req.body;
-
-    if (!id || !name || !image) {
+    const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
+    const origin = req.headers.origin;
+  
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+  
+    logToFile(`Comienza update`);
+    
+    const { id, name, to } = req.body; // Obtiene id, name y to del cuerpo de la solicitud
+    const imageFile = req.file; // Obtiene el archivo subido
+  
+    // Función para escribir en log.txt
+    const logPath = path.join(__dirname, 'log.txt');
+    const logToFile = (message) => {
+      fs.appendFileSync(logPath, `${new Date().toISOString()} - ${message}\n`);
+    };
+  
+    logToFile(`Datos recibidos: { id: ${id}, name: ${name}, imageSize: ${imageFile.size}, to: ${to} }`);
+  
+    if (!id || !name || !imageFile) {
+      logToFile('Error: Datos incompletos');
       return res.status(400).json({ status: 'error', message: 'Datos incompletos' });
     }
-
+  
     try {
-      const imageData = Buffer.from(image, 'base64');
-      const timestamp = Date.now();
-      const fileName = `${name.toLowerCase()}_${id}_${timestamp}.jpg`;
-      const filePath = `/home/realcolorweb/public_html/technologyline.com.ar/banners-images/${fileName}`
-      const fileUrl = `https://technologyline.com.ar/banners-images/${fileName}`
-
-      // Guardar el archivo localmente
-      require('fs').writeFileSync(filePath, imageData);
-
+      const fileUrl = `https://technologyline.com.ar/banners-images/${imageFile.filename}`; // La URL del archivo subido
+      
+      logToFile(`Archivo guardado exitosamente en: ${imageFile.path}`);
+  
       // Actualizar la base de datos
       await PageModel.updateImagePath({ id, fileUrl, to });
-
+      logToFile(`Base de datos actualizada con URL: ${fileUrl}`);
+  
       res.json({ status: 'success', message: 'Imagen subida correctamente' });
-    } 
-    catch (error) {
-      console.error('Error al subir la imagen:', error);
+    } catch (error) {
+      logToFile(`Error al subir la imagen: ${error.message}`);
       res.status(500).json({ status: 'error', message: 'Error al subir la imagen' });
     }
   }
-
+  
   static async deleteImage(req, res) {
     const { id, name } = req.body;
   

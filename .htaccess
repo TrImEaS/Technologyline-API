@@ -1,0 +1,8 @@
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/realcolorweb/public_html/technologyline.com.ar/admin/page-api"
+PassengerBaseURI "/"
+PassengerNodejs "/home/realcolorweb/nodevenv/public_html/technologyline.com.ar/admin/page-api/10/bin/node"
+PassengerAppType node
+PassengerStartupFile index.js
+PassengerAppLogFile "/home/realcolorweb/public_html/technologyline.com.ar/admin/page-api/passenger.log"
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END

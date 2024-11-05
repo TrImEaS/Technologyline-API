@@ -1,29 +1,29 @@
-const pool = require ('./config.js')
+const { LIQUIDSPool } = require ('./config.js')
 
 class ConceptModel {
   static async getAll ({ id, name, number, all }) {
     try {
       if(id) {
-        const [res] = await pool.query(`SELECT * FROM concepts WHERE id = ? AND active = 1`, id)
+        const [res] = await LIQUIDSPool.query(`SELECT * FROM concepts WHERE id = ? AND active = 1`, id)
         return res
       }
 
       if(name) {
-        const [res] = await pool.query(`SELECT * FROM concepts WHERE name = ? AND active = 1`, name)
+        const [res] = await LIQUIDSPool.query(`SELECT * FROM concepts WHERE name = ? AND active = 1`, name)
         return res
       }
 
       if(number) {
-        const [res] = await pool.query(`SELECT * FROM concepts WHERE number = ? AND active = 1`, number)
+        const [res] = await LIQUIDSPool.query(`SELECT * FROM concepts WHERE number = ? AND active = 1`, number)
         return res
       }
 
       if(all) {
-        const [res] = await pool.query(`SELECT * FROM concepts`, number)
+        const [res] = await LIQUIDSPool.query(`SELECT * FROM concepts`, number)
         return res
       }
 
-      const [res] = await pool.query('SELECT * FROM concepts WHERE active = 1');
+      const [res] = await LIQUIDSPool.query('SELECT * FROM concepts WHERE active = 1');
       return res
     } 
     catch (e) {
@@ -44,7 +44,7 @@ class ConceptModel {
       const baseConceptIdsJSON = JSON.stringify(baseConceptIds);
       const query = `INSERT INTO concepts (name, type, number, baseConceptIds, formula)
                      VALUES (?, ?, ?, ?, ?)`;
-      const [result] = await pool.query(query, [ name, type, number, baseConceptIdsJSON, formula ]);
+      const [result] = await LIQUIDSPool.query(query, [ name, type, number, baseConceptIdsJSON, formula ]);
       return result.insertId;
     } 
     catch (e) {
@@ -69,7 +69,7 @@ class ConceptModel {
       if (fieldsToUpdate.length > 0) {
         values.push(id);
         const query = `UPDATE concepts SET ${fieldsToUpdate.join(', ')} WHERE id = ?`;
-        const [result] = await pool.query(query, values);
+        const [result] = await LIQUIDSPool.query(query, values);
         return result.affectedRows > 0; 
       }
   
@@ -85,7 +85,7 @@ class ConceptModel {
   static async delete({ id }) {
     try {
       const query = `UPDATE concepts SET active = 0 WHERE id = ?`;
-      const [result] = await pool.query(query, [id]);
+      const [result] = await LIQUIDSPool.query(query, [id]);
       return result.affectedRows > 0; 
     } 
     catch (e) {

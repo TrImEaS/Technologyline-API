@@ -1,4 +1,4 @@
-const pool = require('./config.js');
+const { LIQUIDSPool } = require('./config.js');
 
 class EmployeesModel {
   static async getAll({ id, full_name, docket, company, sector, category, dni, cuil, active }) {
@@ -60,7 +60,7 @@ class EmployeesModel {
         query += ' WHERE ' + conditions.join(' AND ');
       }
 
-      const [res] = await pool.query(query, params);
+      const [res] = await LIQUIDSPool.query(query, params);
       return res;
     } 
     catch (e) {

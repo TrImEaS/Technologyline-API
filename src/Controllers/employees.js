@@ -1,5 +1,4 @@
 const EmployeesModel = require("../Models/sql/employees");
-const { validatePartialEmployee, validateEmployee } = require ('../Schemas/employees.js')
 
 class EmployeesController {
   static async getAll(req, res) {

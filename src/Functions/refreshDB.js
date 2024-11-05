@@ -20,20 +20,20 @@ async function refreshDB() {
     return false
   }
 
-  const excelSheet = excel.sheet(0).usedRange()
-
+  const excelSheet = excel.sheet(0).usedRange();
+  
   const mapColumnNames = (rowData) => ({
     'id': parseInt(rowData[29]),
     'sku': rowData[0].toString(),
     'name': rowData[1].toString(),
     'price': cleanPrice(rowData[6]),
-    'stock': parseInt(rowData[24]),
-    'category': rowData[25].toString(),
+    'stock': parseInt(rowData[23]),
+    'category': cleanCategory(rowData[25].toString()),
     'sub_category': rowData[26].toString(),
     'brand': rowData[27].toString(),
     'img_base': `https://technologyline.com.ar/products-images/${rowData[0]}.jpg`,
-    "discount": parseInt(rowData[32]) || 0
-  })
+    "discount": parseInt(rowData[32]) || 0,
+  });
 
   const productsExcel = excelSheet.value().slice(1).map(rowData => mapColumnNames(rowData))
   const productsJson = await readJsonFile()

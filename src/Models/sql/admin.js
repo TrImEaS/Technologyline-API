@@ -1,9 +1,9 @@
-const pool = require('./config')
+const { ADMINPool } = require('./config')
 
 class AdminModel {
   static async getAllClients({ id }) {
     try {
-      const [results] = await pool.query('SELECT * FROM `clients_gbp` WHERE id = ? ', [parseInt(id)]);
+      const [results] = await ADMINPool.query('SELECT * FROM `clients_gbp` WHERE id = ? ', [parseInt(id)]);
       const data = results;
 
       return data

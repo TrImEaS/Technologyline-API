@@ -1,15 +1,15 @@
-const pool = require('./config')
+const { ADMINPool } = require('./config')
 const sendMail = require('../../Utils/mail_send')
 
 class PageModel {
   static async getResellersData({ id, name }) {
     try {
-      const [results] = await pool.query('SELECT * FROM resellers_form');
+      const [results] = await ADMINPool.query('SELECT * FROM resellers_form');
 
       if (id) { return results.filter(data => parseInt(data.id) === parseInt(id)); }
       if (name) { return results.filter(data => data.fullname.toLowerCase().includes(name.toLowerCase())) }
 
-      return data
+      return results
     } 
     catch (error) {
       console.error('Error fetching resellers form_data:', error);
@@ -36,7 +36,7 @@ class PageModel {
       }
 
       // Agregar el nuevo dato al array
-      const [result] = await pool.query(`
+      const [result] = await ADMINPool.query(`
       INSERT INTO resellers_form (fullname, email, phone, comentary, view) 
       VALUES (?, ?, ?, ?, ?);
     `, [input.fullname, input.email, input.phone, input.comentary, 0]);
@@ -51,7 +51,7 @@ class PageModel {
 
   static async checkResellerData({ id }) {
     try {
-      const [result] = await pool.query(`
+      const [result] = await ADMINPool.query(`
         UPDATE resellers_form SET view = 1 WHERE id = ?;
       `, [id]);
   
@@ -69,10 +69,9 @@ class PageModel {
 
   static async getBanners() {
     try {
-      const [results] = await pool.query('SELECT * FROM banners');
-      const data = results;
+      const [results] = await ADMINPool.query('SELECT * FROM banners');
 
-      return data
+      return results
     } 
     catch (error) {
       console.error('Error fetching banners:', error);
@@ -82,7 +81,7 @@ class PageModel {
 
   static async updateImagePath({ id, fileUrl, to }) {
     try {
-      const [result] = await pool.query('UPDATE banners SET path = ?, path_to = ? WHERE id = ?', [fileUrl, to, id]);
+      const [result] = await ADMINPool.query('UPDATE banners SET path = ?, path_to = ? WHERE id = ?', [fileUrl, to, id]);
       return result.affectedRows > 0;
     } catch (error) {
       console.error('Error en la actualización de la ruta de la imagen:', error);
@@ -92,7 +91,7 @@ class PageModel {
 
   static async clearImagePath({ id }) {
     try {
-      const [result] = await pool.query('UPDATE banners SET path = "", path_to = "" WHERE id = ?', [id]);
+      const [result] = await ADMINPool.query('UPDATE banners SET path = "", path_to = "" WHERE id = ?', [id]);
       return result.affectedRows > 0;
     } catch (error) {
       console.error('Error al limpiar la ruta de la imagen:', error);

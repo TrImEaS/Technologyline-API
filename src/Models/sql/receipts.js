@@ -1,4 +1,4 @@
-const pool = require('./config')
+const { ADMINPool } = require('./config')
 
 class ReceiptsModel {
   static async getAll({ id, number, employee_id, deposit_date }) {
@@ -31,7 +31,7 @@ class ReceiptsModel {
         query += ' WHERE ' + conditions.join(' AND ');
       }
 
-      const [res] = await pool.query(query, params);
+      const [res] = await ADMINPool.query(query, params);
       return res;
     } 
     catch (error) {
@@ -56,7 +56,7 @@ class ReceiptsModel {
         payment_period
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-      const [result] = await pool.query(query, [
+      const [result] = await ADMINPool.query(query, [
         input.number, 
         input.employee_id, 
         input.deposit_date, 

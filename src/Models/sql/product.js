@@ -1,9 +1,9 @@
-const pool = require('./config')
+const { ADMINPool } = require('./config')
 
 class ProductModel {
   static async getAll({ sku, name, all }) {
     try {
-      const [results] = await pool.query('SELECT * FROM products');
+      const [results] = await ADMINPool.query('SELECT * FROM products');
       const products = results;
 
       if (sku) {
@@ -41,7 +41,7 @@ class ProductModel {
 
   static async getById(id) {
     try {
-      const [results] = await pool.query('SELECT * FROM products WHERE id = ?', [id]);
+      const [results] = await ADMINPool.query('SELECT * FROM products WHERE id = ?', [id]);
       return results[0] || null; // Devuelve el primer resultado o null si no se encuentra
     } catch (error) {
       console.error('Error fetching product by ID:', error);
@@ -51,7 +51,7 @@ class ProductModel {
 
   static async getNextId() {
     try {
-      const [results] = await pool.query('SELECT MAX(id) as maxId FROM products');
+      const [results] = await ADMINPool.query('SELECT MAX(id) as maxId FROM products');
       return results[0].maxId ? results[0].maxId + 1 : 1;
     } catch (error) {
       console.error('Error getting next product ID:', error);
@@ -69,7 +69,7 @@ class ProductModel {
       const { name, sku, price, stock, category, sub_category, description, brand, ean, img, images } = input;
       const query = `INSERT INTO products (name, sku, price, stock, category, sub_category, description, brand, ean, img, images)
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-      const [result] = await pool.query(query, [name, sku, price, stock, category, sub_category, description, brand, ean, img, images]);
+      const [result] = await ADMINPool.query(query, [name, sku, price, stock, category, sub_category, description, brand, ean, img, images]);
       return result.insertId;
     } catch (error) {
       console.error('Error creating product:', error);
@@ -84,7 +84,7 @@ class ProductModel {
       values.push(id);
       
       const query = `UPDATE products SET ${fields} WHERE id = ?`;
-      const [result] = await pool.query(query, values);
+      const [result] = await ADMINPool.query(query, values);
       return result.affectedRows > 0 ? true : false; 
     } 
     catch (error) {
@@ -96,7 +96,7 @@ class ProductModel {
   static async addProductView({ id }) {
     try {
       const query = `UPDATE products SET total_views = total_views + 1 WHERE id = ?`;
-      const [result] = await pool.query(query, [id]);
+      const [result] = await ADMINPool.query(query, [id]);
       return result.affectedRows > 0 ? true : false; 
     } 
     catch (error) {

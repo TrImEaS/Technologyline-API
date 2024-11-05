@@ -1,5 +1,4 @@
 const ReceiptsModel = require("../Models/sql/receipts");
-const { validatePartialReceipt, validateReceipt } = require ('../Schemas/receipts.js')
 
 class ReceiptsController {
   static async getAll(req, res) {
@@ -18,11 +17,6 @@ class ReceiptsController {
   static async create(req, res) {
     try {
       const inputData = req.body  
-
-      const result = validateReceipt(inputData);
-      if (result.error) {
-        return res.status(422).json({ error: JSON.parse(result.error.message) });
-      }
 
       const existingData = await ReceiptsModel.create({ input: inputData });
       if (!existingData) {

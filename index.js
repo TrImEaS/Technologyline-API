@@ -93,3 +93,5 @@ app.use('/api', apiRouter);
 app.get('*', (req, res) => { res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/error.html'); })
 
 app.listen(PORT, () => console.log(`Server listening on port http://localhost:${PORT}`))
+
+app.timeout = 300000;
