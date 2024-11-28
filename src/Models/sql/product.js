@@ -13,7 +13,7 @@ class ProductModel {
       if (name) {
         return products.filter(data =>
           data.adminStatus &&
-          data.stock >= 3 &&
+          data.stock > 0 &&
           data.price >= 1000 &&
           data.status &&
           data.name.toLowerCase().includes(name.toLowerCase())
@@ -27,7 +27,7 @@ class ProductModel {
       return products.filter(data => 
         data.adminStatus &&
         (
-          data.stock >= 3 && 
+          data.stock > 0 && 
           data.price >= 1000 &&
           data.status
         )

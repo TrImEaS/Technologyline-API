@@ -56,7 +56,7 @@ async function refreshDB() {
       if (existingProduct.length > 0) {
         await ADMINPool.query(
           'UPDATE products SET sku = ?, name = ?, price = ?, stock = ?, category = ?, sub_category = ?, brand = ?, img_base = ?, discount = ?, status = ? WHERE id = ?',
-          [sku, name, price, stock, category, sub_category, brand, img_base, discount, stock < 3 ? 0 : 1, id]
+          [sku, name, price, stock, category, sub_category, brand, img_base, discount, stock < 0 ? 0 : 1, id]
         );
       } 
       else {
