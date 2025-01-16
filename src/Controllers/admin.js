@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const refreshDB = require('../Functions/refreshDBSQL.js')
 const AdminModel = require('../Models/sql/admin.js')
+const refreshPrices = require('../Functions/refreshPrices.js')
 
 const usersFilePath = path.resolve(__dirname, '../Data/users.json')
 
@@ -9,6 +10,7 @@ class AdminController {
   static async refreshDB(req, res) {
     try {
       await refreshDB()
+      await refreshPrices()
       return res.status(200).json({ message: 'Datos actualizados exitosamente' })
     } 
     catch (error) {

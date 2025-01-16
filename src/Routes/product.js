@@ -1,6 +1,5 @@
 const { Router } = require('express');
 const ProductController = require('../Controllers/product.js');
-const ProductControllerTest = require('../Controllers/productTest.js');
 const path = require('path');
 const multer = require('multer');
 
@@ -19,9 +18,9 @@ const upload = multer({ storage });
 
 const productRouter = Router();
 
-productRouter.get('/test', ProductControllerTest.getAll);
 productRouter.get('/', ProductController.getAll);
 productRouter.get('/:id', ProductController.getById);
+productRouter.get('/test', ProductController.getAllTest)
 
 // Asegúrate de usar upload.single('file') para recibir un solo archivo
 productRouter.post('/jirejfdisbjfi4iwurjknvijioeb49/refresh-data', upload.single('file'), ProductController.uploadExcel);

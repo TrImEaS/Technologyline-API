@@ -2,9 +2,19 @@ const { validatePartialProduct, validateProduct } = require('../Schemas/product.
 const ProductModel = require('../Models/sql/product.js');
 const refreshDB = require('../Functions/refreshDBSQL.js');
 
+const allowedOrigins = [
+  'http://localhost:5173', 
+  'http://localhost:8080', 
+  'https://www.technologyline.com.ar', 
+  'https://www.line-technology.com.ar', 
+  'https://www.real-color.com.ar',
+  'https://real-color.com.ar',
+  'http://www.real-color.com.ar',
+  'http://real-color.com.ar',
+];
+
 class ProductController {
   static async getAll(req, res) {
-    const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
@@ -21,7 +31,6 @@ class ProductController {
   }
 
   static async getById(req, res) {
-    const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
@@ -40,7 +49,6 @@ class ProductController {
   }
 
   static async create(req, res) {
-    const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
@@ -85,7 +93,6 @@ class ProductController {
   }
 
   static async update(req, res) {
-    const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
@@ -107,7 +114,6 @@ class ProductController {
   }
 
   static async addProductView(req, res) {
-    const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
@@ -141,6 +147,56 @@ class ProductController {
       return res.status(500).json({ error: 'Error interno del servidor' });
     }
   }
+
+  static async getAllTest(req, res) {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+
+    try {
+      // Configuración de las credenciales
+      const wsBasicQueryHeader = {
+        pUsername: 'testuser',    
+        pPassword: 'testpassword',  
+        pCompany: 1,
+        pBranch: 1,
+        pLanguage: 2,
+        pWebWervice: 10,
+        pAuthenticatedToken: null, 
+      };
+
+      // Crear cliente SOAP
+      const client = await soap.createClientAsync(wsdlUrl);
+
+      // Autenticar usuario
+      const authResponse = await client.AuthenticateUserAsync(wsBasicQueryHeader);
+      wsBasicQueryHeader.pAuthenticatedToken = authResponse[0].AuthenticateUserResult;
+
+      if (!wsBasicQueryHeader.pAuthenticatedToken) {
+        throw new Error('Authentication failed');
+      }
+
+      // Consumir método `ItemStorage_funGetXMLData`
+      const stockResponse = await client.ItemStorage_funGetXMLDataAsync({
+        intStor_id: -1, // Todos los depósitos
+        intItem_id: -1, // Todos los artículos
+      });
+
+      // Convertir XML a JSON
+      const parser = new xml2js.Parser();
+      const stockData = await parser.parseStringPromise(
+        stockResponse[0].ItemStorage_funGetXMLDataResult
+      );
+
+      res.json(stockData);
+
+    } catch (error) {
+      console.error('Error retrieving stock data:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
 }
 
 module.exports = ProductController;

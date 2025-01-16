@@ -3,6 +3,17 @@ const fs = require('fs');
 const PageModel = require("../Models/sql/page");
 const { validateResellers_Form } = require('../Schemas/resellers_form')
 
+const allowedOrigins = [
+  'http://localhost:5173', 
+  'http://localhost:8080', 
+  'https://www.technologyline.com.ar', 
+  'https://www.line-technology.com.ar', 
+  'https://www.real-color.com.ar',
+  'https://real-color.com.ar',
+  'http://www.real-color.com.ar',
+  'http://real-color.com.ar',
+];
+
 let ipTracking = {};
 
 setInterval(() => {
@@ -12,7 +23,6 @@ setInterval(() => {
 class PageController {  
   static async getResellersData (req, res) {
     try {
-      const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
       const origin = req.headers.origin;
       if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
@@ -34,7 +44,6 @@ class PageController {
   }
 
   static async saveResellersData(req, res) {
-    const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
@@ -108,7 +117,6 @@ class PageController {
 
   static async getBanners(req, res) {
     try {
-      const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
       const origin = req.headers.origin;
       if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
@@ -129,7 +137,6 @@ class PageController {
   }
 
   static async uploadImage(req, res) {
-    const allowedOrigins = ['http://localhost:5173', 'http://localhost:8080', 'https://www.technologyline.com.ar', 'https://www.line-technology.com.ar'];
     const origin = req.headers.origin;
   
     if (allowedOrigins.includes(origin)) {
