@@ -31,8 +31,8 @@ async function refreshDB() {
       'id': parseInt(rowData[29]),
       'sku': rowData[0].toString(),
       'name': rowData[1].toString(),
-      'price': cleanPrice(rowData[6]),
       'stock': parseInt(rowData[23]),
+      'cost': cleanPrice(rowData[4]),
       'category': cleanCategory(rowData[25].toString()),
       'sub_category': rowData[26].toString(),
       'brand': rowData[27].toString(),
@@ -45,25 +45,47 @@ async function refreshDB() {
 
     // Procesar cada producto
     for (const excelProduct of productsExcel) {
-      const { id, sku, name, price, stock, category, sub_category, brand, img_base, discount } = excelProduct;
+      const { id, sku, name, cost, stock, category, sub_category, brand, img_base, discount } = excelProduct;
       if (!sku) {
         console.log('No SKU found, stopping process.');
         break;
       }
 
+      const formula = await ADMINPool.query('SELECT formula FROM formula WHERE id = 1',);
+
       const [existingProduct] = await ADMINPool.query('SELECT * FROM products WHERE id = ?', [id]);
 
       if (existingProduct.length > 0) {
         await ADMINPool.query(
-          'UPDATE products SET sku = ?, name = ?, price = ?, stock = ?, category = ?, sub_category = ?, brand = ?, img_base = ?, discount = ?, status = ? WHERE id = ?',
-          [sku, name, price, stock, category, sub_category, brand, img_base, discount, stock < 0 ? 0 : 1, id]
+          'UPDATE products SET sku = ?, name = ?, stock = ?, category = ?, sub_category = ?, brand = ?, img_base = ?, discount = ?, status = ? WHERE id = ?',
+          [sku, name, stock, category, sub_category, brand, img_base, discount, stock < 0 ? 0 : 1, id]
         );
+
+        const [existingPrice] = await ADMINPool.query('SELECT * FROM products_prices WHERE list_id = ? AND id_product = ?' [1, id]);
+
+        if(existingPrice.lenght > 0) {
+          await ADMINPool.query(
+            'UPDATE products_prices SET price = ?',
+            [cost]
+          );
+        }
+        else {
+          await ADMINPool.query(
+            'INSERT INTO products_prices (id_product, list_id, price) VALUES (?, ?, ?)',
+            [id, 1, cost]
+          )
+        }
       } 
       else {
         await ADMINPool.query(
-          'INSERT INTO products (id, sku, name, price, stock, category, sub_category, brand, img_base, total_views, specifications, descriptions, discount, status, adminStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-          [id, sku, name, price, stock, category, sub_category, brand, img_base, 0, 'Este producto no contiene especificaciones', 'Este producto no contiene descripcion', discount, 1, 1]
+          'INSERT INTO products (id, sku, name, secondary_list, principal_list, stock, category, sub_category, brand, img_base, total_views, specifications, descriptions, discount, status, adminStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [id, sku, name, 2, 3, stock, category, sub_category, brand, img_base, 0, 'Este producto no contiene especificaciones', 'Este producto no contiene descripcion', discount, 1, 1]
         );
+
+        await ADMINPool.query(
+          'INSERT INTO products_prices (id_product, list_id, price) VALUES (?, ?, ?)',
+          [id, 1, cost]
+        )
       }
     }
 
