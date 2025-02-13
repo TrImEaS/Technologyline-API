@@ -1,5 +1,9 @@
 const { ADMINPool } = require('./config')
 const sendMail = require('../../Utils/mail_send')
+const fs = require('fs')
+const path = require('path')
+
+const movementPath = path.resolve(__dirname, '../../Data/order_movements.json')
 
 class PageModel {
   static async getResellersData({ id, name }) {
@@ -17,7 +21,6 @@ class PageModel {
     }
   }
 
-  //Add new data to SellersData
   static async saveResellersData({ input }) {
     try {
       sendMail({ input })
@@ -96,6 +99,61 @@ class PageModel {
     } catch (error) {
       console.error('Error al limpiar la ruta de la imagen:', error);
       throw error;
+    }
+  }
+
+  static async getOrderMovement(req, res) {
+    try {
+      let jsonData = await this.readJsonFile(movementPath);
+      if(jsonData)
+        return jsonData
+
+      return false
+    } 
+    catch (error) {
+      console.error('Error getting movement:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  static async setOrderMovement() {
+    try {
+      let jsonData = await this.readJsonFile(movementPath);
+  
+      jsonData.movement += 1; // Incrementamos correctamente
+      await this.writeJsonFile(movementPath, jsonData); // Guardamos el archivo
+  
+      console.log('Movimiento actualizado:', jsonData.movement); // Log para depurar
+      return jsonData;
+    } 
+    catch (error) {
+      console.error('Error en setOrderMovement:', error);
+      throw error; // Lanzamos el error para verlo en el log del servidor
+    }
+  }
+  
+
+  //--> --- --- --- --- --- --- --- --- <--//
+  //Function for readJsonFile
+  static async readJsonFile(path) {
+    try {
+      const rawData = await fs.promises.readFile(path)
+      return JSON.parse(rawData)
+    } 
+    catch (error) {
+      console.error('Error reading JSON file:', error)
+      return []
+    }
+  }
+  
+  //Function for writeJsonFile
+  static async writeJsonFile(path ,data) {
+    try {
+      await fs.promises.writeFile(path, JSON.stringify(data, null, 2))
+    } 
+    catch (error) {
+      console.error('Error writing JSON file:', error)
+      throw error
     }
   }
 }

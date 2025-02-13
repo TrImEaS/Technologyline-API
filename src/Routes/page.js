@@ -32,6 +32,9 @@ const upload = multer({
 const pageRouter = Router();
 pageRouter.post('/setBanner', upload.single('image'), PageController.uploadImage);
 pageRouter.post('/', PageController.saveResellersData);
+pageRouter.get('/getOrderMovement', PageController.getOrderMovement);
+pageRouter.post('/sendOrderEmail', PageController.sendOrderEmail);
+pageRouter.post('/setOrderMovement', PageController.setOrderMovement);
 pageRouter.post('/deleteBanner', PageController.deleteImage);
 pageRouter.get('/getIp', PageController.getIp);
 pageRouter.get('/getBanners', PageController.getBanners);

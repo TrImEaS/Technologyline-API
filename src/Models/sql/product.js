@@ -22,7 +22,7 @@ class ProductModel {
           result.prices = result.prices ? result.prices.split(',').reduce((acc, price) => {
             const [key, value] = price.split(':');
             const parsedValue = parseFloat(value);
-            if (parsedValue >= 1000) {  // Solo mantener precios >= 1000
+            if (parsedValue >= 1000) {
               acc[key] = parsedValue;
             }
             return acc;
@@ -44,7 +44,7 @@ class ProductModel {
                         p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.img_base, p.status, p.adminStatus, 
                         GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
                      FROM products p
-                     LEFT JOIN products_prices pp ON p.id = pp.product_id AND pp.list_id IN (2,3)`;
+                     LEFT JOIN products_prices pp ON p.id = pp.product_id AND pp.list_id IN (1,2)`;
   
       const params = [];
       const conditions = [];

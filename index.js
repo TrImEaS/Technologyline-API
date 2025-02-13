@@ -12,6 +12,7 @@ const allowedOrigins = [
   'http://localhost:5173', 
   'http://localhost:8080', 
   'https://www.technologyline.com.ar', 
+  'https://technologyline.com.ar', 
   'https://www.line-technology.com.ar'
 ]
 

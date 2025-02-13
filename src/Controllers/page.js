@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs');
 const PageModel = require("../Models/sql/page");
 const { validateResellers_Form } = require('../Schemas/resellers_form')
+const nodemailer = require('nodemailer');
 
 const allowedOrigins = [
   'http://localhost:5173', 
@@ -19,6 +20,8 @@ let ipTracking = {};
 setInterval(() => {
   ipTracking = {};
 }, 24 * 60 * 60 * 1000); 
+
+const ipOrdersFile = path.join(__dirname, '../Data/ip_orders.json');
 
 class PageController {  
   static async getResellersData (req, res) {
@@ -83,6 +86,163 @@ class PageController {
     } catch (e) {
       console.log('Error al cargar nueva información: ', e);
       return res.status(500).json({ error: "Error interno del servidor." });
+    }
+  }
+
+  static async getOrderMovement(req, res) {
+    try {
+      const movement = await PageModel.getOrderMovement()
+      if(movement)
+        return res.status(200).json(movement)
+
+      res.status(404).json({ message: 'Error to get movement' });
+    } 
+    catch (error) {
+      console.error('Error getting movement:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  static async setOrderMovement(req, res) {
+    try {
+      const movement = await PageModel.setOrderMovement(); 
+  
+      if (movement) {
+        return res.status(200).json({ movement: movement.movement });
+      }
+  
+      res.status(400).json({ message: 'Failed to update movement' });
+    } 
+    catch (error) {
+      console.error('Error en setOrderMovement (Controlador):', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+  
+  static async sendOrderEmail(req, res) {
+    try {
+      const clientIp = req.ip; 
+      const now = Date.now();
+      const oneHourAgo = now - 3600000;
+      const ALLOWED_IP = "190.245.167.220"; 
+  
+      // Leer archivo de registros de IPs
+      let ipOrders = {};
+      if (fs.existsSync(ipOrdersFile)) {
+        const rawData = fs.readFileSync(ipOrdersFile, 'utf-8');
+        ipOrders = rawData ? JSON.parse(rawData) : {};
+      }
+  
+      if (clientIp !== ALLOWED_IP) {
+        if (!ipOrders[clientIp]) ipOrders[clientIp] = [];
+        ipOrders[clientIp] = ipOrders[clientIp].filter(timestamp => timestamp > oneHourAgo);
+  
+        // Verificar si superó el límite de 3 pedidos por hora
+        if (ipOrders[clientIp].length >= 3) {
+          return res.status(403).json({ error: 'Excedió el límite de pedidos por hora, intente más tarde!' });
+        }
+  
+        ipOrders[clientIp].push(now);
+        fs.writeFileSync(ipOrdersFile, JSON.stringify(ipOrders, null, 2));
+      } 
+      else {
+        console.log(`La IP ${clientIp} está exenta del límite de pedidos.`);
+      }
+  
+      const { datos_de_orden, mails } = req.body;
+
+      const transporter = nodemailer.createTransport({
+        host: 'mail.real-color.com.ar',
+        port: 587,
+        secure: false,
+        auth: {
+          user: 'subsistemas@real-color.com.ar',
+          pass: 'FacuFacu9090'
+        }
+      });
+
+      const mailOptions = {
+        from: '"Real Color" <subsistemas@real-color.com.ar>',
+        to: mails.join(','),
+        subject: `¡Nueva venta registrada - Pedido Web - ${datos_de_orden.movimiento_numero}!`,
+        html: `
+          <style>
+            .modal-content {
+              font-family: 'Arial', sans-serif;
+              color: #333;
+              padding: 20px;
+              background: #f9f9f9;
+              border-radius: 8px;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            .modal-content h2 {
+              color: #2c3e50;
+              border-bottom: 2px solid #ecf0f1;
+              padding-bottom: 10px;
+            }
+            .modal-content h3 {
+              margin-top: 20px;
+              color: #2980b9;
+            }
+            .modal-content p {
+              line-height: 1.6;
+              margin: 5px 0;
+            }
+            .modal-content ul {
+              list-style: none;
+              padding: 0;
+            }
+            .modal-content li {
+              background: #ecf0f1;
+              margin-bottom: 10px;
+              padding: 10px;
+              border-radius: 5px;
+            }
+            .modal-content strong {
+              color: #34495e;
+            }
+          </style>
+        
+          <div class="modal-content">
+            <h2>Detalles de la Orden</h2>
+            <p><strong>Número de Movimiento:</strong> ${datos_de_orden.movimiento_numero}</p>
+            
+            <h3>Datos del Cliente</h3>
+            <p><strong>Nombre:</strong> ${datos_de_orden.datos_cliente.nombre_completo}</p>
+            <p><strong>DNI:</strong> ${datos_de_orden.datos_cliente.dni}</p>
+            <p><strong>Dirección:</strong> ${datos_de_orden.datos_cliente.direccion}</p>
+            <p><strong>CP:</strong> ${datos_de_orden.datos_cliente.cp}</p>
+            <p><strong>Celular:</strong> ${datos_de_orden.datos_cliente.celular}</p>
+            
+            <h3>Productos</h3>
+            <ul>
+              ${datos_de_orden.productos.map(p => `
+                <li>
+                  <p><strong>SKU:</strong> ${p.sku}</p>
+                  <p><strong>Descripción:</strong> ${p.descripcion}</p>
+                  <p><strong>Precio:</strong> $${p.precio}</p>
+                  <p><strong>Cantidad:</strong> ${p.cantidad_seleccionada}</p>
+                </li>
+              `).join('')}
+            </ul>
+            
+            <h3>Opción de Entrega</h3>
+            <p><strong>Retira en Local:</strong> ${datos_de_orden.opcion_de_entrega.retira_en_local}</p>
+            <p><strong>Dirección:</strong> ${datos_de_orden.opcion_de_entrega.direccion}</p>
+            <p><strong>CP:</strong> ${datos_de_orden.opcion_de_entrega.cp}</p>
+            
+            <h3>Forma de Pago</h3>
+            <p><strong>Abona en:</strong> ${datos_de_orden.abona_en}</p>
+          </div>
+        `
+      };
+
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: 'Correo enviado con éxito' });
+    } 
+    catch (error) {
+      console.error('Error enviando el correo:', error);
+      res.status(500).json({ error: 'No se pudo enviar el correo' });
     }
   }
 
