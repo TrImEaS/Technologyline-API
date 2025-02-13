@@ -1,6 +1,8 @@
 const { validatePartialProduct, validateProduct } = require('../Schemas/product.js');
 const ProductModel = require('../Models/sql/product.js');
-const refreshDB = require('../Functions/refreshDBSQL.js');
+// const refreshDB = require('../Functions/refreshDBSQL.js');
+const fs = require('fs');
+const path = require('path');
 
 const allowedOrigins = [
   'http://localhost:5173', 
@@ -12,6 +14,20 @@ const allowedOrigins = [
   'http://www.real-color.com.ar',
   'http://real-color.com.ar',
 ];
+
+// Función para escribir errores en el archivo de log
+function logError(errorMessage) {
+  const logFilePath = path.join(__dirname, '../logs/log_error.txt');
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] ${errorMessage}\n`;
+
+  // Escribir el error en el archivo de log
+  fs.appendFile(logFilePath, logMessage, (err) => {
+    if (err) {
+      console.error('Error writing to log file:', err);
+    }
+  });
+}
 
 class ProductController {
   static async getAll(req, res) {
@@ -25,16 +41,16 @@ class ProductController {
       const products = await ProductModel.getAll({ sku, name, all });
       res.json(products);
     } catch (error) {
-      console.error('Error retrieving products', error);
+      logError(`Error retrieving products: ${error.message}`);
       res.status(500).json({ error: 'Internal server error' });
     }
   }
 
   static async getById(req, res) {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+    // const origin = req.headers.origin;
+    // if (allowedOrigins.includes(origin)) {
+    //   res.setHeader('Access-Control-Allow-Origin', origin);
+    // }
 
     try {
       let { id } = req.params;
@@ -43,16 +59,16 @@ class ProductController {
 
       res.status(404).json({ message: 'Product not found' });
     } catch (error) {
-      console.error('Error retrieving product:', error);
+      logError(`Error retrieving product with id ${req.params.id}: ${error.message}`);
       res.status(500).json({ error: 'Internal server error' });
     }
   }
 
   static async create(req, res) {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+    // const origin = req.headers.origin;
+    // if (allowedOrigins.includes(origin)) {
+    //   res.setHeader('Access-Control-Allow-Origin', origin);
+    // }
 
     const newId = await ProductModel.getNextId();
 
@@ -87,16 +103,16 @@ class ProductController {
 
       return res.status(201).json({ message: 'Product created correctly' });
     } catch (e) {
-      console.log('Error to create new product: ', e);
+      logError(`Error to create new product: ${e.message}`);
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
 
   static async update(req, res) {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+    // const origin = req.headers.origin;
+    // if (allowedOrigins.includes(origin)) {
+    //   res.setHeader('Access-Control-Allow-Origin', origin);
+    // }
 
     try {
       const result = validatePartialProduct(req.body);
@@ -108,16 +124,16 @@ class ProductController {
       const updatedata = await ProductModel.update({ id, input: result.data });
       return res.json(updatedata);
     } catch (e) {
-      console.log('Error updating product: ', e);
+      logError(`Error updating product with id ${req.params.id}: ${e.message}`);
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
 
   static async addProductView(req, res) {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+    // const origin = req.headers.origin;
+    // if (allowedOrigins.includes(origin)) {
+    //   res.setHeader('Access-Control-Allow-Origin', origin);
+    // }
 
     try {
       const result = validatePartialProduct(req.body);
@@ -129,73 +145,73 @@ class ProductController {
       const updatedata = await ProductModel.addProductView({ id });
       return res.json(updatedata);
     } catch (e) {
-      console.log('Error adding view to product: ', e);
+      logError(`Error adding view to product with id ${req.params.id}: ${e.message}`);
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
 
-  static async uploadExcel(req, res) {
-    try {
-      if (!req.file)
-        return res.status(400).json({ error: 'No se subió ningún archivo.' });
+  // static async uploadExcel(req, res) {
+  //   try {
+  //     if (!req.file)
+  //       return res.status(400).json({ error: 'No se subió ningún archivo.' });
 
-      await refreshDB();
-      return res.status(200).json({ message: 'Archivo subido y datos actualizados exitosamente.' });
-    } 
-    catch (error) {
-      console.error('Error al cargar el archivo:', error);
-      return res.status(500).json({ error: 'Error interno del servidor' });
-    }
-  }
+  //     await refreshDB();
+  //     return res.status(200).json({ message: 'Archivo subido y datos actualizados exitosamente.' });
+  //   } 
+  //   catch (error) {
+  //     logError(`Error uploading Excel file: ${error.message}`);
+  //     return res.status(500).json({ error: 'Error interno del servidor' });
+  //   }
+  // }
 
-  static async getAllTest(req, res) {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+  // static async getAllTest(req, res) {
+  //   const origin = req.headers.origin;
+  //   if (allowedOrigins.includes(origin)) {
+  //     res.setHeader('Access-Control-Allow-Origin', origin);
+  //   }
 
-    try {
-      // Configuración de las credenciales
-      const wsBasicQueryHeader = {
-        pUsername: 'testuser',    
-        pPassword: 'testpassword',  
-        pCompany: 1,
-        pBranch: 1,
-        pLanguage: 2,
-        pWebWervice: 10,
-        pAuthenticatedToken: null, 
-      };
+  //   try {
+  //     // Configuración de las credenciales
+  //     const wsBasicQueryHeader = {
+  //       pUsername: 'testuser',    
+  //       pPassword: 'testpassword',  
+  //       pCompany: 1,
+  //       pBranch: 1,
+  //       pLanguage: 2,
+  //       pWebWervice: 10,
+  //       pAuthenticatedToken: null, 
+  //     };
 
-      // Crear cliente SOAP
-      const client = await soap.createClientAsync(wsdlUrl);
+  //     // Crear cliente SOAP
+  //     const client = await soap.createClientAsync(wsdlUrl);
 
-      // Autenticar usuario
-      const authResponse = await client.AuthenticateUserAsync(wsBasicQueryHeader);
-      wsBasicQueryHeader.pAuthenticatedToken = authResponse[0].AuthenticateUserResult;
+  //     // Autenticar usuario
+  //     const authResponse = await client.AuthenticateUserAsync(wsBasicQueryHeader);
+  //     wsBasicQueryHeader.pAuthenticatedToken = authResponse[0].AuthenticateUserResult;
 
-      if (!wsBasicQueryHeader.pAuthenticatedToken) {
-        throw new Error('Authentication failed');
-      }
+  //     if (!wsBasicQueryHeader.pAuthenticatedToken) {
+  //       throw new Error('Authentication failed');
+  //     }
 
-      // Consumir método `ItemStorage_funGetXMLData`
-      const stockResponse = await client.ItemStorage_funGetXMLDataAsync({
-        intStor_id: -1, // Todos los depósitos
-        intItem_id: -1, // Todos los artículos
-      });
+  //     // Consumir método `ItemStorage_funGetXMLData`
+  //     const stockResponse = await client.ItemStorage_funGetXMLDataAsync({
+  //       intStor_id: -1, // Todos los depósitos
+  //       intItem_id: -1, // Todos los artículos
+  //     });
 
-      // Convertir XML a JSON
-      const parser = new xml2js.Parser();
-      const stockData = await parser.parseStringPromise(
-        stockResponse[0].ItemStorage_funGetXMLDataResult
-      );
+  //     // Convertir XML a JSON
+  //     const parser = new xml2js.Parser();
+  //     const stockData = await parser.parseStringPromise(
+  //       stockResponse[0].ItemStorage_funGetXMLDataResult
+  //     );
 
-      res.json(stockData);
+  //     res.json(stockData);
 
-    } catch (error) {
-      console.error('Error retrieving stock data:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  }
+  //   } catch (error) {
+  //     logError(`Error retrieving stock data: ${error.message}`);
+  //     res.status(500).json({ error: 'Internal server error' });
+  //   }
+  // }
 
 }
 

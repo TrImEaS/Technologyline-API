@@ -20,10 +20,10 @@ const productRouter = Router();
 
 productRouter.get('/', ProductController.getAll);
 productRouter.get('/:id', ProductController.getById);
-productRouter.get('/test', ProductController.getAllTest)
+// productRouter.get('/test', ProductController.getAllTest)
 
 // Asegúrate de usar upload.single('file') para recibir un solo archivo
-productRouter.post('/jirejfdisbjfi4iwurjknvijioeb49/refresh-data', upload.single('file'), ProductController.uploadExcel);
+// productRouter.post('/jirejfdisbjfi4iwurjknvijioeb49/refresh-data', upload.single('file'), ProductController.uploadExcel);
 
 productRouter.post('/', ProductController.create);
 productRouter.post('/addView/:id', ProductController.addProductView);

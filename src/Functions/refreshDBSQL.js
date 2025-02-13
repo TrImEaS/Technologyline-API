@@ -15,13 +15,13 @@ async function refreshDB() {
     const excelSheet = excel.sheet(0).usedRange();
     const mapColumnNames = (rowData) => ({
       id: parseInt(rowData[29]),
-      sku: rowData[0]?.toString() || '',
-      name: rowData[1]?.toString() || '',
+      sku: (rowData[0] && rowData[0].toString()) || '',  // Reemplazado `?.toString()` por chequeo manual
+      name: (rowData[1] && rowData[1].toString()) || '', // Reemplazado `?.toString()` por chequeo manual
       stock: parseInt(rowData[23]) || 0,
       cost: cleanPrice(rowData[4]) || 0,
-      category: cleanCategory(rowData[25]?.toString() || ''),
-      sub_category: rowData[26]?.toString() || '',
-      brand: rowData[27]?.toString() || '',
+      category: cleanCategory((rowData[25] && rowData[25].toString()) || ''), // Reemplazado `?.toString()` por chequeo manual
+      sub_category: (rowData[26] && rowData[26].toString()) || '', // Reemplazado `?.toString()` por chequeo manual
+      brand: (rowData[27] && rowData[27].toString()) || '', // Reemplazado `?.toString()` por chequeo manual
       img_base: `https://technologyline.com.ar/products-images/${rowData[0]}.jpg`,
       discount: parseInt(rowData[32]) || 0,
     });
