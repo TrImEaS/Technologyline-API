@@ -1,0 +1,2 @@
+[2025-02-14T14:43:10.841Z] Error: ENOENT: no such file or directory, open 'C:\Users\Subsistemas\Documents\GitHub\Technologyline-API\src\Data\prices.xlsx'
+[2025-02-14T14:50:23.456Z] Error: ENOENT: no such file or directory, open 'C:\Users\Subsistemas\Documents\GitHub\Technologyline-API\src\Data\prices.xlsx'

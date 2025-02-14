@@ -69,21 +69,12 @@ app.use((req, res, next) => {
 app.use('/', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/search', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/products', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/cart', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others/about_us', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others/garantia', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others/centros_de_ayuda', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others/revendedores', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
-
-//Static routes for RealColor Ecommerce 
-app.use('/', express.static('/home/realcolorweb/public_html/technologyline.com.ar/test/page/realcolorweb/'));
-app.use('/search', express.static('/home/realcolorweb/public_html/technologyline.com.ar/test/page/realcolorweb/'));
-app.use('/products', express.static('/home/realcolorweb/public_html/technologyline.com.ar/test/page/realcolorweb/'));
-app.use('/others', express.static('/home/realcolorweb/public_html/technologyline.com.ar/test/page/realcolorweb/'));
-app.use('/others/about_us', express.static('/home/realcolorweb/public_html/technologyline.com.ar/test/page/realcolorweb/'));
-app.use('/others/garantia', express.static('/home/realcolorweb/public_html/technologyline.com.ar/test/page/realcolorweb/'));
-app.use('/others/centros_de_ayuda', express.static('/home/realcolorweb/public_html/technologyline.com.ar/test/page/realcolorweb/'));
-app.use('/others/revendedores', express.static('/home/realcolorweb/public_html/technologyline.com.ar/test/page/realcolorweb/'));
 
 //Static routes for admin-ecommerce
 app.use('/admin/page', express.static('/home/realcolorweb/public_html/technologyline.com.ar/admin/page'));

@@ -131,10 +131,7 @@ class PageModel {
       throw error; // Lanzamos el error para verlo en el log del servidor
     }
   }
-  
 
-  //--> --- --- --- --- --- --- --- --- <--//
-  //Function for readJsonFile
   static async readJsonFile(path) {
     try {
       const rawData = await fs.promises.readFile(path)
@@ -146,7 +143,6 @@ class PageModel {
     }
   }
   
-  //Function for writeJsonFile
   static async writeJsonFile(path ,data) {
     try {
       await fs.promises.writeFile(path, JSON.stringify(data, null, 2))
