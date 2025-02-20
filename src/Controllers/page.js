@@ -297,42 +297,32 @@ class PageController {
   }
 
   static async uploadImage(req, res) {
-    const origin = req.headers.origin;
+    const { id, name, to } = req.body;
+
+    const imageFile = req.file; 
+    if (!imageFile) 
+      return res.status(400).json({ status: 'error', message: 'Archivo de imagen no recibido' });
   
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-  
-    logToFile(`Comienza update`);
-    
-    const { id, name, to } = req.body; // Obtiene id, name y to del cuerpo de la solicitud
-    const imageFile = req.file; // Obtiene el archivo subido
-  
-    // Función para escribir en log.txt
-    const logPath = path.join(__dirname, 'log.txt');
-    const logToFile = (message) => {
-      fs.appendFileSync(logPath, `${new Date().toISOString()} - ${message}\n`);
-    };
-  
-    logToFile(`Datos recibidos: { id: ${id}, name: ${name}, imageSize: ${imageFile.size}, to: ${to} }`);
+    console.log(`Datos recibidos: { id: ${id}, name: ${name}, imageSize: ${imageFile.size}, to: ${to} }`);
   
     if (!id || !name || !imageFile) {
-      logToFile('Error: Datos incompletos');
+      console.log('Error: Datos incompletos');
       return res.status(400).json({ status: 'error', message: 'Datos incompletos' });
     }
   
     try {
       const fileUrl = `https://technologyline.com.ar/banners-images/${imageFile.filename}`; // La URL del archivo subido
       
-      logToFile(`Archivo guardado exitosamente en: ${imageFile.path}`);
+      console.log(`Archivo guardado exitosamente en: ${imageFile.path}`);
   
       // Actualizar la base de datos
       await PageModel.updateImagePath({ id, fileUrl, to });
-      logToFile(`Base de datos actualizada con URL: ${fileUrl}`);
+      console.log(`Base de datos actualizada con URL: ${fileUrl}`);
   
       res.json({ status: 'success', message: 'Imagen subida correctamente' });
-    } catch (error) {
-      logToFile(`Error al subir la imagen: ${error.message}`);
+    } 
+    catch (error) {
+      console.log(`Error al subir la imagen: ${error.message}`);
       res.status(500).json({ status: 'error', message: 'Error al subir la imagen' });
     }
   }
@@ -375,6 +365,26 @@ class PageController {
     }
   }
 
+  static async uploadExcel(req, res) {
+    try {
+      if (!req.file) 
+        return res.status(400).json({ error: 'No se recibió ningún archivo' });
+  
+      const filePath = path.resolve(__dirname, '../Data', req.file.filename);
+  
+      if (!fs.existsSync(filePath)) {
+        return res.status(500).json({ error: 'Error al procesar el archivo, no se encontró en el servidor' });
+      }
+  
+      res.json({
+        message: 'Archivo subido correctamente',
+        fileName: req.file.filename,
+        filePath,
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Error al subir el archivo', message: error.message });
+    }
+  }
 }
 
 module.exports = PageController

@@ -6,9 +6,9 @@
   "type": "commonjs",
   "scripts": {
     "start": "nodemon index.js",
-    "refresh-json": "node ./src/Functions/refreshDB.js",
-    "refresh-db": "node ./src/Functions/refreshDBSQL.js",
+    "refresh-db": "node ./src/Functions/refreshDB.js",
     "refresh-prices": "node ./src/Functions/refreshPrices.js",
+    "refresh-img": "node ./src/Functions/refreshImg.js",
     "dev": "node --watch index.js"
   },
   "keywords": [],

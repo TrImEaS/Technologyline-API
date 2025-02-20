@@ -3,7 +3,6 @@ const { ADMINPool } = require('./config')
 class ProductModel {
   static async getAll({ id, sku, name, all }) {
     try {
-      // Si se pasa sku, hacer la consulta por sku, incluyendo las imágenes
       if (sku) {
         const querySku = `SELECT 
                               p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.img_base, p.status, p.adminStatus, 
@@ -38,13 +37,44 @@ class ProductModel {
         });
         return results; // Devolver solo los resultados de la consulta con sku
       }
+
+      if (all) {
+        const querySku = `SELECT 
+                              p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.img_base, p.status, p.adminStatus, 
+                              p.specifications, p.descriptions,
+                              GROUP_CONCAT(DISTINCT pi.img_url) AS img_urls,
+                              GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
+                            FROM products p
+                            LEFT JOIN products_images pi ON p.id = pi.product_id
+                            LEFT JOIN products_prices pp ON p.id = pp.product_id 
+                            GROUP BY p.id`;
   
-      // Si no se pasa sku, hacer la consulta con los filtros generales
-      let query = `SELECT 
-                        p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.img_base, p.status, p.adminStatus, 
-                        GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
-                     FROM products p
-                     LEFT JOIN products_prices pp ON p.id = pp.product_id AND pp.list_id IN (1,2)`;
+        const [results] = await ADMINPool.query(querySku, [sku]);
+
+        results.forEach(result => {
+          result.prices = result.prices ? result.prices.split(',').reduce((acc, price) => {
+            const [key, value] = price.split(':');
+            const parsedValue = parseFloat(value);
+            if (parsedValue >= 1000) {
+              acc[key] = parsedValue;
+            }
+            return acc;
+          }, {}) : {};
+          result.img_urls = result.img_urls ? result.img_urls.split(',') : [];
+  
+          for (let priceKey in result.prices) {
+            result[priceKey] = result.prices[priceKey];
+          }
+
+          delete result.prices;
+        });
+        return results;
+      }
+  
+      let query = `SELECT p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.img_base, p.status, p.adminStatus, 
+                   GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
+                   FROM products p
+                   LEFT JOIN products_prices pp ON p.id = pp.product_id AND pp.list_id IN (1,2)`;
   
       const params = [];
       const conditions = [];
@@ -57,41 +87,37 @@ class ProductModel {
         conditions.push(`p.name LIKE ?`);
         params.push(`%${name}%`);
       }
+
       if (!all) {
         conditions.push(`p.adminStatus = 1 AND p.stock > 0 AND p.status = 1`);
       }
   
-      // Si hay condiciones, añadirlas a la consulta
       if (conditions.length > 0) {
         query += ` WHERE sku != 'ENVIO' AND  ${conditions.join(' AND ')}`;
       }
   
-      query += ' GROUP BY p.id';  // Asegurarse de hacer el GROUP BY después de las condiciones
+      query += ' GROUP BY p.id';  
   
       const [results] = await ADMINPool.query(query, params);
   
-      // Aquí convertimos `prices` a un objeto clave-valor y lo desglosamos en propiedades individuales
       if (results && results.length > 0) {
         results.forEach(result => {
           result.prices = result.prices ? result.prices.split(',').reduce((acc, price) => {
             const [key, value] = price.split(':');
             const parsedValue = parseFloat(value);
-            if (parsedValue >= 1000) {  // Solo mantener precios >= 1000
+            if (parsedValue >= 1000) {  
               acc[key] = parsedValue;
             }
             return acc;
-          }, {}) : {}; // Convertir prices en objeto
+          }, {}) : {}; 
   
-          // Aplanar el objeto 'prices' a propiedades individuales
           for (let priceKey in result.prices) {
             result[priceKey] = result.prices[priceKey];
           }
   
-          // Eliminar el campo 'prices' que ya se desglosó en las propiedades
           delete result.prices;
-  
-          // No devolvemos img_urls si no hay consulta por sku
-          delete result.img_urls;  // Eliminar img_urls para los productos sin sku
+
+          delete result.img_urls; 
         });
       }
   

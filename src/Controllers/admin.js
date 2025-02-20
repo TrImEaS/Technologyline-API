@@ -1,8 +1,10 @@
 const fs = require('fs')
 const path = require('path')
-const refreshDB = require('../Functions/refreshDBSQL.js')
 const AdminModel = require('../Models/sql/admin.js')
+const refreshDB = require('../Functions/refreshDB.js')
 const refreshPrices = require('../Functions/refreshPrices.js')
+const refreshImg = require('../Functions/refreshImg.js')
+
 
 const usersFilePath = path.resolve(__dirname, '../Data/users.json')
 
@@ -10,12 +12,42 @@ class AdminController {
   static async refreshDB(req, res) {
     try {
       await refreshDB()
-      await refreshPrices()
-      return res.status(200).json({ message: 'Datos actualizados exitosamente' })
+      return res.status(200).json({ message: 'Stock actualizado exitosamente' })
     } 
     catch (error) {
-      console.error('Error al actualizar los datos:', error)
-      return res.status(500).json({ message: 'Error al actualizar los datos' })
+      console.error('❌ Error al actualizar los stock:', error);
+
+      return res.status(500).json({
+        message: `Error al actualizar los stock: ${error.message}`,
+      });
+    }
+  }
+
+  static async refreshPrices(req, res) {
+    try {
+      await refreshPrices()
+      return res.status(200).json({ message: 'Precios actualizados exitosamente' })
+    } 
+    catch (error) {
+      console.error('❌ Error al actualizar los precios:', error);
+
+      return res.status(500).json({
+        message: `Error al actualizar los precios: ${error.message}`,
+      });
+    }
+  }
+
+  static async refreshImg(req, res) {
+    try {
+      await refreshImg()
+      return res.status(200).json({ message: 'Imagenes actualizadas exitosamente' })
+    } 
+    catch (error) {
+      console.error('❌ Error al actualizar las imagenes:', error)
+
+      return res.status(500).json({
+        message: `Error al actualizar los precios: ${error.message}`,
+      });
     }
   }
 
@@ -58,7 +90,6 @@ class AdminController {
       return res.status(500).json({ message: 'Error del servidor al traer clientes' })
     }
   }
-  
 }
 
 module.exports = AdminController

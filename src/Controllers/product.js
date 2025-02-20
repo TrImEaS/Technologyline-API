@@ -1,6 +1,6 @@
 const { validatePartialProduct, validateProduct } = require('../Schemas/product.js');
 const ProductModel = require('../Models/sql/product.js');
-// const refreshDB = require('../Functions/refreshDBSQL.js');
+// const refreshDB = require('../Functions/refreshDB.js');
 const fs = require('fs');
 const path = require('path');
 

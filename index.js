@@ -92,7 +92,7 @@ app.get('/admin/QRGen-App/app/*', (req, res) => { res.sendFile('/home/realcolorw
 app.use('/api', apiRouter);
 
 //Error page
-app.get('*', (req, res) => { res.sendFile('/home/realcolorweb/public_html/technologyline.com.ar/error.html'); })
+app.get('*', (req, res) => { res.status(404).sendFile('/home/realcolorweb/public_html/technologyline.com.ar/error.html'); })
 
 app.listen(PORT, () => console.log(`Server listening on port http://localhost:${PORT}`))
 
