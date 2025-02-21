@@ -3,7 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const { ADMINPool } = require('../Models/sql/config');
 
-const excelPath = path.resolve(__dirname, '../Data/prices.xlsx');
+// const excelPath = path.resolve(__dirname, '../Data/prices.xlsx');
+const excelPath = path.resolve(__dirname, '../Data/products.xlsx');
 const logFilePath = path.resolve(__dirname, '../Data/log.txt');
 
 async function refreshPrices() {

@@ -12,6 +12,7 @@ class AdminController {
   static async refreshDB(req, res) {
     try {
       await refreshDB()
+      await refreshPrices()
       return res.status(200).json({ message: 'Stock actualizado exitosamente' })
     } 
     catch (error) {

@@ -39,18 +39,16 @@ class ProductModel {
       }
 
       if (all) {
-        const querySku = `SELECT 
-                              p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.img_base, p.status, p.adminStatus, 
-                              p.specifications, p.descriptions,
-                              GROUP_CONCAT(DISTINCT pi.img_url) AS img_urls,
-                              GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
-                            FROM products p
-                            LEFT JOIN products_images pi ON p.id = pi.product_id
-                            LEFT JOIN products_prices pp ON p.id = pp.product_id 
-                            GROUP BY p.id`;
-  
-        const [results] = await ADMINPool.query(querySku, [sku]);
-
+        const querySku = `SELECT *,
+                                GROUP_CONCAT(DISTINCT pi.img_url) AS img_urls,
+                                GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
+                              FROM products p
+                              LEFT JOIN products_images pi ON p.id = pi.product_id
+                              LEFT JOIN products_prices pp ON p.id = pp.product_id 
+                              GROUP BY p.id`;
+      
+        const [results] = await ADMINPool.query(querySku);
+      
         results.forEach(result => {
           result.prices = result.prices ? result.prices.split(',').reduce((acc, price) => {
             const [key, value] = price.split(':');
@@ -61,11 +59,11 @@ class ProductModel {
             return acc;
           }, {}) : {};
           result.img_urls = result.img_urls ? result.img_urls.split(',') : [];
-  
+      
           for (let priceKey in result.prices) {
             result[priceKey] = result.prices[priceKey];
           }
-
+      
           delete result.prices;
         });
         return results;
@@ -122,12 +120,12 @@ class ProductModel {
       }
   
       return results;
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error fetching products:', error);
       throw error;
     }
   }
-  
   
   static async getNextId() {
     try {
