@@ -6,13 +6,13 @@ class ProductModel {
       if (sku) {
         const querySku = `SELECT 
                               p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.img_base, p.status, p.adminStatus, 
-                              p.specifications, p.descriptions,
+                              p.specifications, p.descriptions, p.total_views,
                               GROUP_CONCAT(DISTINCT pi.img_url) AS img_urls,
                               GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
                             FROM products p
                             LEFT JOIN products_images pi ON p.id = pi.product_id
                             LEFT JOIN products_prices pp ON p.id = pp.product_id
-                            WHERE p.sku = ? AND p.adminStatus = 1 AND p.stock > 0 AND p.status = 1 AND pp.list_id 
+                            WHERE p.sku = ? 
                             GROUP BY p.id`;
   
         const [results] = await ADMINPool.query(querySku, [sku]);
@@ -155,13 +155,13 @@ class ProductModel {
     }
   }
 
-  static async update({ id, input }) {
+  static async update({ sku, input }) {
     try {
       const fields = Object.keys(input).map(field => `${field} = ?`).join(', ');
       const values = Object.values(input);
-      values.push(id);
+      values.push(sku);
       
-      const query = `UPDATE products SET ${fields} WHERE id = ?`;
+      const query = `UPDATE products SET ${fields} WHERE sku = ?`;
       const [result] = await ADMINPool.query(query, values);
       return result.affectedRows > 0 ? true : false; 
     } 
@@ -183,16 +183,47 @@ class ProductModel {
     }
   }
 
-  static async getProductImages(id) {
+  static async updateProductImages(productId, imageUrls) {
     try {
-      const [results] = await ADMINPool.query(
-        'SELECT img_url FROM products_images WHERE product_id = ?',
-        [id]
-      );
-      return results.map(image => image.img_url); // Devuelve un array de URLs de imágenes
+      // First, delete existing images for this product
+      const deleteQuery = `DELETE FROM products_images WHERE product_id = ?`;
+      await ADMINPool.query(deleteQuery, [productId]);
+
+      // Then insert new images
+      const insertQuery = `INSERT INTO products_images (product_id, img_url) VALUES ?`;
+      const values = imageUrls.map(url => [productId, url]);
+      const [result] = await ADMINPool.query(insertQuery, [values]);
+      
+      return result.affectedRows > 0;
+    } 
+    catch (error) {
+      console.error('Error updating product images:', error);
+      throw error;
+    }
+  }
+
+  static async deleteProductImages(productId) {
+    try {
+      const query = 'DELETE FROM products_images WHERE product_id = ?';
+      await ADMINPool.query(query, [productId]);
+      return true;
     } catch (error) {
-      console.error('Error fetching images for id:', id, error);
-      return []; // Retorna un array vacío si ocurre un error
+      console.error('Error deleting product images:', error);
+      throw error;
+    }
+  }
+  
+  static async insertProductImages(productId, imageUrls) {
+    try {
+      if (imageUrls.length === 0) return true;
+  
+      const values = imageUrls.map(url => [productId, url]);
+      const query = 'INSERT INTO products_images (product_id, img_url) VALUES ?';
+      const [result] = await ADMINPool.query(query, [values]);
+      return result.affectedRows > 0;
+    } catch (error) {
+      console.error('Error inserting product images:', error);
+      throw error;
     }
   }
 }

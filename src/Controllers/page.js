@@ -4,17 +4,6 @@ const PageModel = require("../Models/sql/page");
 const { validateResellers_Form } = require('../Schemas/resellers_form')
 const nodemailer = require('nodemailer');
 
-const allowedOrigins = [
-  'http://localhost:5173', 
-  'http://localhost:8080', 
-  'https://www.technologyline.com.ar', 
-  'https://www.line-technology.com.ar', 
-  'https://www.real-color.com.ar',
-  'https://real-color.com.ar',
-  'http://www.real-color.com.ar',
-  'http://real-color.com.ar',
-];
-
 let ipTracking = {};
 
 setInterval(() => {
@@ -26,11 +15,6 @@ const ipOrdersFile = path.join(__dirname, '../Data/ip_orders.json');
 class PageController {  
   static async getResellersData (req, res) {
     try {
-      const origin = req.headers.origin;
-      if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-      }
-
       const { id, name } = req.query;
       const data = await PageModel.getResellersData({ id, name });
       
@@ -47,11 +31,6 @@ class PageController {
   }
 
   static async saveResellersData(req, res) {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-
     // Obtener la IP del cliente
     const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const cleanIp = clientIp.includes('::ffff:') ? clientIp.split('::ffff:')[1] : clientIp;
@@ -277,11 +256,6 @@ class PageController {
 
   static async getBanners(req, res) {
     try {
-      const origin = req.headers.origin;
-      if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-      }
-
       const data = await PageModel.getBanners();
 
       res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
@@ -293,6 +267,23 @@ class PageController {
     catch (error) {
       console.error('Error retrieving products:', error);
       res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  static async updateBannerPosition(req, res) {
+    const { id, newId, name } = req.body;
+  
+    if (!id || !newId || !name) {
+      return res.status(400).json({ status: 'error', message: 'Datos incompletos' });
+    }
+  
+    try {
+      await PageModel.updateBannerPosition({ id, newId, name });
+      res.json({ status: 'success', message: 'Posición actualizada correctamente' });
+    } 
+    catch (error) {
+      console.error('Error al actualizar posición:', error);
+      res.status(500).json({ status: 'error', message: 'Error al actualizar posición' });
     }
   }
 
@@ -383,6 +374,22 @@ class PageController {
       });
     } catch (error) {
       res.status(500).json({ error: 'Error al subir el archivo', message: error.message });
+    }
+  }
+
+  static async getCategoriesForCarrousel(req, res) {
+    try {
+      const data = await PageModel.getCategoriesForCarrousel();
+
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Expires', '0');
+      res.setHeader('Pragma', 'no-cache');
+      
+      res.json(data);
+    } 
+    catch (error) {
+      console.error('Error retrieving products:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   }
 }

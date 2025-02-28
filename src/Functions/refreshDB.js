@@ -14,17 +14,16 @@ async function refreshDB() {
 
     const excelSheet = excel.sheet('stock fisico ').usedRange();
     const mapColumnNames = (rowData) => ({
-      id: parseInt(rowData[12]),
-      sku: (rowData[1] && rowData[1].toString()) || '',
-      name: (rowData[2] && rowData[2].toString()) || '',
-      stock: parseInt(rowData[6]) || 0,
-      category: cleanCategory((rowData[13] && rowData[13].toString()) || ''),
-      sub_category: cleanCategory((rowData[3] && rowData[3].toString()) || ''),
-      brand: cleanCategory((rowData[11] && rowData[11].toString()) || ''),
-      img_base: `https://technologyline.com.ar/products-images/${rowData[1]}.jpg`,
+      sku: (rowData[0] && rowData[0].toString()) || '',
+      id: parseInt(rowData[11]),
+      name: (rowData[1] && rowData[1].toString()) || '',
+      category: cleanCategory((rowData[12] && rowData[12].toString()) || ''),
+      stock: parseInt(rowData[5]) || 0,
+      sub_category: cleanCategory((rowData[2] && rowData[2].toString()) || ''),
+      brand: cleanCategory((rowData[10] && rowData[10].toString()) || ''),
+      img_base: `https://technologyline.com.ar/products-images/${rowData[0]}.jpg`,
     });
     const productsExcel = excelSheet.value().slice(2).map(mapColumnNames);
-    console.log(excelSheet.value().slice(2,10));
     console.log('Cargando datos...');
 
     // Obtener productos existentes de la base de datos
@@ -35,61 +34,61 @@ async function refreshDB() {
     const insertProductQueries = [];
     const updateProductImagesQueries = [];
     const excelProductIds = new Set();
-
     // Recorremos todos los productos del Excel
-    // for (const excelProduct of productsExcel) {
-    //   const { id, sku, name, stock, category, sub_category, brand, img_base } = excelProduct;
-    //   if (!sku) throw new Error('No SKU found, stopping process.');
-    //   if (sku === 16 || id === 4710) continue;
+    for (const excelProduct of productsExcel) {
+      const { id, sku, name, stock, category, sub_category, brand, img_base } = excelProduct;
+      // Saltamos las filas sin SKU en lugar de lanzar un error
+      if (!sku) continue;
+      if (sku === 16 || id === 4710) continue;
 
-    //   excelProductIds.add(id);
-    //   console.log(`Procesando SKU: ${sku}`);
+      excelProductIds.add(sku);
+      console.log(`Procesando SKU: ${sku}`);
 
-    //   // Si el producto ya existe en la base de datos
-    //   if (existingProductMap.has(sku)) {
-    //     const dbProductId = existingProductMap.get(sku);
+      // Si el producto ya existe en la base de datos
+      if (existingProductMap.has(sku)) {
+        const dbProductId = existingProductMap.get(sku);
         
-    //     // Actualizamos el producto en la tabla `products`
-    //     updateProductQueries.push(connection.query(
-    //       'UPDATE products SET id = ?, sku = ?, name = ?, stock = ?, category = ?, sub_category = ?, brand = ?, img_base = ?, status = ? WHERE id = ?',
-    //       [id, sku, name, stock, category, sub_category, brand, img_base, stock < 0 ? 0 : 1, dbProductId]
-    //     ));
+        // Actualizamos el producto en la tabla `products`
+        updateProductQueries.push(connection.query(
+          'UPDATE products SET id = ?, sku = ?, name = ?, stock = ?, category = ?, sub_category = ?, brand = ?, img_base = ?, status = ? WHERE id = ?',
+          [id, sku, name, stock, category, sub_category, brand, img_base, stock < 0 ? 0 : 1, dbProductId]
+        ));
 
-    //     // Actualizamos las imágenes del producto en `products_images`
-    //     updateProductImagesQueries.push(connection.query(
-    //       'UPDATE products_images SET product_id = ? WHERE product_id = ?',
-    //       [id, dbProductId]
-    //     ));
-    //   } 
-    //   // Si el producto no existe, lo insertamos
-    //   else {
-    //     insertProductQueries.push(connection.query(
-    //       `INSERT INTO products (id, sku, name, stock, category, sub_category, brand, img_base, total_views, specifications, descriptions, status, adminStatus) 
-    //        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    //       [id, sku, name, stock, category, sub_category, brand, img_base, 0, 'Este producto no contiene especificaciones', 'Este producto no contiene descripcion', 1, 1]
-    //     ));
+        // Actualizamos las imágenes del producto en `products_images`
+        updateProductImagesQueries.push(connection.query(
+          'UPDATE products_images SET product_id = ? WHERE product_id = ?',
+          [id, dbProductId]
+        ));
+      } 
+      // Si el producto no existe, lo insertamos
+      else {
+        insertProductQueries.push(connection.query(
+          `INSERT INTO products (id, sku, name, stock, category, sub_category, brand, img_base, total_views, specifications, descriptions, status, adminStatus) 
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [id, sku, name, stock, category, sub_category, brand, img_base, 0, 'Este producto no contiene especificaciones', 'Este producto no contiene descripcion', 1, 1]
+        ));
         
-    //     // Insertamos las imágenes correspondientes
-    //     updateProductImagesQueries.push(connection.query(
-    //       'UPDATE products_images SET product_id = ? WHERE product_id = ?',
-    //       [id, id]
-    //     ));
-    //   }
-    // }
+        // Insertamos las imágenes correspondientes
+        updateProductImagesQueries.push(connection.query(
+          'UPDATE products_images SET product_id = ? WHERE product_id = ?',
+          [id, id]
+        ));
+      }
+    }
 
-    // // Marcar como inactivos los productos que no están en el Excel
-    // const deactivateProductsQuery = connection.query(
-    //   'UPDATE products SET stock = 0, status = 0 WHERE id NOT IN (?)',
-    //   [Array.from(excelProductIds)]
-    // );
+    // Modificamos la query para usar SKU en lugar de ID
+    const deactivateProductsQuery = connection.query(
+      'UPDATE products SET stock = 0, status = 0 WHERE sku NOT IN (?)',
+      [Array.from(excelProductIds)]
+    );
 
-    // // Ejecutamos todas las consultas
-    // await Promise.all([
-    //   ...updateProductQueries,
-    //   ...insertProductQueries,
-    //   ...updateProductImagesQueries,
-    //   deactivateProductsQuery
-    // ]);
+    // Ejecutamos todas las consultas
+    await Promise.all([
+      ...updateProductQueries,
+      ...insertProductQueries,
+      ...updateProductImagesQueries,
+      deactivateProductsQuery
+    ]);
 
     await connection.commit();
     console.log('Datos cargados, productos actualizados y desactivados correctamente.');
@@ -126,5 +125,5 @@ function cleanCategory(category) {
   return category;
 }
 
-refreshDB()
+// refreshDB()
 module.exports = refreshDB;

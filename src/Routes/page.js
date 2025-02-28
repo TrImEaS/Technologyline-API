@@ -37,7 +37,6 @@ const uploadImages = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
 })
 
-
 const storageExcel = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, dataFolder);
@@ -65,16 +64,20 @@ const uploadExcel = multer({
   },
 });
 
-pageRouter.post('/uploadExcel', uploadExcel.single('file'), PageController.uploadExcel);
-pageRouter.patch('/setBanner', uploadImages.single('image'), PageController.uploadImage);
-pageRouter.post('/', PageController.saveResellersData);
+pageRouter.get('/getCategoriesForCarrousel', PageController.getCategoriesForCarrousel);
 pageRouter.get('/getOrderMovement', PageController.getOrderMovement);
-pageRouter.post('/sendOrderEmail', PageController.sendOrderEmail);
-pageRouter.post('/setOrderMovement', PageController.setOrderMovement);
-pageRouter.post('/deleteBanner', PageController.deleteImage);
 pageRouter.get('/getIp', PageController.getIp);
 pageRouter.get('/getBanners', PageController.getBanners);
 pageRouter.get('/resellersData', PageController.getResellersData);
+
+pageRouter.patch('/setBanner', uploadImages.single('image'), PageController.uploadImage);
+pageRouter.patch('/updateBannerPosition', PageController.updateBannerPosition);
 pageRouter.patch('/check-view/:id', PageController.checkResellerData);
+
+pageRouter.post('/uploadExcel', uploadExcel.single('file'), PageController.uploadExcel);
+pageRouter.post('/sendOrderEmail', PageController.sendOrderEmail);
+pageRouter.post('/', PageController.saveResellersData);
+pageRouter.post('/setOrderMovement', PageController.setOrderMovement);
+pageRouter.post('/deleteBanner', PageController.deleteImage);
 
 module.exports = pageRouter;

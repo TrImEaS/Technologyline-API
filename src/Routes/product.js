@@ -3,30 +3,28 @@ const ProductController = require('../Controllers/product.js');
 const path = require('path');
 const multer = require('multer');
 
-// Configuración de almacenamiento para multer
+// Multer configuration
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.resolve(__dirname, '../Data'));
-  },
-  filename: (req, file, cb) => {
-    const extension = path.extname(file.originalname);
-    cb(null, 'products' + extension);
-  },
+    destination: function (req, file, cb) {
+        cb(null, '/home/realcolorweb/public_html/technologyline.com.ar/products-images')
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname))
+    }
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 const productRouter = Router();
 
 productRouter.get('/', ProductController.getAll);
 productRouter.get('/:id', ProductController.getById);
-// productRouter.get('/test', ProductController.getAllTest)
-
-// Asegúrate de usar upload.single('file') para recibir un solo archivo
-// productRouter.post('/jirejfdisbjfi4iwurjknvijioeb49/refresh-data', upload.single('file'), ProductController.uploadExcel);
 
 productRouter.post('/', ProductController.create);
 productRouter.post('/addView/:id', ProductController.addProductView);
-productRouter.patch('/:id', ProductController.update);
+productRouter.post('/addImage', upload.single('image'), ProductController.addImage);
+productRouter.patch('/updateImages', ProductController.updateImages);
+productRouter.patch('/', ProductController.update);
 
 module.exports = productRouter;

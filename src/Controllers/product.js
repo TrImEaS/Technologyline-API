@@ -1,27 +1,13 @@
 const { validatePartialProduct, validateProduct } = require('../Schemas/product.js');
 const ProductModel = require('../Models/sql/product.js');
-// const refreshDB = require('../Functions/refreshDB.js');
 const fs = require('fs');
 const path = require('path');
 
-const allowedOrigins = [
-  'http://localhost:5173', 
-  'http://localhost:8080', 
-  'https://www.technologyline.com.ar', 
-  'https://www.line-technology.com.ar', 
-  'https://www.real-color.com.ar',
-  'https://real-color.com.ar',
-  'http://www.real-color.com.ar',
-  'http://real-color.com.ar',
-];
-
-// Función para escribir errores en el archivo de log
 function logError(errorMessage) {
-  const logFilePath = path.join(__dirname, '../logs/log_error.txt');
+  const logFilePath = path.join(__dirname, '../Data/log_error.txt');
   const timestamp = new Date().toISOString();
   const logMessage = `[${timestamp}] ${errorMessage}\n`;
 
-  // Escribir el error en el archivo de log
   fs.appendFile(logFilePath, logMessage, (err) => {
     if (err) {
       console.error('Error writing to log file:', err);
@@ -31,11 +17,6 @@ function logError(errorMessage) {
 
 class ProductController {
   static async getAll(req, res) {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-
     try {
       const { sku, name, all } = req.query;
       const products = await ProductModel.getAll({ sku, name, all });
@@ -47,11 +28,6 @@ class ProductController {
   }
 
   static async getById(req, res) {
-    // const origin = req.headers.origin;
-    // if (allowedOrigins.includes(origin)) {
-    //   res.setHeader('Access-Control-Allow-Origin', origin);
-    // }
-
     try {
       let { id } = req.params;
       const product = await ProductModel.getById(parseInt(id));
@@ -65,11 +41,6 @@ class ProductController {
   }
 
   static async create(req, res) {
-    // const origin = req.headers.origin;
-    // if (allowedOrigins.includes(origin)) {
-    //   res.setHeader('Access-Control-Allow-Origin', origin);
-    // }
-
     const newId = await ProductModel.getNextId();
 
     try {
@@ -109,110 +80,104 @@ class ProductController {
   }
 
   static async update(req, res) {
-    // const origin = req.headers.origin;
-    // if (allowedOrigins.includes(origin)) {
-    //   res.setHeader('Access-Control-Allow-Origin', origin);
-    // }
-
     try {
       const result = validatePartialProduct(req.body);
+      console.log(result.data)
       if (!result.success)
         return res.status(400).json({ error: JSON.parse(result.error.message) });
 
-      const { id } = req.params;
+      const { sku } = req.query;
 
-      const updatedata = await ProductModel.update({ id, input: result.data });
+      const updatedata = await ProductModel.update({ sku, input: result.data });
       return res.json(updatedata);
     } catch (e) {
-      logError(`Error updating product with id ${req.params.id}: ${e.message}`);
+      logError(`Error updating product with id ${req.query.sku}: ${e.message}`);
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
 
   static async addProductView(req, res) {
-    // const origin = req.headers.origin;
-    // if (allowedOrigins.includes(origin)) {
-    //   res.setHeader('Access-Control-Allow-Origin', origin);
-    // }
-
     try {
       const result = validatePartialProduct(req.body);
       if (!result.success)
         return res.status(400).json({ error: JSON.parse(result.error.message) });
 
-      const { id } = req.params;
+      const { id } = req.query;
 
       const updatedata = await ProductModel.addProductView({ id });
       return res.json(updatedata);
     } catch (e) {
-      logError(`Error adding view to product with id ${req.params.id}: ${e.message}`);
+      logError(`Error adding view to product with id ${req.query.id}: ${e.message}`);
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
 
-  // static async uploadExcel(req, res) {
-  //   try {
-  //     if (!req.file)
-  //       return res.status(400).json({ error: 'No se subió ningún archivo.' });
+  static async addImage(req, res) {
+    try {
+      if (!req.file || !req.body.sku || !req.body.index) {
+        return res.status(400).json({ error: 'Faltan datos requeridos (imagen, SKU o índice)' });
+      }
+  
+      const { sku, index } = req.body;
+      const extension = path.extname(req.file.originalname);
+      
+      // Construir el nombre del archivo según el índice
+      const newFileName = parseInt(index) === 0 ? 
+        `${sku}${extension}` : 
+        `${sku}_${index}${extension}`;
+  
+      // Ruta completa del archivo
+      const newPath = path.join('/home/realcolorweb/public_html/technologyline.com.ar/products-images', newFileName);
+  
+      // Renombrar el archivo
+      fs.renameSync(req.file.path, newPath);
+  
+      const imageUrl = `https://technologyline.com.ar/products-images/${newFileName}`;
+  
+      return res.status(200).json({ 
+        message: 'Imagen subida correctamente',
+        imageUrl: imageUrl
+      });
+  
+    } catch (error) {
+      logError(`Error uploading image: ${error.message}`);
+      if (req.file) {
+        fs.unlink(req.file.path, (err) => {
+          if (err) logError(`Error deleting failed upload: ${err.message}`);
+        });
+      }
+      return res.status(500).json({ error: 'Error interno del servidor al subir la imagen' });
+    }
+  }
 
-  //     await refreshDB();
-  //     return res.status(200).json({ message: 'Archivo subido y datos actualizados exitosamente.' });
-  //   } 
-  //   catch (error) {
-  //     logError(`Error uploading Excel file: ${error.message}`);
-  //     return res.status(500).json({ error: 'Error interno del servidor' });
-  //   }
-  // }
-
-  // static async getAllTest(req, res) {
-  //   const origin = req.headers.origin;
-  //   if (allowedOrigins.includes(origin)) {
-  //     res.setHeader('Access-Control-Allow-Origin', origin);
-  //   }
-
-  //   try {
-  //     // Configuración de las credenciales
-  //     const wsBasicQueryHeader = {
-  //       pUsername: 'testuser',    
-  //       pPassword: 'testpassword',  
-  //       pCompany: 1,
-  //       pBranch: 1,
-  //       pLanguage: 2,
-  //       pWebWervice: 10,
-  //       pAuthenticatedToken: null, 
-  //     };
-
-  //     // Crear cliente SOAP
-  //     const client = await soap.createClientAsync(wsdlUrl);
-
-  //     // Autenticar usuario
-  //     const authResponse = await client.AuthenticateUserAsync(wsBasicQueryHeader);
-  //     wsBasicQueryHeader.pAuthenticatedToken = authResponse[0].AuthenticateUserResult;
-
-  //     if (!wsBasicQueryHeader.pAuthenticatedToken) {
-  //       throw new Error('Authentication failed');
-  //     }
-
-  //     // Consumir método `ItemStorage_funGetXMLData`
-  //     const stockResponse = await client.ItemStorage_funGetXMLDataAsync({
-  //       intStor_id: -1, // Todos los depósitos
-  //       intItem_id: -1, // Todos los artículos
-  //     });
-
-  //     // Convertir XML a JSON
-  //     const parser = new xml2js.Parser();
-  //     const stockData = await parser.parseStringPromise(
-  //       stockResponse[0].ItemStorage_funGetXMLDataResult
-  //     );
-
-  //     res.json(stockData);
-
-  //   } catch (error) {
-  //     logError(`Error retrieving stock data: ${error.message}`);
-  //     res.status(500).json({ error: 'Internal server error' });
-  //   }
-  // }
-
+  static async updateImages(req, res) {
+    try {
+      const { productId, images } = req.body;
+      
+      if (!productId || !Array.isArray(images)) {
+        return res.status(400).json({ error: 'Datos inválidos' });
+      }
+  
+      // Primero eliminar todas las imágenes existentes del producto
+      await ProductModel.deleteProductImages(productId);
+  
+      // Luego insertar las nuevas URLs
+      const success = await ProductModel.insertProductImages(productId, images);
+  
+      if (!success) {
+        return res.status(404).json({ error: 'Error al actualizar las imágenes' });
+      }
+  
+      return res.status(200).json({ 
+        message: 'Imágenes actualizadas correctamente',
+        images: images
+      });
+  
+    } catch (error) {
+      logError(`Error updating images: ${error.message}`);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  }
 }
 
 module.exports = ProductController;

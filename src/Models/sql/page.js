@@ -152,6 +152,18 @@ class PageModel {
       throw error
     }
   }
+
+  static async getCategoriesForCarrousel() {
+    try {
+      const [results] = await ADMINPool.query('SELECT * FROM categories_carousel WHERE active = 1');
+
+      return results
+    } 
+    catch (error) {
+      console.error('Error fetching categories_carousel:', error);
+      throw error;
+    }
+  }
 }
 
 module.exports = PageModel
