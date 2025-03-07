@@ -192,6 +192,7 @@ class PageController {
             <p><strong>Dirección:</strong> ${datos_de_orden.datos_cliente.direccion}</p>
             <p><strong>CP:</strong> ${datos_de_orden.datos_cliente.cp}</p>
             <p><strong>Celular:</strong> ${datos_de_orden.datos_cliente.celular}</p>
+            <p><strong>Email:</strong> ${datos_de_orden.datos_cliente.email}</p>
             
             <h3>Productos</h3>
             <ul>
