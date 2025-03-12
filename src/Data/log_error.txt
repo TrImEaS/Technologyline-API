@@ -5,3 +5,4 @@
 [2025-02-26T15:45:25.015Z] Error updating image order for product with id LAB844: image.split is not a function
 [2025-02-28T14:25:48.019Z] Error retrieving product with id getCategoriesForCarrousel: ProductModel.getById is not a function
 [2025-03-06T19:03:07.582Z] Error retrieving products: connect ECONNREFUSED ::1:3306
+[2025-03-10T14:14:02.115Z] Error retrieving products: connect ECONNREFUSED ::1:3306
