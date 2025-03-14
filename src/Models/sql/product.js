@@ -6,7 +6,7 @@ class ProductModel {
       if (sku) {
         const querySku = `SELECT 
                               p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.img_base, p.status, p.adminStatus, 
-                              p.specifications, p.descriptions, p.total_views,
+                              p.specifications, p.descriptions, p.total_views, p.week_views,
                               GROUP_CONCAT(DISTINCT pi.img_url) AS img_urls,
                               GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
                             FROM products p
@@ -69,7 +69,7 @@ class ProductModel {
         return results;
       }
   
-      let query = `SELECT p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.total_views, p.brand, p.img_base, p.status, p.adminStatus, 
+      let query = `SELECT p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.week_views, p.total_views, p.brand, p.img_base, p.status, p.adminStatus, 
                    GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
                    FROM products p
                    LEFT JOIN products_prices pp ON p.id = pp.product_id AND pp.list_id IN (1,2)`;
@@ -173,7 +173,10 @@ class ProductModel {
 
   static async addProductView({ id }) {
     try {
-      const query = `UPDATE products SET total_views = total_views + 1 WHERE id = ?`;
+      const query = `UPDATE products SET 
+                     total_views = total_views + 1, 
+                     week_views = week_views + 1 
+                     WHERE id = ?`;
       const [result] = await ADMINPool.query(query, [id]);
       return result.affectedRows > 0 ? true : false; 
     } 

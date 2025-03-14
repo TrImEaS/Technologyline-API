@@ -22,8 +22,8 @@ productRouter.get('/', ProductController.getAll);
 productRouter.get('/:id', ProductController.getById);
 
 productRouter.post('/', ProductController.create);
-productRouter.post('/addView/:id', ProductController.addProductView);
 productRouter.post('/addImage', upload.single('image'), ProductController.addImage);
+productRouter.patch('/addView/:id', ProductController.addProductView);
 productRouter.patch('/updateImages', ProductController.updateImages);
 productRouter.patch('/', ProductController.update);
 

@@ -21,7 +21,7 @@ app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.static('/home/realcolorweb/public_html/technologyline.com.ar/products-images'))
 app.use(express.static('/home/realcolorweb/public_html/technologyline.com.ar/banners-images'))
-app.use(cors())
+app.use(cors(allowedOrigins))
 
 const loadJSON = (filePath) => {
   if (fs.existsSync(filePath)) {

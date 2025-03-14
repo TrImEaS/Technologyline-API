@@ -99,12 +99,13 @@ class ProductController {
   static async addProductView(req, res) {
     try {
       const result = validatePartialProduct(req.body);
-      if (!result.success)
+      if (!result.success){
+        console.log('error')
         return res.status(400).json({ error: JSON.parse(result.error.message) });
+      }
 
-      const { id } = req.query;
-
-      const updatedata = await ProductModel.addProductView({ id });
+      const { id } = req.params;
+      const updatedata = await ProductModel.addProductView({ id: id });
       return res.json(updatedata);
     } catch (e) {
       logError(`Error adding view to product with id ${req.query.id}: ${e.message}`);
