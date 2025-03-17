@@ -186,6 +186,20 @@ class ProductModel {
     }
   }
 
+  static async refreshWeekViews() {
+    try {
+      const query = `UPDATE products SET 
+                     total_views = 0, 
+                     week_views = 0`;
+      const [result] = await ADMINPool.query(query);
+      return result.affectedRows > 0 ? true : false; 
+    } 
+    catch (error) {
+      console.error('Error refreshing product views:', error);
+      throw error;
+    }
+  }
+
   static async updateProductImages(productId, imageUrls) {
     try {
       // First, delete existing images for this product

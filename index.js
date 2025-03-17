@@ -57,9 +57,7 @@ app.use((req, res, next) => {
     saveJSON(IP_LOG_FILE_JSON, ipLog);
     saveJSON(STATISTICS_FILE_JSON, statistics);
 
-    console.log(`Visita registrada de IP: ${ip}. Total de visitas: ${statistics.views}`);
-  } else {
-    console.log(`Visita ignorada para IP: ${ip}`);
+    // console.log(`Visita registrada de IP: ${ip}. Total de visitas: ${statistics.views}`);
   }
 
   next();

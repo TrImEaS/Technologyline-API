@@ -113,6 +113,17 @@ class ProductController {
     }
   }
 
+  static async refreshWeekViews(req, res) {
+    try {
+      const updatedata = await ProductModel.refreshWeekViews();
+      return res.json(updatedata);
+    } 
+    catch (e) {
+      logError(`Error adding view to product with id ${req.query.id}: ${e.message}`);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
   static async addImage(req, res) {
     try {
       if (!req.file || !req.body.sku || !req.body.index) {
