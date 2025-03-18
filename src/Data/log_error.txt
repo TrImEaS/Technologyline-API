@@ -14,3 +14,9 @@
 [2025-03-17T21:21:33.446Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
 [2025-03-17T21:21:34.665Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
 [2025-03-17T21:23:10.614Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-18T18:28:07.179Z] Error retrieving products: connect ECONNREFUSED ::1:3306
+[2025-03-18T18:28:13.161Z] Error retrieving products: connect ECONNREFUSED ::1:3306
+[2025-03-18T18:29:12.042Z] Error retrieving products: connect ECONNREFUSED ::1:3306
+[2025-03-18T18:29:27.317Z] Error retrieving products: connect ECONNREFUSED ::1:3306
+[2025-03-18T18:29:36.139Z] Error retrieving products: connect ECONNREFUSED ::1:3306
+[2025-03-18T18:31:06.396Z] Error retrieving products: connect ECONNREFUSED ::1:3306
