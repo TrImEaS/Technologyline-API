@@ -21,7 +21,6 @@ async function refreshDB() {
       stock: parseInt(rowData[5]) || 0,
       sub_category: cleanCategory((rowData[2] && rowData[2].toString()) || ''),
       brand: cleanCategory((rowData[10] && rowData[10].toString()) || ''),
-      img_base: `https://technologyline.com.ar/products-images/${rowData[0]}.jpg`,
     });
     const productsExcel = excelSheet.value().slice(2).map(mapColumnNames);
     console.log('Cargando datos...');
@@ -36,7 +35,7 @@ async function refreshDB() {
     const excelProductIds = new Set();
     // Recorremos todos los productos del Excel
     for (const excelProduct of productsExcel) {
-      const { id, sku, name, stock, category, sub_category, brand, img_base } = excelProduct;
+      const { id, sku, name, stock, category, sub_category, brand } = excelProduct;
       // Saltamos las filas sin SKU en lugar de lanzar un error
       if (!sku) continue;
       if (sku === 16 || id === 4710) continue;
@@ -50,8 +49,8 @@ async function refreshDB() {
         
         // Actualizamos el producto en la tabla `products`
         updateProductQueries.push(connection.query(
-          'UPDATE products SET id = ?, sku = ?, name = ?, stock = ?, category = ?, sub_category = ?, brand = ?, img_base = ?, status = ? WHERE id = ?',
-          [id, sku, name, stock, category, sub_category, brand, img_base, stock < 0 ? 0 : 1, dbProductId]
+          'UPDATE products SET id = ?, sku = ?, name = ?, stock = ?, category = ?, sub_category = ?, brand = ?, status = ? WHERE id = ?',
+          [id, sku, name, stock, category, sub_category, brand, stock < 0 ? 0 : 1, dbProductId]
         ));
 
         // Actualizamos las imágenes del producto en `products_images`
@@ -63,9 +62,9 @@ async function refreshDB() {
       // Si el producto no existe, lo insertamos
       else {
         insertProductQueries.push(connection.query(
-          `INSERT INTO products (id, sku, name, stock, category, sub_category, brand, img_base, total_views, specifications, descriptions, status, adminStatus) 
+          `INSERT INTO products (id, sku, name, stock, category, sub_category, brand, total_views, specifications, descriptions, status, adminStatus) 
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          [id, sku, name, stock, category, sub_category, brand, img_base, 0, 'Este producto no contiene especificaciones', 'Este producto no contiene descripcion', 1, 1]
+          [id, sku, name, stock, category, sub_category, brand, 0, 'Este producto no contiene especificaciones', 'Este producto no contiene descripcion', 1, 1]
         ));
         
         // Insertamos las imágenes correspondientes

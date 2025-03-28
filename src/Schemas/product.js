@@ -18,10 +18,6 @@ const productSchema = z.object({
     required_error: 'Se requiere la marca',
     invalid_type_error: 'La marca debe de ser de tipo string/texto'
   }),
-  img_base: z.string({
-    required_error: 'Se requiere la ruta de la imagen principal',
-    invalid_type_error: 'La ruta debe de ser de tipo string/texto'
-  }),
   week_views: z.number().positive(),
   total_views: z.number().positive(),
   discount: z.number().positive(),

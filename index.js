@@ -69,6 +69,7 @@ app.use('/search', express.static('/home/realcolorweb/public_html/technologyline
 app.use('/products', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/cart', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/shipments', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others/about_us', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others/garantia', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others/centros_de_ayuda', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));

@@ -1,3 +1,4 @@
+const { ADMINPool } = require('./config')
 const fs = require('fs')
 const path = require('path')
 
@@ -5,7 +6,6 @@ const clientPath = path.resolve(__dirname, '../../Data/clients.json')
 const statisticsPath = path.resolve(__dirname, '../../Data/statistics.json')
 
 class ClientModel {
-  //Get all data
   static async getAll({ id }) {
     let jsonData = await this.readJsonFile(clientPath)
 
@@ -16,7 +16,26 @@ class ClientModel {
     return jsonData
   }
 
-  //Get last id
+  static async addClient({ input }) {
+    try {
+      const [exists] = await ADMINPool.query('SELECT fullname from client_ecommerce WHERE email = ?', [input.email])
+      if (exists.length > 0) {
+        return false
+      }
+      
+      const [results] = await ADMINPool.query(
+        'INSERT INTO `client_ecommerce`(`fullname`, `nickname`, `email`, `dni`, `address`, `password`) VALUES (?, ?, ?, ?, ?, ?)', 
+        [input.fullname, input.nickname, input.email, input.dni, input.address, input.password]);
+      const data = results;
+
+      return data
+    } 
+    catch (error) {
+      console.error('Error fetching resellers form_data:', error);
+      throw error;
+    }
+  }
+
   static async getNextId() {
     let jsonData = await this.readJsonFile(clientPath)
 
@@ -90,7 +109,6 @@ class ClientModel {
   }
 
   //--> --- --- --- --- --- --- --- --- <--//
-  //Function for readJsonFile
   static async readJsonFile(path) {
     try {
       const rawData = await fs.promises.readFile(path)
@@ -102,7 +120,6 @@ class ClientModel {
     }
   }
   
-  //Function for writeJsonFile
   static async writeJsonFile(path ,data) {
     try {
       await fs.promises.writeFile(path, JSON.stringify(data, null, 2))
