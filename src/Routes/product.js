@@ -19,12 +19,12 @@ const upload = multer({ storage: storage });
 const productRouter = Router();
 
 productRouter.get('/', ProductController.getAll);
+productRouter.get('/refreshWeekViews', ProductController.refreshWeekViews);
 productRouter.get('/:id', ProductController.getById);
 
 productRouter.post('/', ProductController.create);
 productRouter.post('/addImage', upload.single('image'), ProductController.addImage);
 productRouter.patch('/addView/:id', ProductController.addProductView);
-productRouter.get('/refreshWeekViews', ProductController.refreshWeekViews);
 productRouter.patch('/updateImages', ProductController.updateImages);
 productRouter.patch('/', ProductController.update);
 

@@ -24,3 +24,32 @@
 [2025-03-27T17:29:13.943Z] Error retrieving products: connect ECONNREFUSED ::1:3306
 [2025-03-27T17:29:23.962Z] Error retrieving products: connect ECONNREFUSED ::1:3306
 [2025-03-27T19:53:27.148Z] Error retrieving products: connect ECONNREFUSED ::1:3306
+[2025-03-31T18:54:05.273Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:54:07.483Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:54:08.313Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:54:12.543Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:55:01.510Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:55:02.126Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:57:34.738Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:57:35.416Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:57:35.825Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:57:48.126Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:57:48.581Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:58:53.608Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:58:54.218Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:58:54.575Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:58:54.951Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:59:25.749Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:59:26.206Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:59:26.470Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:59:26.621Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:59:26.746Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T19:00:19.139Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T19:00:19.803Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T19:01:11.933Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T19:01:12.453Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T19:01:12.652Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T19:01:12.836Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T19:03:20.925Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T19:03:21.523Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T19:05:49.602Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function

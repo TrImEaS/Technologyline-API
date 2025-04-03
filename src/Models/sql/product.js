@@ -191,9 +191,7 @@ class ProductModel {
 
   static async refreshWeekViews() {
     try {
-      const query = `UPDATE products SET 
-                     total_views = 0, 
-                     week_views = 0`;
+      const query = `UPDATE products SET week_views = 0`;
       const [result] = await ADMINPool.query(query);
       return result.affectedRows > 0 ? true : false; 
     } 

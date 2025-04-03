@@ -63,7 +63,7 @@ async function refreshDB() {
       else {
         insertProductQueries.push(connection.query(
           `INSERT INTO products (id, sku, name, stock, category, sub_category, brand, total_views, specifications, descriptions, status, adminStatus) 
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [id, sku, name, stock, category, sub_category, brand, 0, 'Este producto no contiene especificaciones', 'Este producto no contiene descripcion', 1, 1]
         ));
         
