@@ -4,24 +4,30 @@ const apiRouter = require('./src/Routes/apiRouter')
 const fs = require('fs');
 const path = require('path');
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 808
 const IP_LOG_FILE_JSON = path.join(__dirname, './src/Data/ip_log.json');
 const STATISTICS_FILE_JSON = path.join(__dirname, './src/Data/statistics.json');
 const app = express()
-const allowedOrigins = [
-  'http://localhost:5173', 
-  'http://localhost:8080', 
-  'https://www.technologyline.com.ar', 
-  'https://technologyline.com.ar', 
-  'https://www.line-technology.com.ar'
-]
+const corsOptions = {
+  origin: [
+    'http://localhost:5173', 
+    'http://localhost:8080', 
+    'https://www.technologyline.com.ar', 
+    'https://technologyline.com.ar', 
+    'https://www.line-technology.com.ar'
+  ],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}
 
 app.disable('x-powered-by')
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.static('/home/realcolorweb/public_html/technologyline.com.ar/products-images'))
 app.use(express.static('/home/realcolorweb/public_html/technologyline.com.ar/banners-images'))
-app.use(cors(allowedOrigins))
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions));
 
 const loadJSON = (filePath) => {
   if (fs.existsSync(filePath)) {

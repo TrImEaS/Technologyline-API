@@ -69,15 +69,21 @@ pageRouter.get('/getOrderMovement', PageController.getOrderMovement);
 pageRouter.get('/getIp', PageController.getIp);
 pageRouter.get('/getBanners', PageController.getBanners);
 pageRouter.get('/resellersData', PageController.getResellersData);
+pageRouter.get('/getUserData', PageController.getUserData);
 
 pageRouter.patch('/setBanner', uploadImages.single('image'), PageController.uploadImage);
 pageRouter.patch('/updateBannerPosition', PageController.updateBannerPosition);
 pageRouter.patch('/check-view/:id', PageController.checkResellerData);
+pageRouter.patch('/changeUserData', PageController.changeUserData);
 
+pageRouter.post('/', PageController.saveResellersData);
 pageRouter.post('/uploadExcel', uploadExcel.single('file'), PageController.uploadExcel);
 pageRouter.post('/sendOrderEmail', PageController.sendOrderEmail);
-pageRouter.post('/', PageController.saveResellersData);
+pageRouter.post('/loginUser', PageController.loginUser);
+pageRouter.post('/registerUser', PageController.registerUser);
 pageRouter.post('/setOrderMovement', PageController.setOrderMovement);
 pageRouter.post('/deleteBanner', PageController.deleteImage);
+
+pageRouter.delete('/deleteUser', PageController.deleteUser);
 
 module.exports = pageRouter;

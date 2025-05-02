@@ -32,6 +32,26 @@ class PageController {
     }
   }
 
+  static async getUserData (req, res) {
+    res.json({message: 'getUserData' }) 
+  }
+
+  static async changeUserData (req, res) {
+    res.json({message: 'changeUserData' }) 
+  }
+
+  static async loginUser (req, res) {
+    res.json({message: 'loginUser' }) 
+  }
+
+  static async registerUser (req, res) {
+    res.json({message: 'registerUser' }) 
+  }
+
+  static async deleteUser (req, res) {
+    res.json({message: 'deleteUser' }) 
+  }
+
   static async saveResellersData(req, res) {
     // Obtener la IP del cliente
     const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
