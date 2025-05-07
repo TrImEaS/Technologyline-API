@@ -80,6 +80,7 @@ pageRouter.post('/', PageController.saveResellersData);
 pageRouter.post('/uploadExcel', uploadExcel.single('file'), PageController.uploadExcel);
 pageRouter.post('/sendOrderEmail', PageController.sendOrderEmail);
 pageRouter.post('/loginUser', PageController.loginUser);
+pageRouter.post('/loginGoogle', PageController.loginGoogle);
 pageRouter.post('/registerUser', PageController.registerUser);
 pageRouter.post('/setOrderMovement', PageController.setOrderMovement);
 pageRouter.post('/deleteBanner', PageController.deleteImage);

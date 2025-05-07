@@ -5,6 +5,8 @@ const { validateResellers_Form } = require('../Schemas/resellers_form')
 const nodemailer = require('nodemailer');
 const getOrderNotificationTemplate = require('../Utils/EmailTemplates/orderNotification');
 const getOrderConfirmationTemplate = require('../Utils/EmailTemplates/orderConfirmation');
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = 'trimeasdacarry';
 
 let ipTracking = {};
 
@@ -41,11 +43,82 @@ class PageController {
   }
 
   static async loginUser (req, res) {
-    res.json({message: 'loginUser' }) 
+    try {
+      const { email, password } = req.body;
+      const user = await PageModel.loginUser({ email, password });
+  
+      if (user) {
+        const token = jwt.sign(
+          { id: user.id || user, email },
+          SECRET_KEY,
+          { expiresIn: '7d' }
+        );
+  
+        return res.status(200).json({ login: true, token });
+      }
+  
+      res.status(400).json({ message: 'Failed to login user' });
+    } 
+    catch (error) {
+      console.error('Error al logearse:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
+  
+  static async loginGoogle (req, res) {
+    try {
+      const { email, name, sub } = req.body;
+      const user = await PageModel.loginGoogle({ email, name, sub });
+  
+      if (user) {
+        const token = jwt.sign(
+          { id: user.id || user, email },
+          SECRET_KEY,
+          { expiresIn: '7d' }
+        );
+  
+        return res.status(200).json({ login: true, token });
+      }
+  
+      res.status(400).json({ message: 'Failed to login user with Google' });
+    } catch (error) {
+      console.error('Error al logearse con Google:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+  
 
   static async registerUser (req, res) {
-    res.json({message: 'registerUser' }) 
+    try {
+      const {
+        name,
+        username,
+        dni,
+        address,
+        postalCode,
+        phone,
+        email,
+        password,
+      } = req.body;
+
+      const user = await PageModel.registerUser({ name, username, dni, address, postalCode, phone, email, password });
+  
+      if (user) {
+        const token = jwt.sign(
+          { id: user.id || user, email },
+          SECRET_KEY,
+          { expiresIn: '7d' }
+        );
+  
+        return res.status(200).json({ login: true, token });
+      }
+  
+      res.status(400).json({ message: 'Failed to register user' });
+    } 
+    catch (error) {
+      console.error('Error al registrarse:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    } 
   }
 
   static async deleteUser (req, res) {

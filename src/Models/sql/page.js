@@ -164,6 +164,57 @@ class PageModel {
       throw error;
     }
   }
+
+  static async loginGoogle ({ email, name, sub }) {
+    try {
+      const [results] = await ADMINPool.query('SELECT * FROM clients_ecommerce WHERE email = ?', [email]);
+      
+      if (results.length > 0) {
+        return results[0]
+      } 
+      else {
+        const [result] = await ADMINPool.query('INSERT INTO clients_ecommerce (username, email, fullname, google_id) VALUES (?, ?, ?)', [name, email, name, sub]);
+        return result.insertId
+      }
+    } 
+    catch (error) {
+      console.error('Error al logearse con google, intente nuevemente!):', error);
+      throw error;
+    }
+  }
+
+  static async loginUser ({ email, password }) {
+    try {
+      const [results] = await ADMINPool.query('SELECT * FROM clients_ecommerce WHERE email = ? AND password = ?', [email, password]);
+      
+      if (results.length > 0) {
+        return results[0]
+      } 
+      else {
+        return false
+      }
+    } 
+    catch (error) {
+      console.error('Error al logearse con google, intente nuevemente!):', error);
+      throw error;
+    }
+  }
+
+  static async registerUser ({ name, username, dni, address, postalCode, phone, email, password }) {
+    try {
+      const [result] = await ADMINPool.query('INSERT INTO clients_ecommerce (username, password, fullname, dni, phone, address, postal_code, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+                                                                      [username, password, name, dni, phone, address.toLowerCase(), postalCode, email.toLowerCase()]);
+      if (result.affectedRows === 0) {
+        return false
+      }
+      return result.insertId
+    } 
+    catch (error) {
+      console.error('Error al registrarse, intente nuevemente!):', error);
+      throw error;
+    }
+  }
+    
 }
 
 module.exports = PageModel

@@ -76,11 +76,15 @@ async function refreshDB() {
       }
     }
 
-    // Modificamos la query para usar SKU en lugar de ID
-    const deactivateProductsQuery = connection.query(
-      'UPDATE products SET stock = 0, status = 0 WHERE sku NOT IN (?)',
-      [Array.from(excelProductIds)]
-    );
+    let deactivateProductsQuery = Promise.resolve(); // Por si no se ejecuta nada
+
+    if (excelProductIds.size > 0) {
+      deactivateProductsQuery = connection.query(
+        'UPDATE products SET stock = 0, status = 0 WHERE sku NOT IN (?)',
+        [Array.from(excelProductIds)]
+      );
+    }
+    
 
     // Ejecutamos todas las consultas
     await Promise.all([
