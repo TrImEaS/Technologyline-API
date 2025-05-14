@@ -129,28 +129,25 @@ class ProductController {
       if (!req.file || !req.body.sku || !req.body.index) {
         return res.status(400).json({ error: 'Faltan datos requeridos (imagen, SKU o índice)' });
       }
-  
+
       const { sku, index } = req.body;
       const extension = path.extname(req.file.originalname);
-      
-      // Construir el nombre del archivo según el índice
-      const newFileName = parseInt(index) === 0 ? 
-        `${sku}${extension}` : 
-        `${sku}_${index}${extension}`;
-  
-      // Ruta completa del archivo
+
+      // Siempre usar formato con guión bajo e índice empezando desde 1
+      const suffix = `_${parseInt(index) + 1}`;
+      const newFileName = `${sku}${suffix}${extension}`;
+
       const newPath = path.join('/home/realcolorweb/public_html/technologyline.com.ar/products-images', newFileName);
-  
-      // Renombrar el archivo
+
       fs.renameSync(req.file.path, newPath);
-  
+
       const imageUrl = `https://technologyline.com.ar/products-images/${newFileName}`;
-  
+
       return res.status(200).json({ 
         message: 'Imagen subida correctamente',
         imageUrl: imageUrl
       });
-  
+
     } catch (error) {
       logError(`Error uploading image: ${error.message}`);
       if (req.file) {
@@ -164,17 +161,17 @@ class ProductController {
 
   static async updateImages(req, res) {
     try {
-      const { productId, images } = req.body;
+      const { sku, images } = req.body;
       
-      if (!productId || !Array.isArray(images)) {
+      if (!sku || !Array.isArray(images)) {
         return res.status(400).json({ error: 'Datos inválidos' });
       }
   
       // Primero eliminar todas las imágenes existentes del producto
-      await ProductModel.deleteProductImages(productId);
+      await ProductModel.deleteProductImages(sku);
   
       // Luego insertar las nuevas URLs
-      const success = await ProductModel.insertProductImages(productId, images);
+      const success = await ProductModel.insertProductImages(sku, images);
   
       if (!success) {
         return res.status(404).json({ error: 'Error al actualizar las imágenes' });

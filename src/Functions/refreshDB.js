@@ -14,14 +14,14 @@ async function refreshDB() {
 
     const excelSheet = excel.sheet('stock fisico ').usedRange();
     const mapColumnNames = (rowData) => ({
-      sku: (rowData[0] && rowData[0].toString()) || '',
-      id: parseInt(rowData[11]),
-      name: (rowData[1] && rowData[1].toString()) || '',
-      category: cleanCategory((rowData[12] && rowData[12].toString()) || ''),
-      stock: parseInt(rowData[5]) || 0,
-      sub_category: cleanCategory((rowData[2] && rowData[2].toString()) || ''),
-      brand: cleanCategory((rowData[10] && rowData[10].toString()) || ''),
-      tax_percentage: parseFloat(rowData[13]).toFixed(2) || 0,
+      sku: (rowData[1] && rowData[1].toString().trim()) || '',
+      id: parseInt(rowData[12]),
+      name: (rowData[2] && rowData[2].toString()) || '',
+      category: cleanCategory((rowData[13] && rowData[13].toString()) || ''),
+      stock: parseInt(rowData[6]) || 0,
+      sub_category: cleanCategory((rowData[3] && rowData[3].toString()) || ''),
+      brand: cleanCategory((rowData[11] && rowData[11].toString()) || ''),
+      tax_percentage: parseFloat(rowData[14]).toFixed(2) || 0,
     });
     const productsExcel = excelSheet.value().slice(2).map(mapColumnNames);
     console.log('Cargando datos...');
@@ -34,70 +34,64 @@ async function refreshDB() {
     const insertProductQueries = [];
     const updateProductImagesQueries = [];
     const excelProductIds = new Set();
-    // Recorremos todos los productos del Excel
+
     for (const excelProduct of productsExcel) {
       const { id, sku, name, stock, category, sub_category, brand, tax_percentage } = excelProduct;
-      // Saltamos las filas sin SKU en lugar de lanzar un error
       if (!sku) continue;
-      if (sku === 16 || id === 4710) continue;
-
+      if (sku === '16' || id === 4710) continue;
       excelProductIds.add(sku);
-      console.log(`Procesando SKU: ${sku}`);
 
-      // Si el producto ya existe en la base de datos
       if (existingProductMap.has(sku)) {
-        const dbProductId = existingProductMap.get(sku);
-        
-        // Actualizamos el producto en la tabla `products`
         updateProductQueries.push(connection.query(
-          'UPDATE products SET id = ?, sku = ?, name = ?, stock = ?, category = ?, sub_category = ?, brand = ?, status = ?, tax_percentage = ? WHERE id = ?',
-          [id, sku, name, stock, category, sub_category, brand, stock < 0 ? 0 : 1, tax_percentage, dbProductId]
-        ));
-
-        // Actualizamos las imágenes del producto en `products_images`
-        updateProductImagesQueries.push(connection.query(
-          'UPDATE products_images SET product_id = ? WHERE product_id = ?',
-          [id, dbProductId]
+          'UPDATE products SET gbp_id = ?, sku = ?, name = ?, stock = ?, category = ?, sub_category = ?, brand = ?, status = ?, tax_percentage = ? WHERE sku = ?',
+          [id, sku, name, stock, category, sub_category, brand, stock < 0 ? 0 : 1, tax_percentage, sku]
         ));
       } 
-      // Si el producto no existe, lo insertamos
       else {
         insertProductQueries.push(connection.query(
-          `INSERT INTO products (id, sku, name, stock, category, sub_category, brand, total_views, specifications, descriptions, status, adminStatus, tax_percentage) 
+          `INSERT INTO products (gbp_id, sku, name, stock, category, sub_category, brand, total_views, specifications, descriptions, status, adminStatus, tax_percentage) 
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [id, sku, name, stock, category, sub_category, brand, 0, 'Este producto no contiene especificaciones', 'Este producto no contiene descripcion', 1, 1, tax_percentage]
-        ));
-        
-        // Insertamos las imágenes correspondientes
-        updateProductImagesQueries.push(connection.query(
-          'UPDATE products_images SET product_id = ? WHERE product_id = ?',
-          [id, id]
         ));
       }
     }
 
-    let deactivateProductsQuery = Promise.resolve(); // Por si no se ejecuta nada
-
-    if (excelProductIds.size > 0) {
-      deactivateProductsQuery = connection.query(
-        'UPDATE products SET stock = 0, status = 0 WHERE sku NOT IN (?)',
-        [Array.from(excelProductIds)]
-      );
+    for (const [sku] of existingProductMap) {
+      if (!excelProductIds.has(sku)) {
+        updateProductQueries.push(connection.query(
+          'UPDATE products SET stock = 0, status = 0 WHERE sku = ?',
+          [sku]
+        ));
+      }
     }
-    
 
     // Ejecutamos todas las consultas
-    await Promise.all([
+    let hasErrors = false;
+
+    const allQueries = [
       ...updateProductQueries,
       ...insertProductQueries,
       ...updateProductImagesQueries,
-      deactivateProductsQuery
-    ]);
+    ];
 
-    await connection.commit();
-    console.log('Datos cargados, productos actualizados y desactivados correctamente.');
+    for (const queryPromise of allQueries) {
+      try {
+        await queryPromise;
+      } catch (err) {
+        hasErrors = true;
+        console.error('❌ Error en query individual:', err.message);
+      }
+    }
 
-    return { success: true, message: "Base de datos actualizada correctamente" };
+    if (hasErrors) {
+      await connection.rollback();
+      console.log('⚠️ Transacción revertida por errores en algunas queries.');
+      throw new Error('Error al ejecutar algunas queries. Se hizo rollback.');
+    } else {
+      await connection.commit();
+      console.log('✅ Transacción completada correctamente.');
+      return { success: true, message: "Base de datos actualizada correctamente" };
+    }
   } 
   catch (e) {
     console.error('❌ Error en refreshDB:', e);
