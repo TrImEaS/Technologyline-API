@@ -14,14 +14,14 @@ async function refreshDB() {
 
     const excelSheet = excel.sheet('stock fisico ').usedRange();
     const mapColumnNames = (rowData) => ({
-      sku: (rowData[1] && rowData[1].toString().trim()) || '',
-      id: parseInt(rowData[12]),
-      name: (rowData[2] && rowData[2].toString()) || '',
-      category: cleanCategory((rowData[13] && rowData[13].toString()) || ''),
-      stock: parseInt(rowData[6]) || 0,
-      sub_category: cleanCategory((rowData[3] && rowData[3].toString()) || ''),
-      brand: cleanCategory((rowData[11] && rowData[11].toString()) || ''),
-      tax_percentage: parseFloat(rowData[14]).toFixed(2) || 0,
+      sku: (rowData[0] && rowData[0].toString().trim()) || '',
+      id: parseInt(rowData[11]),
+      name: (rowData[1] && rowData[1].toString()) || '',
+      category: cleanCategory((rowData[12] && rowData[12].toString()) || ''),
+      stock: parseInt(rowData[5]) || 0,
+      sub_category: cleanCategory((rowData[2] && rowData[2].toString()) || ''),
+      brand: cleanCategory((rowData[10] && rowData[10].toString()) || ''),
+      tax_percentage: parseFloat(rowData[13]).toFixed(2) || 0,
     });
     const productsExcel = excelSheet.value().slice(2).map(mapColumnNames);
     console.log('Cargando datos...');
@@ -40,6 +40,7 @@ async function refreshDB() {
       if (!sku) continue;
       if (sku === '16' || id === 4710) continue;
       excelProductIds.add(sku);
+      console.log(excelProduct)
 
       if (existingProductMap.has(sku)) {
         updateProductQueries.push(connection.query(
