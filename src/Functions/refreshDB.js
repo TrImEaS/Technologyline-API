@@ -78,7 +78,8 @@ async function refreshDB() {
     for (const queryPromise of allQueries) {
       try {
         await queryPromise;
-      } catch (err) {
+      } 
+      catch (err) {
         hasErrors = true;
         console.error('❌ Error en query individual:', err.message);
       }
