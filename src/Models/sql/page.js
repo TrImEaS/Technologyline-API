@@ -21,6 +21,21 @@ class PageModel {
     }
   }
 
+  static async gerUserData({ email }) {
+    try {
+      const [results] = await ADMINPool.query('SELECT * FROM clients_ecommerce WHERE email = ?', email);
+
+      if(results.length > 0)
+        return results[0]
+
+      return false
+    } 
+    catch (error) {
+      console.error('Error fetching resellers form_data:', error);
+      throw error;
+    }
+  }
+
   static async saveResellersData({ input }) {
     try {
       sendMail({ input })

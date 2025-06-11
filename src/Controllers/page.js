@@ -35,58 +35,71 @@ class PageController {
   }
 
   static async getUserData (req, res) {
-    res.json({message: 'getUserData' }) 
+    const { email } = req.query;
+    const data = await PageModel.gerUserData({ email });
+    
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Expires', '0');
+    res.setHeader('Pragma', 'no-cache');
+    
+    res.json(data);
   }
 
   static async changeUserData (req, res) {
     res.json({message: 'changeUserData' }) 
   }
 
-  static async loginUser (req, res) {
+  static async loginUser(req, res) {
     try {
       const { email, password } = req.body;
       const user = await PageModel.loginUser({ email, password });
-  
+
       if (user) {
         const token = jwt.sign(
           { id: user.id || user, email },
           SECRET_KEY,
           { expiresIn: '7d' }
         );
-  
+
+        res.cookie('email', email, {
+          maxAge: 7 * 24 * 60 * 60 * 1000 
+        });
+
         return res.status(200).json({ login: true, token });
       }
-  
+
       res.status(400).json({ message: 'Failed to login user' });
-    } 
-    catch (error) {
+    } catch (error) {
       console.error('Error al logearse:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   }
-  
-  static async loginGoogle (req, res) {
+
+  static async loginGoogle(req, res) {
     try {
       const { email, name, sub } = req.body;
       const user = await PageModel.loginGoogle({ email, name, sub });
-  
+
       if (user) {
         const token = jwt.sign(
           { id: user.id || user, email },
           SECRET_KEY,
           { expiresIn: '7d' }
         );
-  
+
+        res.cookie('email', email, {
+          maxAge: 7 * 24 * 60 * 60 * 1000 
+        });
+
         return res.status(200).json({ login: true, token });
       }
-  
+
       res.status(400).json({ message: 'Failed to login user with Google' });
     } catch (error) {
       console.error('Error al logearse con Google:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   }
-  
 
   static async registerUser (req, res) {
     try {
@@ -109,6 +122,10 @@ class PageController {
           SECRET_KEY,
           { expiresIn: '7d' }
         );
+
+        res.cookie('email', email, {
+          maxAge: 7 * 24 * 60 * 60 * 1000 
+        });
   
         return res.status(200).json({ login: true, token });
       }

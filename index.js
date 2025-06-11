@@ -3,6 +3,7 @@ const cors = require('cors')
 const apiRouter = require('./src/Routes/apiRouter')
 const fs = require('fs');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT || 808
 const IP_LOG_FILE_JSON = path.join(__dirname, './src/Data/ip_log.json');
@@ -22,6 +23,7 @@ const corsOptions = {
 }
 
 app.disable('x-powered-by')
+app.use(cookieParser());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.static('/home/realcolorweb/public_html/technologyline.com.ar/products-images'))
