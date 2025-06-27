@@ -14,7 +14,7 @@ setInterval(() => {
   ipTracking = {};
 }, 24 * 60 * 60 * 1000); 
 
-const ipOrdersFile = path.join(__dirname, '../Data/ip_orders.json');
+// const ipOrdersFile = path.join(__dirname, '../Data/ip_orders.json');
 
 class PageController {  
   static async getResellersData (req, res) {
@@ -45,8 +45,45 @@ class PageController {
     res.json(data);
   }
 
-  static async changeUserData (req, res) {
-    res.json({message: 'changeUserData' }) 
+  static async changeUserData(req, res) {
+    try {
+      const updatedUser = await PageModel.changeUserData({
+        input: req.body,
+        email: req.body.email
+      });
+
+      if (updatedUser) {
+        return res.status(200).json({ message: 'Datos del usuario actualizados correctamente' });
+      }
+
+      res.status(400).json({ message: 'No se pudieron actualizar los datos del usuario' });
+    } catch (error) {
+      console.error('Error al actualizar los datos del usuario:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  }
+
+  static async changeUserPassword(req, res) {
+    try {
+      const updatedUser = await PageModel.changeUserPassword({
+        input: req.body,
+        email: req.body.email
+      });
+
+      if (updatedUser === 1)
+        return res.status(400).json({ message: 'La contraseña actual es incorrecta' });
+
+      if (updatedUser === 2)
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+
+      if (updatedUser)
+        return res.status(200).json({ message: 'Contraseña actualizada correctamente' });
+
+      res.status(400).json({ message: 'No se pudo actualizar la contraseña' });
+    } catch (error) {
+      console.error('Error al actualizar la contraseña:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
   }
 
   static async loginUser(req, res) {
@@ -65,7 +102,7 @@ class PageController {
           maxAge: 7 * 24 * 60 * 60 * 1000 
         });
 
-        return res.status(200).json({ login: true, token });
+        return res.status(200).json({ login: true, token, id: user.id });
       }
 
       res.status(400).json({ message: 'Failed to login user' });
@@ -91,7 +128,7 @@ class PageController {
           maxAge: 7 * 24 * 60 * 60 * 1000 
         });
 
-        return res.status(200).json({ login: true, token });
+        return res.status(200).json({ login: true, token, id: user.id });
       }
 
       res.status(400).json({ message: 'Failed to login user with Google' });
@@ -108,13 +145,14 @@ class PageController {
         username,
         dni,
         address,
-        postalCode,
+        location,
+        postal_code,
         phone,
         email,
         password,
       } = req.body;
 
-      const user = await PageModel.registerUser({ name, username, dni, address, postalCode, phone, email, password });
+      const user = await PageModel.registerUser({ name, username, dni, address, location, postal_code, phone, email, password });
   
       if (user) {
         const token = jwt.sign(
@@ -127,15 +165,28 @@ class PageController {
           maxAge: 7 * 24 * 60 * 60 * 1000 
         });
   
-        return res.status(200).json({ login: true, token });
+        return res.status(200).json({ login: true, token, id: user.id });
       }
   
-      res.status(400).json({ message: 'Failed to register user' });
+      res.status(400).json({ message: result.error });
     } 
     catch (error) {
+      if (error.code === 'EMAIL_EXISTS') {
+        return res.status(409).json({ message: 'El correo ya está registrado' });
+      }
+
       console.error('Error al registrarse:', error);
       res.status(500).json({ error: 'Internal server error' });
-    } 
+    }
+  }
+
+  static async getClientBill(req, res) {
+    const { id, movement, invoice_number } = req.query
+    const filePath = `/home/realcolorweb/public_html/technologyline.com.ar/bills/client_${id}/fc-${invoice_number}_movement-${movement}.pdf`;
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'Factura no encontrada' });
+    }
+    res.status(200).json({ link: `https://technologyline.com.ar/bills/client_${id}/fc-${invoice_number}_movement-${movement}.pdf` });
   }
 
   static async deleteUser (req, res) {
@@ -212,33 +263,33 @@ class PageController {
   
   static async sendOrderEmail(req, res) {
     try {
-      const clientIp = req.ip; 
-      const now = Date.now();
-      const oneHourAgo = now - 3600000;
-      const ALLOWED_IP = "190.245.167.220"; 
+      // const clientIp = req.ip; 
+      // const now = Date.now();
+      // const oneHourAgo = now - 3600000;
+      // const ALLOWED_IP = "190.245.167.220"; 
   
       // Leer archivo de registros de IPs
-      let ipOrders = {};
-      if (fs.existsSync(ipOrdersFile)) {
-        const rawData = fs.readFileSync(ipOrdersFile, 'utf-8');
-        ipOrders = rawData ? JSON.parse(rawData) : {};
-      }
+      // let ipOrders = {};
+      // if (fs.existsSync(ipOrdersFile)) {
+      //   const rawData = fs.readFileSync(ipOrdersFile, 'utf-8');
+      //   ipOrders = rawData ? JSON.parse(rawData) : {};
+      // }
   
-      if (clientIp !== ALLOWED_IP) {
-        if (!ipOrders[clientIp]) ipOrders[clientIp] = [];
-        ipOrders[clientIp] = ipOrders[clientIp].filter(timestamp => timestamp > oneHourAgo);
+      // if (clientIp !== ALLOWED_IP || clientIp === "::ffff:127.0.0.1") {
+      //   if (!ipOrders[clientIp]) ipOrders[clientIp] = [];
+      //   ipOrders[clientIp] = ipOrders[clientIp].filter(timestamp => timestamp > oneHourAgo);
   
-        // Verificar si superó el límite de 3 pedidos por hora
-        if (ipOrders[clientIp].length >= 3) {
-          return res.status(403).json({ error: 'Excedió el límite de pedidos por hora, intente más tarde!' });
-        }
+      //   // Verificar si superó el límite de 3 pedidos por hora
+      //   if (ipOrders[clientIp].length >= 3) {
+      //     return res.status(403).json({ error: 'Excedió el límite de pedidos por hora, intente más tarde!' });
+      //   }
   
-        ipOrders[clientIp].push(now);
-        fs.writeFileSync(ipOrdersFile, JSON.stringify(ipOrders, null, 2));
-      } 
-      else {
-        console.log(`La IP ${clientIp} está exenta del límite de pedidos.`);
-      }
+      //   ipOrders[clientIp].push(now);
+      //   fs.writeFileSync(ipOrdersFile, JSON.stringify(ipOrders, null, 2));
+      // } 
+      // else {
+      //   console.log(`La IP ${clientIp} está exenta del límite de pedidos.`);
+      // }
   
       const { datos_de_orden, mails } = req.body;
 
@@ -255,7 +306,7 @@ class PageController {
       const mailOptions = {
         from: `"${datos_de_orden.company}" <subsistemas@real-color.com.ar>`,
         to: mails.join(','),
-        subject: `¡Nueva venta registrada - Pedido Web de ${datos_de_orden.company} - ${datos_de_orden.movimiento_numero}!`,
+        subject: `¡Nuevo pedido registrado - Pedido Web de ${datos_de_orden.company} - ${datos_de_orden.movimiento_numero}!`,
         html: getOrderNotificationTemplate(datos_de_orden)
       };
 
@@ -267,6 +318,11 @@ class PageController {
         html: getOrderConfirmationTemplate(datos_de_orden)
       };
 
+      const result = await PageModel.saveOrderData({ input: req.body.datos_de_orden });
+      if(!result)
+        return res.status(400).json({ error: 'Error al guardar los datos del pedido' });
+
+      // Enviar los correos
       await transporter.sendMail(mailOptions);
       await transporter.sendMail(mailToClient);
 
@@ -275,6 +331,35 @@ class PageController {
     catch (error) {
       console.error('Error enviando el correo:', error);
       res.status(500).json({ error: 'No se pudo enviar el correo' });
+    }
+  }
+
+  static async getClientOrders(req, res) {
+    try {
+      const { email, id, movement } = req.query;
+      const movements = await PageModel.getClientOrders({ email, id, movement })
+      if(movements)
+        return res.status(200).json(movements)
+
+      res.status(404).json({ message: 'Error to get movement' });
+    } 
+    catch (error) {
+      console.error('Error getting movement:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  static async getOrdersStates(req, res) {
+    try {
+      const states = await PageModel.getOrdersStates()
+      if(states)
+        return res.status(200).json(states)
+
+      res.status(404).json({ message: 'Error to get states' });
+    } 
+    catch (error) {
+      console.error('Error getting movement:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   }
 
@@ -443,6 +528,43 @@ class PageController {
     catch (error) {
       console.error('Error retrieving products:', error);
       res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  static async uploadClientBill(req, res) {
+    try {
+      const { invoice_number, clientId, movement } = req.body;
+      console.log(req.body)
+      await PageModel.setClientInvoice({
+        clientId: parseInt(clientId),
+        invoiceNumber: invoice_number,
+        movement: parseInt(movement)
+      });
+      return res.status(200).json({ ok: true, message: 'Factura subida y DB actualizada' });
+    } catch (err) {
+      console.error('Error en uploadClientBill:', err);
+      return res.status(500).json({ ok: false, error: 'Error interno al subir factura' });
+    }
+  }
+
+  static async changeOrderState(req, res) {
+    try {
+      const { orderId, state } = req.body;
+
+      if (!orderId || !state) {
+        return res.status(400).json({ error: 'OrderID y estado son requeridos' });
+      }
+
+      const updatedOrder = await PageModel.changeOrderState({ orderId, state });
+
+      if (updatedOrder) {
+        return res.status(200).json({ message: 'Estado del pedido actualizado correctamente' });
+      }
+
+      res.status(404).json({ message: 'Pedido no encontrado' });
+    } catch (error) {
+      console.error('Error al actualizar el estado del pedido:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
     }
   }
 }

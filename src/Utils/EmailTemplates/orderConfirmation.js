@@ -66,7 +66,7 @@ const getOrderConfirmationTemplate = (datos_de_orden) => {
       <div class="content">
         <div class="message-box">
           <p>Estimado/a ${datos_de_orden.datos_cliente.nombre_completo},</p>
-          <p>Hemos recibido tu solicitud de pedido correctamente. En breve, un representante de ventas se pondrá en contacto contigo para finalizar la compra y coordinar los detalles.</p>
+          <p>Hemos recibido tu solicitud de pedido correctamente. En breve, un representante de ventas se pondrá en contacto contigo para finalizarlo y coordinar los detalles.</p>
         </div>
 
         <div class="section">

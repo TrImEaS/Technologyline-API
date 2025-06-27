@@ -15,11 +15,15 @@ const corsOptions = {
     'http://localhost:8080', 
     'https://www.technologyline.com.ar', 
     'https://technologyline.com.ar', 
-    'https://www.line-technology.com.ar'
+    'https://www.line-technology.com.ar',
+    'https://www.realcolor.com.ar',
+    'https://www.real-color.com.ar',
+    'https://real-color.com.ar',
+    'https://realcolor.com.ar',
   ],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 }
 
 app.disable('x-powered-by')
@@ -82,6 +86,10 @@ app.use('/others/about_us', express.static('/home/realcolorweb/public_html/techn
 app.use('/others/garantia', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others/centros_de_ayuda', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 app.use('/others/revendedores', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/login', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/myaccount', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/myaccount/profile', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
+app.use('/myaccount/orders', express.static('/home/realcolorweb/public_html/technologyline.com.ar/'));
 
 //Static routes for admin-ecommerce
 app.use('/admin/page', express.static('/home/realcolorweb/public_html/technologyline.com.ar/admin/page'));
