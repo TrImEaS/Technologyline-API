@@ -5,6 +5,12 @@ const path = require('path')
 
 const movementPath = path.resolve(__dirname, '../../Data/order_movements.json')
 
+function logErrorToFile(error) {
+  const logPath = path.join(__dirname, 'error.log.txt');
+  const logMessage = `[${new Date().toISOString()}] ${error.stack || error.message || error}\n\n`;
+  fs.appendFileSync(logPath, logMessage, 'utf8');
+}
+
 class PageModel {
   static async getResellersData({ id, name }) {
     try {
@@ -201,7 +207,7 @@ class PageModel {
 
       const [insertOrderHeader] = await ADMINPool.query(`
         INSERT INTO orders_header (movement, client_id, invoice_number, total_articles, total_price, payment_list, company, order_state) 
-        VALUES (, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, 
         [
           +input.movimiento_numero, 
           client_id[0].id, '', 
@@ -234,6 +240,7 @@ class PageModel {
     } 
     catch (error) {
       console.error('Error saving order data:', error);
+      logErrorToFile(error);
       throw error;
     }
   }

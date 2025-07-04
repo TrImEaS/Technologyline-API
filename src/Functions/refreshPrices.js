@@ -10,7 +10,7 @@ const logFilePath = path.resolve(__dirname, '../Data/log.txt');
 async function refreshPrices() {
   console.log('Iniciando la actualización de precios...');
   const connection = await ADMINPool.getConnection();
-  console.log('Conexión a la base de datos establecida');
+  // console.log('Conexión a la base de datos establecida');
 
   try {
     await connection.beginTransaction();

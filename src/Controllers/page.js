@@ -6,6 +6,13 @@ const nodemailer = require('nodemailer');
 const getOrderNotificationTemplate = require('../Utils/EmailTemplates/orderNotification');
 const getOrderConfirmationTemplate = require('../Utils/EmailTemplates/orderConfirmation');
 const jwt = require('jsonwebtoken');
+
+function logErrorToFile(error) {
+  const logPath = path.join(__dirname, 'error.log.txt');
+  const logMessage = `[${new Date().toISOString()}] ${error.stack || error.message || error}\n\n`;
+  fs.appendFileSync(logPath, logMessage, 'utf8');
+}
+
 const SECRET_KEY = 'trimeasdacarry';
 
 let ipTracking = {};
@@ -263,34 +270,6 @@ class PageController {
   
   static async sendOrderEmail(req, res) {
     try {
-      // const clientIp = req.ip; 
-      // const now = Date.now();
-      // const oneHourAgo = now - 3600000;
-      // const ALLOWED_IP = "190.245.167.220"; 
-  
-      // Leer archivo de registros de IPs
-      // let ipOrders = {};
-      // if (fs.existsSync(ipOrdersFile)) {
-      //   const rawData = fs.readFileSync(ipOrdersFile, 'utf-8');
-      //   ipOrders = rawData ? JSON.parse(rawData) : {};
-      // }
-  
-      // if (clientIp !== ALLOWED_IP || clientIp === "::ffff:127.0.0.1") {
-      //   if (!ipOrders[clientIp]) ipOrders[clientIp] = [];
-      //   ipOrders[clientIp] = ipOrders[clientIp].filter(timestamp => timestamp > oneHourAgo);
-  
-      //   // Verificar si superó el límite de 3 pedidos por hora
-      //   if (ipOrders[clientIp].length >= 3) {
-      //     return res.status(403).json({ error: 'Excedió el límite de pedidos por hora, intente más tarde!' });
-      //   }
-  
-      //   ipOrders[clientIp].push(now);
-      //   fs.writeFileSync(ipOrdersFile, JSON.stringify(ipOrders, null, 2));
-      // } 
-      // else {
-      //   console.log(`La IP ${clientIp} está exenta del límite de pedidos.`);
-      // }
-  
       const { datos_de_orden, mails } = req.body;
 
       const transporter = nodemailer.createTransport({
@@ -330,6 +309,7 @@ class PageController {
     } 
     catch (error) {
       console.error('Error enviando el correo:', error);
+      logErrorToFile(error);
       res.status(500).json({ error: 'No se pudo enviar el correo' });
     }
   }
@@ -571,3 +551,30 @@ class PageController {
 
 module.exports = PageController
 
+      // const clientIp = req.ip; 
+      // const now = Date.now();
+      // const oneHourAgo = now - 3600000;
+      // const ALLOWED_IP = "190.245.167.220"; 
+  
+      // Leer archivo de registros de IPs
+      // let ipOrders = {};
+      // if (fs.existsSync(ipOrdersFile)) {
+      //   const rawData = fs.readFileSync(ipOrdersFile, 'utf-8');
+      //   ipOrders = rawData ? JSON.parse(rawData) : {};
+      // }
+  
+      // if (clientIp !== ALLOWED_IP || clientIp === "::ffff:127.0.0.1") {
+      //   if (!ipOrders[clientIp]) ipOrders[clientIp] = [];
+      //   ipOrders[clientIp] = ipOrders[clientIp].filter(timestamp => timestamp > oneHourAgo);
+  
+      //   // Verificar si superó el límite de 3 pedidos por hora
+      //   if (ipOrders[clientIp].length >= 3) {
+      //     return res.status(403).json({ error: 'Excedió el límite de pedidos por hora, intente más tarde!' });
+      //   }
+  
+      //   ipOrders[clientIp].push(now);
+      //   fs.writeFileSync(ipOrdersFile, JSON.stringify(ipOrders, null, 2));
+      // } 
+      // else {
+      //   console.log(`La IP ${clientIp} está exenta del límite de pedidos.`);
+      // }

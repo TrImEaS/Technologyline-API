@@ -40,7 +40,7 @@ async function refreshDB() {
       if (!sku) continue;
       if (sku === '16' || id === 4710) continue;
       excelProductIds.add(sku);
-      console.log(excelProduct)
+      // console.log(excelProduct)
 
       if (existingProductMap.has(sku)) {
         updateProductQueries.push(connection.query(
