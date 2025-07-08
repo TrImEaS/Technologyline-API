@@ -104,8 +104,8 @@ pageRouter.patch('/setBanner', uploadImages.single('image'), PageController.uplo
 pageRouter.patch('/updateBannerPosition', PageController.updateBannerPosition);
 pageRouter.patch('/changeUserData', PageController.changeUserData);
 pageRouter.patch('/changeUserPassword', PageController.changeUserPassword);
-pageRouter.patch('/check-view/:id', PageController.checkResellerData);
 pageRouter.patch('/changeOrderState', PageController.changeOrderState);
+pageRouter.patch('/check-view/:id', PageController.checkResellerData);
 
 pageRouter.post('/', PageController.saveResellersData);
 pageRouter.post('/uploadExcel', uploadExcel.single('file'), PageController.uploadExcel);

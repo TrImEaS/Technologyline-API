@@ -529,13 +529,13 @@ class PageController {
 
   static async changeOrderState(req, res) {
     try {
-      const { orderId, state } = req.body;
+      const { orderId, state, user, observations } = req.body;
 
-      if (!orderId || !state) {
-        return res.status(400).json({ error: 'OrderID y estado son requeridos' });
+      if (!orderId || !state || !user) {
+        return res.status(400).json({ error: 'OrderID, estado y usuario son requeridos' });
       }
 
-      const updatedOrder = await PageModel.changeOrderState({ orderId, state });
+      const updatedOrder = await PageModel.changeOrderState({ orderId, state, user, observations });
 
       if (updatedOrder) {
         return res.status(200).json({ message: 'Estado del pedido actualizado correctamente' });
