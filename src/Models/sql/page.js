@@ -306,6 +306,8 @@ class PageModel {
             company: order.company,
             payment: order.payment_name,
             order_state: order.order_state_name,
+            user: order.user,
+            observations: order.observations,
             client_data: clientInfo[0] || null
           },
           order_details: details
@@ -430,11 +432,12 @@ class PageModel {
     return true;
   }
 
-  static async changeOrderState({ orderId, state }) {
+  static async changeOrderState({ orderId, state, user, observations }) {
     try {
-      const [result] = await ADMINPool.query('UPDATE orders_header SET order_state = ? WHERE id = ?', [+state, +orderId]);
+      const [result] = await ADMINPool.query('UPDATE orders_header SET order_state = ?, user = ?, observations = ? WHERE id = ?', [+state, user, observations, +orderId]);
       return result.affectedRows > 0;
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error al cambiar el estado del pedido:', error);
       throw error;
     }
