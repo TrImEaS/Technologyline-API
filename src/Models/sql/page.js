@@ -5,12 +5,6 @@ const path = require('path')
 
 const movementPath = path.resolve(__dirname, '../../Data/order_movements.json')
 
-function logErrorToFile(error) {
-  const logPath = path.join(__dirname, 'error.log.txt');
-  const logMessage = `[${new Date().toISOString()}] ${error.stack || error.message || error}\n\n`;
-  fs.appendFileSync(logPath, logMessage, 'utf8');
-}
-
 class PageModel {
   static async getResellersData({ id, name }) {
     try {
@@ -240,7 +234,6 @@ class PageModel {
     } 
     catch (error) {
       console.error('Error saving order data:', error);
-      logErrorToFile(error);
       throw error;
     }
   }
@@ -313,8 +306,6 @@ class PageModel {
             company: order.company,
             payment: order.payment_name,
             order_state: order.order_state_name,
-            user: order.user,
-            observations: order.observations,
             client_data: clientInfo[0] || null
           },
           order_details: details
@@ -377,7 +368,6 @@ class PageModel {
   static async loginGoogle ({ email, name, sub }) {
     try {
       const [results] = await ADMINPool.query('SELECT * FROM clients_ecommerce WHERE email = ?', [email]);
-      
       if (results.length > 0) {
         return results[0]
       } 
@@ -440,12 +430,11 @@ class PageModel {
     return true;
   }
 
-  static async changeOrderState({ orderId, state, user, observations }) {
+  static async changeOrderState({ orderId, state }) {
     try {
-      const [result] = await ADMINPool.query('UPDATE orders_header SET order_state = ?, user = ?, observations = ? WHERE id = ?', [+state, user, observations, +orderId]);
+      const [result] = await ADMINPool.query('UPDATE orders_header SET order_state = ? WHERE id = ?', [+state, +orderId]);
       return result.affectedRows > 0;
-    } 
-    catch (error) {
+    } catch (error) {
       console.error('Error al cambiar el estado del pedido:', error);
       throw error;
     }

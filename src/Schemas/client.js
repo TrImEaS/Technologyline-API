@@ -1,4 +1,4 @@
-const z = require ('zod')
+/* const z = require ('zod')
 
 const clientSchema = z.object({
   fullname: z.string().min(3).max(100),
@@ -18,4 +18,4 @@ function validatePartialClient(object) {
   return clientSchema.partial().safeParse(object)
 }
 
-module.exports = { validateClient, validatePartialClient }
+module.exports = { validateClient, validatePartialClient } */

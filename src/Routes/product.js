@@ -25,7 +25,7 @@ productRouter.get('/:id', ProductController.getById);
 productRouter.post('/', ProductController.create);
 productRouter.post('/addImage', upload.single('image'), ProductController.addImage);
 productRouter.patch('/addView/:id', ProductController.addProductView);
-productRouter.patch('/updateImages', ProductController.updateImages);
 productRouter.patch('/', ProductController.update);
+productRouter.patch('/updateImages', ProductController.updateImages);
 
 module.exports = productRouter;

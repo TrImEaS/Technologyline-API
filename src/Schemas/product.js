@@ -1,4 +1,4 @@
-const z = require ('zod')
+/* const z = require ('zod')
 
 const productSchema = z.object({
   stock: z.number().int().positive(),
@@ -39,4 +39,4 @@ function validatePartialProduct(input) {
   return productSchema.partial().safeParse(input)
 }
 
-module.exports = { validateProduct, validatePartialProduct }
+module.exports = { validateProduct, validatePartialProduct } */

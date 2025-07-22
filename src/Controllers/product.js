@@ -1,4 +1,4 @@
-const { validatePartialProduct, validateProduct } = require('../Schemas/product.js');
+// const { validatePartialProduct, validateProduct } = require('../Schemas/product.js');
 const ProductModel = require('../Models/sql/product.js');
 const fs = require('fs');
 const path = require('path');
@@ -61,10 +61,10 @@ class ProductController {
       };
 
       // Validacion de datos
-      const result = validateProduct(inputData);
-      if (result.error) {
-        return res.status(422).json({ error: JSON.parse(result.error.message) });
-      }
+      // const result = validateProduct(inputData);
+      // if (result.error) {
+      //   return res.status(422).json({ error: JSON.parse(result.error.message) });
+      // }
 
       // Validar si los datos ya existen sino subir los datos
       const existingData = await ProductModel.create({ input: inputData });
@@ -81,14 +81,14 @@ class ProductController {
 
   static async update(req, res) {
     try {
-      const result = validatePartialProduct(req.body);
-      console.log(result.data)
-      if (!result.success)
-        return res.status(400).json({ error: JSON.parse(result.error.message) });
+      // const result = validatePartialProduct(req.body);
+      // console.log(result.data)
+      // if (!result.success)
+      //   return res.status(400).json({ error: JSON.parse(result.error.message) });
 
       const { sku } = req.query;
 
-      const updatedata = await ProductModel.update({ sku, input: result.data });
+      const updatedata = await ProductModel.update({ sku, input: req.body });
       return res.json(updatedata);
     } catch (e) {
       logError(`Error updating product with id ${req.query.sku}: ${e.message}`);
@@ -98,16 +98,17 @@ class ProductController {
 
   static async addProductView(req, res) {
     try {
-      const result = validatePartialProduct(req.body);
-      if (!result.success){
-        console.log('error')
-        return res.status(400).json({ error: JSON.parse(result.error.message) });
-      }
+      // const result = validatePartialProduct(req.body);
+      // if (!result.success){
+      //   console.log('error')
+      //   return res.status(400).json({ error: JSON.parse(result.error.message) });
+      // }
 
       const { id } = req.params;
       const updatedata = await ProductModel.addProductView({ id: id });
       return res.json(updatedata);
-    } catch (e) {
+    } 
+    catch (e) {
       logError(`Error adding view to product with id ${req.query.id}: ${e.message}`);
       return res.status(500).json({ error: 'Internal server error' });
     }

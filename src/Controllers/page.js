@@ -6,12 +6,8 @@ const nodemailer = require('nodemailer');
 const getOrderNotificationTemplate = require('../Utils/EmailTemplates/orderNotification');
 const getOrderConfirmationTemplate = require('../Utils/EmailTemplates/orderConfirmation');
 const jwt = require('jsonwebtoken');
-
-function logErrorToFile(error) {
-  const logPath = path.join(__dirname, 'error.log.txt');
-  const logMessage = `[${new Date().toISOString()}] ${error.stack || error.message || error}\n\n`;
-  fs.appendFileSync(logPath, logMessage, 'utf8');
-}
+console.log('jsonwebtoken version:', require('jsonwebtoken/package').version);
+console.log('signed:', jwt.sign({foo:'bar'}, 'testkey'));
 
 const SECRET_KEY = 'trimeasdacarry';
 
@@ -100,22 +96,20 @@ class PageController {
 
       if (user) {
         const token = jwt.sign(
-          { id: user.id || user, email },
+          { id: +user.id || user, email },
           SECRET_KEY,
           { expiresIn: '7d' }
         );
 
-        res.cookie('email', email, {
-          maxAge: 7 * 24 * 60 * 60 * 1000 
-        });
+        res.cookie('email', email, { maxAge: 7 * 24 * 60 * 60 * 1000 });
 
-        return res.status(200).json({ login: true, token, id: user.id });
+        return res.status(200).json({ login: true, token, id: +user.id });
       }
 
       res.status(400).json({ message: 'Failed to login user' });
     } catch (error) {
       console.error('Error al logearse:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: `Internal server error ${error.message}` });
     }
   }
 
@@ -126,7 +120,7 @@ class PageController {
 
       if (user) {
         const token = jwt.sign(
-          { id: user.id || user, email },
+          { id: +user.id || user, email },
           SECRET_KEY,
           { expiresIn: '7d' }
         );
@@ -135,13 +129,13 @@ class PageController {
           maxAge: 7 * 24 * 60 * 60 * 1000 
         });
 
-        return res.status(200).json({ login: true, token, id: user.id });
+        return res.status(200).json({ login: true, token, id: +user.id });
       }
 
-      res.status(400).json({ message: 'Failed to login user with Google' });
+      res.status(400).json({ message: `Failed to login user with Google ${error.message}` });
     } catch (error) {
       console.error('Error al logearse con Google:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: `Internal server error ${error.message}` });
     }
   }
 
@@ -163,7 +157,7 @@ class PageController {
   
       if (user) {
         const token = jwt.sign(
-          { id: user.id || user, email },
+          { id: +user.id || user, email },
           SECRET_KEY,
           { expiresIn: '7d' }
         );
@@ -172,7 +166,7 @@ class PageController {
           maxAge: 7 * 24 * 60 * 60 * 1000 
         });
   
-        return res.status(200).json({ login: true, token, id: user.id });
+        return res.status(200).json({ login: true, token, id: +user.id });
       }
   
       res.status(400).json({ message: result.error });
@@ -270,6 +264,34 @@ class PageController {
   
   static async sendOrderEmail(req, res) {
     try {
+      // const clientIp = req.ip; 
+      // const now = Date.now();
+      // const oneHourAgo = now - 3600000;
+      // const ALLOWED_IP = "190.245.167.220"; 
+  
+      // Leer archivo de registros de IPs
+      // let ipOrders = {};
+      // if (fs.existsSync(ipOrdersFile)) {
+      //   const rawData = fs.readFileSync(ipOrdersFile, 'utf-8');
+      //   ipOrders = rawData ? JSON.parse(rawData) : {};
+      // }
+  
+      // if (clientIp !== ALLOWED_IP || clientIp === "::ffff:127.0.0.1") {
+      //   if (!ipOrders[clientIp]) ipOrders[clientIp] = [];
+      //   ipOrders[clientIp] = ipOrders[clientIp].filter(timestamp => timestamp > oneHourAgo);
+  
+      //   // Verificar si superó el límite de 3 pedidos por hora
+      //   if (ipOrders[clientIp].length >= 3) {
+      //     return res.status(403).json({ error: 'Excedió el límite de pedidos por hora, intente más tarde!' });
+      //   }
+  
+      //   ipOrders[clientIp].push(now);
+      //   fs.writeFileSync(ipOrdersFile, JSON.stringify(ipOrders, null, 2));
+      // } 
+      // else {
+      //   console.log(`La IP ${clientIp} está exenta del límite de pedidos.`);
+      // }
+  
       const { datos_de_orden, mails } = req.body;
 
       const transporter = nodemailer.createTransport({
@@ -309,7 +331,6 @@ class PageController {
     } 
     catch (error) {
       console.error('Error enviando el correo:', error);
-      logErrorToFile(error);
       res.status(500).json({ error: 'No se pudo enviar el correo' });
     }
   }
@@ -529,13 +550,13 @@ class PageController {
 
   static async changeOrderState(req, res) {
     try {
-      const { orderId, state, user, observations } = req.body;
+      const { orderId, state } = req.body;
 
-      if (!orderId || !state || !user) {
-        return res.status(400).json({ error: 'OrderID, estado y usuario son requeridos' });
+      if (!orderId || !state) {
+        return res.status(400).json({ error: 'OrderID y estado son requeridos' });
       }
 
-      const updatedOrder = await PageModel.changeOrderState({ orderId, state, user, observations });
+      const updatedOrder = await PageModel.changeOrderState({ orderId, state });
 
       if (updatedOrder) {
         return res.status(200).json({ message: 'Estado del pedido actualizado correctamente' });
@@ -551,30 +572,3 @@ class PageController {
 
 module.exports = PageController
 
-      // const clientIp = req.ip; 
-      // const now = Date.now();
-      // const oneHourAgo = now - 3600000;
-      // const ALLOWED_IP = "190.245.167.220"; 
-  
-      // Leer archivo de registros de IPs
-      // let ipOrders = {};
-      // if (fs.existsSync(ipOrdersFile)) {
-      //   const rawData = fs.readFileSync(ipOrdersFile, 'utf-8');
-      //   ipOrders = rawData ? JSON.parse(rawData) : {};
-      // }
-  
-      // if (clientIp !== ALLOWED_IP || clientIp === "::ffff:127.0.0.1") {
-      //   if (!ipOrders[clientIp]) ipOrders[clientIp] = [];
-      //   ipOrders[clientIp] = ipOrders[clientIp].filter(timestamp => timestamp > oneHourAgo);
-  
-      //   // Verificar si superó el límite de 3 pedidos por hora
-      //   if (ipOrders[clientIp].length >= 3) {
-      //     return res.status(403).json({ error: 'Excedió el límite de pedidos por hora, intente más tarde!' });
-      //   }
-  
-      //   ipOrders[clientIp].push(now);
-      //   fs.writeFileSync(ipOrdersFile, JSON.stringify(ipOrders, null, 2));
-      // } 
-      // else {
-      //   console.log(`La IP ${clientIp} está exenta del límite de pedidos.`);
-      // }

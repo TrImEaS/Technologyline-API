@@ -1,59 +1,127 @@
-[2025-02-26T15:38:29.562Z] Error updating image order for product with id LAB844: Error fetching existing images for product LAB844: Cannot read properties of undefined (reading 'split')
-[2025-02-26T15:40:35.979Z] Error updating image order for product with id LAB844: Cannot read properties of undefined (reading 'split')
-[2025-02-26T15:45:08.975Z] Error updating image order for product with id LAB844: image.split is not a function
-[2025-02-26T15:45:15.399Z] Error updating image order for product with id LAB844: image.split is not a function
-[2025-02-26T15:45:25.015Z] Error updating image order for product with id LAB844: image.split is not a function
-[2025-02-28T14:25:48.019Z] Error retrieving product with id getCategoriesForCarrousel: ProductModel.getById is not a function
-[2025-03-06T19:03:07.582Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-10T14:14:02.115Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-13T17:45:24.536Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-17T21:21:04.350Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-17T21:21:13.188Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-17T21:21:15.099Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-17T21:21:31.063Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-17T21:21:33.446Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-17T21:21:34.665Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-17T21:23:10.614Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-18T18:28:07.179Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-18T18:28:13.161Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-18T18:29:12.042Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-18T18:29:27.317Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-18T18:29:36.139Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-18T18:31:06.396Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-27T17:28:04.182Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-27T17:29:13.943Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-27T17:29:23.962Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-27T19:53:27.148Z] Error retrieving products: connect ECONNREFUSED ::1:3306
-[2025-03-31T18:54:05.273Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:54:07.483Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:54:08.313Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:54:12.543Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:55:01.510Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:55:02.126Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:57:34.738Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:57:35.416Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:57:35.825Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:57:48.126Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:57:48.581Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:58:53.608Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:58:54.218Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:58:54.575Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:58:54.951Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:59:25.749Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:59:26.206Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:59:26.470Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:59:26.621Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T18:59:26.746Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T19:00:19.139Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T19:00:19.803Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T19:01:11.933Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T19:01:12.453Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T19:01:12.652Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T19:01:12.836Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T19:03:20.925Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T19:03:21.523Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-03-31T19:05:49.602Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
-[2025-05-14T16:34:10.304Z] Error retrieving products: Column 'sku' in where clause is ambiguous
-[2025-07-02T17:51:34.466Z] Error retrieving products: 
-[2025-07-07T14:42:01.728Z] Error retrieving products: 
-[2025-07-14T18:08:55.393Z] Error retrieving products: 
+[2025-03-17T16:00:50.853Z] Error retrieving product with id addView: ProductModel.getById is not a function
+[2025-03-17T21:19:27.452Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-17T21:19:41.774Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-17T21:20:12.910Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-25T16:27:51.885Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T07:00:04.628Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T18:50:49.173Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-03-31T19:13:19.941Z] Error retrieving product with id refreshWeekViews: ProductModel.getById is not a function
+[2025-04-21T19:51:43.540Z] Error retrieving products: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '(GROUP_CONCAT(DISTINCT pi.img_url ORDER BY pi.id), ',', 1) AS img_url,
+      ...' at line 3
+[2025-04-21T19:51:54.906Z] Error retrieving products: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '(GROUP_CONCAT(DISTINCT pi.img_url ORDER BY pi.id), ',', 1) AS img_url,
+      ...' at line 3
+[2025-04-21T19:52:10.407Z] Error retrieving products: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '(GROUP_CONCAT(DISTINCT pi.img_url ORDER BY pi.id), ',', 1) AS img_url,
+      ...' at line 3
+[2025-05-14T16:25:49.345Z] Error retrieving products: Column 'sku' in WHERE is ambiguous
+[2025-05-14T16:27:54.947Z] Error retrieving products: Column 'sku' in WHERE is ambiguous
+[2025-05-14T16:29:20.617Z] Error retrieving products: Column 'sku' in WHERE is ambiguous
+[2025-05-14T16:34:22.627Z] Error retrieving products: Column 'sku' in WHERE is ambiguous
+[2025-05-14T16:36:08.417Z] Error retrieving products: Column 'sku' in WHERE is ambiguous
+[2025-05-14T16:36:15.694Z] Error retrieving products: Column 'sku' in WHERE is ambiguous
+[2025-05-14T16:39:36.042Z] Error retrieving products: Column 'sku' in WHERE is ambiguous
+[2025-05-14T16:39:53.783Z] Error retrieving products: Column 'sku' in WHERE is ambiguous
+[2025-05-14T16:39:56.303Z] Error retrieving products: Column 'sku' in WHERE is ambiguous
+[2025-05-26T17:41:24.843Z] Error retrieving products: write ECONNRESET
+[2025-06-23T13:51:24.401Z] Error retrieving products: write ECONNRESET
+[2025-07-16T18:54:05.675Z] Error retrieving products: Access denied for user 'root'@'localhost' (using password: NO)
+[2025-07-16T18:55:25.208Z] Error retrieving products: Access denied for user 'root'@'localhost' (using password: NO)
+[2025-07-16T18:55:25.208Z] Error retrieving products: Access denied for user 'root'@'localhost' (using password: NO)
+[2025-07-16T19:54:25.056Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T20:03:52.044Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T20:18:24.094Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T20:18:39.150Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T20:44:40.017Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T20:57:15.807Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T21:08:57.697Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T22:23:22.571Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T22:33:06.234Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T22:34:31.622Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T22:34:32.955Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T22:34:48.987Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T23:59:07.741Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-16T23:59:40.845Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T00:00:17.638Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T00:01:26.626Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T00:01:35.445Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T00:01:54.393Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T02:05:37.399Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T02:06:07.284Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T02:28:37.888Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T02:37:58.788Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T02:45:14.335Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T02:58:45.909Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T03:00:34.904Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T03:01:40.388Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T03:10:11.153Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T03:12:15.114Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T03:13:14.280Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T03:41:10.493Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T03:47:09.470Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T12:00:25.282Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T12:02:09.368Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T12:53:31.189Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T12:56:44.685Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T14:36:08.780Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T14:39:02.535Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T14:53:20.545Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T14:53:32.471Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T14:56:58.486Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T14:57:29.575Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T15:24:38.444Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T15:27:33.000Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T15:27:49.502Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T15:27:57.026Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T15:28:15.404Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T15:29:05.942Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T15:29:09.534Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T15:29:28.766Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T15:29:32.966Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T16:31:43.767Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T17:40:35.682Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T19:01:35.079Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T19:02:38.579Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T19:03:04.519Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T19:33:49.526Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T20:48:09.967Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T21:29:26.026Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-17T22:44:27.648Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T00:18:42.931Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T13:02:10.312Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T13:08:12.172Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T13:40:32.573Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T13:41:51.211Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T13:42:31.339Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T13:43:33.730Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T13:43:41.592Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T13:45:43.910Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T13:46:23.836Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T13:50:31.126Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T13:50:33.825Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T14:32:28.879Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T14:47:29.888Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T15:33:38.602Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T15:51:41.100Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T16:02:39.799Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T16:16:39.382Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T17:31:04.238Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T17:44:35.450Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T17:47:48.379Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T17:56:02.307Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T18:12:18.736Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T18:22:02.468Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T18:22:35.107Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T18:23:06.440Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T18:27:01.536Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T18:33:28.130Z] Error updating product with id CARG726: validatePartialProduct is not a function
+[2025-07-18T18:33:52.785Z] Error updating product with id CARG726: validatePartialProduct is not a function
+[2025-07-18T18:34:51.663Z] Error updating product with id LAB729: validatePartialProduct is not a function
+[2025-07-18T18:46:18.089Z] Error updating product with id CAB143: validatePartialProduct is not a function
+[2025-07-18T18:46:20.356Z] Error updating product with id CAB143: validatePartialProduct is not a function
+[2025-07-18T18:46:34.200Z] Error updating product with id CAB143: validatePartialProduct is not a function
+[2025-07-18T19:36:11.565Z] Error adding view to product with id undefined: validatePartialProduct is not a function
+[2025-07-18T19:52:40.559Z] Error updating product with id CAB143: validatePartialProduct is not a function
+[2025-07-18T19:54:24.467Z] Error updating product with id CAB143: result is not defined
+[2025-07-18T19:56:01.926Z] Error updating product with id CAB143: result is not defined
+[2025-07-18T20:01:41.185Z] Error updating product with id CAB143: result is not defined
+[2025-07-18T20:11:44.238Z] Error updating product with id CAB143: result is not defined
+[2025-07-18T20:13:51.675Z] Error updating product with id CAB143: result is not defined
