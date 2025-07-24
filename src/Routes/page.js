@@ -79,13 +79,14 @@ const uploadExcel = multer({
   limits: { fileSize: 50 * 1024 * 1024 }, // Máximo 50MB
   fileFilter: (req, file, cb) => {
     const allowedMimes = [
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+      'application/vnd.ms-excel', // .xls
+      'application/vnd.ms-excel.sheet.macroenabled.12', // .xlsm
     ];
     if (allowedMimes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Formato de archivo no permitido, solo .xls y .xlsx'));
+      cb(new Error('Formato de archivo no permitido, solo .xls, .xlsx y .xlsm'));
     }
   },
 });

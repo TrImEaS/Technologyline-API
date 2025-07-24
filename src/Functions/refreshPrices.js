@@ -1,96 +1,74 @@
-const XlsxPopulate = require('xlsx-populate');
+const XLSX = require('xlsx');
 const path = require('path');
 const fs = require('fs');
 const { ADMINPool } = require('../Models/sql/config');
 
-// const excelPath = path.resolve(__dirname, '../Data/prices.xlsx');
-const excelPath = path.resolve(__dirname, '../Data/products.xlsx');
-const logFilePath = path.resolve(__dirname, '../Data/log.txt');
+const excelPath  = path.resolve(__dirname, '../Data/products.xlsm');
+const logFile    = path.resolve(__dirname, '../Data/log.txt');
 
 async function refreshPrices() {
-  console.log('Iniciando la actualización de precios...');
-  const connection = await ADMINPool.getConnection();
-  // console.log('Conexión a la base de datos establecida');
-
+  const conn = await ADMINPool.getConnection();
   try {
-    await connection.beginTransaction();
+    await conn.beginTransaction();
+    const wb    = XLSX.readFile(excelPath);
+    const sheet = wb.Sheets['PVP WEB LINK DE PAGO'];
+    if (!sheet) throw new Error('Hoja "PVP WEB LINK DE PAGO" no encontrada');
 
-    const excel = await XlsxPopulate.fromFileAsync(excelPath);
-    if (!excel) {
-      console.log('Error al cargar el archivo Excel');
-      logMessage('Error: No se pudo cargar el archivo Excel.');
-      return false;
-    }
+    const rows = XLSX.utils.sheet_to_json(sheet, { header:1, defval:'' }).slice(5);
+    const products = rows.map(row => ({
+      sku          : String(row[1] || ''),
+      list         : row[11] || '',
+      cash         : row[4]  ? cleanPrice(row[4])  : '',
+      threeQuotes  : row[19] ? cleanPrice(row[19]) : '',
+      sixQuotes    : row[27] ? cleanPrice(row[27]) : '',
+      nineQuotes   : row[35] ? cleanPrice(row[35]) : '',
+      twelveQuotes : row[43] ? cleanPrice(row[43]) : ''
+    }));
 
-    const excelSheet = excel.sheet('PVP WEB LINK DE PAGO').usedRange();
-    const mapColumnNames = (rowData) => ({
-      'sku': rowData[1] ? rowData[1] : '',
-      'list': rowData[11] ? rowData[11] : '',
-      'cash': rowData[4] ? cleanPrice(rowData[4]) : '',
-      'threeQuotes': rowData[19] ? cleanPrice(rowData[19]) : '',
-      'sixQuotes': rowData[27] ? cleanPrice(rowData[27]) : '',
-      'nineQuotes': rowData[35] ? cleanPrice(rowData[35]) : '',
-      'twelveQuotes': rowData[43] ? cleanPrice(rowData[43]) : '',
+    log('Cargando precios...');
+    await conn.query('TRUNCATE TABLE products_prices');
+
+    const inserts = [];
+    products.forEach(p => {
+      if (!p.sku) { log('Sin SKU, deteniendo'); return; }
+      [1,2,3,4,5,6].forEach(listId => {
+        const price = ({
+          1: p.list,
+          2: p.cash,
+          3: p.threeQuotes,
+          4: p.sixQuotes,
+          5: p.nineQuotes,
+          6: p.twelveQuotes
+        })[listId];
+        inserts.push(conn.query(
+          'INSERT INTO products_prices (list_id, sku, price) VALUES (?,?,?)',
+          [listId, p.sku, parseFloat(price).toFixed(2)]
+        ));
+      });
     });
 
-    const productsExcel = excelSheet.value().slice(5).map(rowData => mapColumnNames(rowData));
-    // console.log('Productos cargados desde el Excel:', productsExcel);
+    await Promise.all(inserts);
+    await conn.commit();
+    log('✅ Precios actualizados');
+    return { success:true, message:'Base de datos actualizada correctamente' };
 
-    logMessage('Cargando precios...');
-
-    await ADMINPool.query('TRUNCATE TABLE products_prices');
-    const queries = [];
-
-    for (const excelProduct of productsExcel) {
-      const { sku, list, cash, threeQuotes, sixQuotes, nineQuotes, twelveQuotes } = excelProduct;
-      if (!sku) {
-        logMessage('No sku found, stopping process.');
-        break;
-      }
-
-      queries.push(ADMINPool.query('INSERT INTO products_prices (`list_id`, `sku`, `price`) VALUES (?,?,?)', [1, sku, list.toFixed(2)]));
-      queries.push(ADMINPool.query('INSERT INTO products_prices (`list_id`, `sku`, `price`) VALUES (?,?,?)', [2, sku, cash.toFixed(2)]));
-      queries.push(ADMINPool.query('INSERT INTO products_prices (`list_id`, `sku`, `price`) VALUES (?,?,?)', [3, sku, threeQuotes.toFixed(2)]));
-      queries.push(ADMINPool.query('INSERT INTO products_prices (`list_id`, `sku`, `price`) VALUES (?,?,?)', [4, sku, sixQuotes.toFixed(2)]));
-      queries.push(ADMINPool.query('INSERT INTO products_prices (`list_id`, `sku`, `price`) VALUES (?,?,?)', [5, sku, nineQuotes.toFixed(2)]));
-      queries.push(ADMINPool.query('INSERT INTO products_prices (`list_id`, `sku`, `price`) VALUES (?,?,?)', [6, sku, twelveQuotes.toFixed(2)]));
-      
-      // logMessage(`Producto actualizado: SKU: ${id}:\n Price: Cash: ${cash}\n3 Cuotas: ${threeQuotes}\n6 Cuotas: ${sixQuotes}\n9 Cuotas: ${nineQuotes}\n12 Cuotas: ${twelveQuotes}\n`);
-    }
-
-    console.log('Ejecutando consultas...');
-    await Promise.all(queries);
-
-    logMessage('Datos cargados!');
-    console.log('Datos Cargados!');
-    await connection.commit();
-    return { success: true, message: "Base de datos actualizada correctamente" };
-
-  }
-  catch (e) {
-    console.error('❌ Error en refresh prices:', e);
-    await connection.rollback();
-    console.log('⚠️ Transacción revertida.');
-    
-    throw new Error(`Error en refresh prices: ${e.message}`);
-  }
-  finally {
-    connection.release();
+  } catch (e) {
+    await conn.rollback();
+    console.error(e);
+    throw e;
+  } finally {
+    conn.release();
   }
 }
 
-function cleanPrice(price) {
-  if (typeof price === 'string') {
-    return parseFloat(price.replace('ARS', '').trim()).toFixed(2);
-  }
-  return price;
+function cleanPrice(str) {
+  const s = String(str).replace('ARS','').trim().replace(',','.');
+  return parseFloat(s);
 }
 
-function logMessage(message) {
-  const timestamp = new Date().toISOString();
-  const fullMessage = `[${timestamp}] ${message}\n`;
-  fs.appendFileSync(logFilePath, fullMessage, 'utf8');
+function log(msg) {
+  const ts = new Date().toISOString();
+  fs.appendFileSync(logFile, `[${ts}] ${msg}\n`, 'utf8');
 }
 
-// refreshPrices()
 module.exports = refreshPrices;

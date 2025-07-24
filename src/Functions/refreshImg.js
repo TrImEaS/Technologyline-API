@@ -11,11 +11,12 @@ const dbConfig = {
 
 async function checkImageExists(url) {
   return new Promise((resolve) => {
-    https.request(url, { method: 'HEAD' }, (response) => {
-      resolve(response.statusCode === 200);
-    })
-    .on('error', () => resolve(false))
-    .end();
+    https
+      .request(url, { method: 'HEAD' }, (res) => {
+        resolve(res.statusCode === 200);
+      })
+      .on('error', () => resolve(false))
+      .end();
   });
 }
 
@@ -23,53 +24,51 @@ async function migrateImages() {
   let connection;
   try {
     connection = await mysql.createConnection(dbConfig);
-    console.log('procesando imagenes...');
-    await ADMINPool.query('TRUNCATE TABLE products_prices');
+    await connection.beginTransaction();
+
+    console.log('Procesando imágenes...');
+    await connection.query('TRUNCATE TABLE products_images');
 
     const [products] = await connection.execute('SELECT sku FROM products');
-
     const baseUrl = 'https://technologyline.com.ar/products-images';
-    const allImagePromises = [];
+    const imageInserts = [];
 
-    for (const { sku } of products) {
-      let images = [];
-
-      const urls = [ `${baseUrl}/${sku}.jpg` ];
+    for (const row of products) {
+      const sku = row.sku;
+      const urls = [ baseUrl + '/' + sku + '.jpg' ];
       for (let i = 1; i <= 9; i++) {
-        urls.push(`${baseUrl}/${sku}_${i}.jpg`);
+        urls.push(baseUrl + '/' + sku + '_' + i + '.jpg');
       }
 
-      const results = await Promise.all(urls.map(checkImageExists));
-
-      results.forEach((exists, index) => {
-        if (exists) images.push([sku, urls[index]]);
-      });
-
-      if (images.length > 0) {
-        // console.log(`Agregando imágenes para SKU: ${sku}`);
-        allImagePromises.push(connection.query(
-          'INSERT INTO products_images (sku, img_url) VALUES ?',
-          [images]
-        ));
+      const existsArray = await Promise.all(urls.map(checkImageExists));
+      for (let i = 0; i < existsArray.length; i++) {
+        if (existsArray[i]) {
+          imageInserts.push([sku, urls[i]]);
+        }
       }
     }
 
-    await Promise.all(allImagePromises);
+    if (imageInserts.length > 0) {
+      await connection.query(
+        'INSERT INTO products_images (sku, img_url) VALUES ?',
+        [imageInserts]
+      );
+    }
 
     await connection.commit();
-    console.log('Img cargadas!');
-    return { success: true, message: "Imágenes actualizadas correctamente" };
-  } 
-  catch (e) {
+    console.log('Imágenes cargadas!');
+    return { success: true, message: 'Imágenes actualizadas correctamente' };
+  } catch (e) {
     console.error('❌ Error en migrateImages:', e);
-    if (connection) await connection.rollback();
-    console.log('⚠️ Transacción revertida.');
-    throw new Error(`Error en migrateImages: ${e.message}`);
-  } 
-  finally {
-    if (connection) await connection.end();
+    if (connection) {
+      await connection.rollback();
+    }
+    throw new Error('Error en migrateImages: ' + e.message);
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
   }
 }
 
-// migrateImages()
 module.exports = migrateImages;

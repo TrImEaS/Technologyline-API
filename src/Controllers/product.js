@@ -107,8 +107,7 @@ class ProductController {
       const { id } = req.params;
       const updatedata = await ProductModel.addProductView({ id: id });
       return res.json(updatedata);
-    } 
-    catch (e) {
+    } catch (e) {
       logError(`Error adding view to product with id ${req.query.id}: ${e.message}`);
       return res.status(500).json({ error: 'Internal server error' });
     }
