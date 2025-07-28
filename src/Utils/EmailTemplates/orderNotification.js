@@ -67,20 +67,19 @@ const getOrderNotificationTemplate = (datos_de_orden) => {
       </ul>
       
       <h3>Opción de Entrega</h3>
-      ${datos_de_orden.opcion_de_entrega.retira_en_local.toLowerCase() == 'no' 
-        ?
-          `<div>
+      ${datos_de_orden.opcion_de_entrega.retira_en_local.toLowerCase() === 'no'
+        ? `<div>
             <p><strong>Dirección:</strong> ${datos_de_orden.opcion_de_entrega.direccion}</p>
             <p><strong>CP:</strong> ${datos_de_orden.opcion_de_entrega.cp}</p>
           </div>`
-        
-        : `<p><strong>Retira en Local</strong></p>`
+
+        : '<p><strong>Retira en Local</strong></p>'
       }
       
       <h3>Forma de Pago</h3>
       <p><strong>Abona en:</strong> ${datos_de_orden.abona_en}</p>
     </div>
-  `;
-};
+  `
+}
 
-module.exports = getOrderNotificationTemplate;
+module.exports = getOrderNotificationTemplate

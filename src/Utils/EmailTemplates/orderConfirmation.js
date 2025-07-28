@@ -84,9 +84,9 @@ const getOrderConfirmationTemplate = (datos_de_orden) => {
 
         <div class="section">
           <h3>Método de Entrega</h3>
-          ${datos_de_orden.opcion_de_entrega.retira_en_local.toLowerCase() === 'no' 
+          ${datos_de_orden.opcion_de_entrega.retira_en_local.toLowerCase() === 'no'
             ? `<p>Envío a domicilio: ${datos_de_orden.opcion_de_entrega.direccion}, CP: ${datos_de_orden.opcion_de_entrega.cp}</p>`
-            : `<p>Retiro en sucursal</p>`
+            : '<p>Retiro en sucursal</p>'
           }
         </div>
 
@@ -110,7 +110,7 @@ const getOrderConfirmationTemplate = (datos_de_orden) => {
         <img class='footer_img' src={datos_de_orden.footer_img}/>
       </div>
     </div>
-  `;
-};
+  `
+}
 
-module.exports = getOrderConfirmationTemplate;
+module.exports = getOrderConfirmationTemplate

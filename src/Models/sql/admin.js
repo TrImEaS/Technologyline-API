@@ -1,24 +1,23 @@
 const { ADMINPool } = require('./config')
 
 class AdminModel {
-  static async getAllClients({ id }) {
+  static async getAllClients ({ id }) {
     try {
-      const [results] = await ADMINPool.query('SELECT * FROM `clients_gbp` WHERE id = ? ', [parseInt(id)]);
-      const data = results;
+      const [results] = await ADMINPool.query('SELECT * FROM `clients_gbp` WHERE id = ? ', [parseInt(id)])
+      const data = results
 
       return data
-    } 
-    catch (error) {
-      console.error('Error fetching resellers form_data:', error);
-      throw error;
+    } catch (error) {
+      console.error('Error fetching resellers form_data:', error)
+      throw error
     }
   }
 }
 
 AdminModel.bulkInsertClients = async function (clients) {
-  const connection = await ADMINPool.getConnection();
+  const connection = await ADMINPool.getConnection()
   try {
-    await connection.beginTransaction();
+    await connection.beginTransaction()
     for (const client of clients) {
       await connection.query(
         `INSERT INTO clients_gbp
@@ -39,33 +38,33 @@ AdminModel.bulkInsertClients = async function (clients) {
           client.fecha_alta,
           client.inactivo
         ]
-      );
+      )
     }
-    await connection.commit();
+    await connection.commit()
   } catch (e) {
-    await connection.rollback();
-    throw e;
+    await connection.rollback()
+    throw e
   } finally {
-    connection.release();
+    connection.release()
   }
-};
+}
 
-AdminModel.existeClientePorDocumento = async function(documento) {
-  const connection = await ADMINPool.getConnection();
+AdminModel.existeClientePorDocumento = async function (documento) {
+  const connection = await ADMINPool.getConnection()
   try {
-    const doc = String(documento).trim();
+    const doc = String(documento).trim()
     const [rows] = await connection.query(
-      "SELECT 1 FROM clients_gbp WHERE TRIM(documento) = ? LIMIT 1",
+      'SELECT 1 FROM clients_gbp WHERE TRIM(documento) = ? LIMIT 1',
       [doc]
-    );
-    return rows.length > 0;
+    )
+    return rows.length > 0
   } finally {
-    connection.release();
+    connection.release()
   }
-};
+}
 
 AdminModel.insertClienteEspecial = async function (cliente) {
-  const connection = await ADMINPool.getConnection();
+  const connection = await ADMINPool.getConnection()
   try {
     const [result] = await connection.query(
       `INSERT INTO cliente_especial (numero_cliente, razon_social, domicilio, ciudad, provincia, clase_fiscal, documento, tel)
@@ -80,41 +79,41 @@ AdminModel.insertClienteEspecial = async function (cliente) {
         cliente.documento,
         cliente.tel || null
       ]
-    );
-    const [rows] = await connection.query('SELECT * FROM cliente_especial WHERE id = ?', [result.insertId]);
-    return rows[0]; 
+    )
+    const [rows] = await connection.query('SELECT * FROM cliente_especial WHERE id = ?', [result.insertId])
+    return rows[0]
   } finally {
-    connection.release();
+    connection.release()
   }
-};
+}
 
 AdminModel.getAllClientesEspeciales = async function () {
-  const connection = await ADMINPool.getConnection();
+  const connection = await ADMINPool.getConnection()
   try {
-    const [rows] = await connection.query('SELECT * FROM cliente_especial');
-    return rows;
+    const [rows] = await connection.query('SELECT * FROM cliente_especial')
+    return rows
   } finally {
-    connection.release();
+    connection.release()
   }
-};
+}
 
-AdminModel.setClienteEspecialActivado = async function(id, activado) {
-  const connection = await ADMINPool.getConnection();
+AdminModel.setClienteEspecialActivado = async function (id, activado) {
+  const connection = await ADMINPool.getConnection()
   try {
-    await connection.query('UPDATE cliente_especial SET activado = ? WHERE id = ?', [!!activado, id]);
+    await connection.query('UPDATE cliente_especial SET activado = ? WHERE id = ?', [!!activado, id])
   } finally {
-    connection.release();
+    connection.release()
   }
-};
+}
 
 AdminModel.getClientesEspecialesActivos = async function () {
-  const connection = await ADMINPool.getConnection();
+  const connection = await ADMINPool.getConnection()
   try {
-    const [rows] = await connection.query('SELECT * FROM cliente_especial WHERE activado = 1');
-    return rows;
+    const [rows] = await connection.query('SELECT * FROM cliente_especial WHERE activado = 1')
+    return rows
   } finally {
-    connection.release();
+    connection.release()
   }
-};
+}
 
 module.exports = AdminModel

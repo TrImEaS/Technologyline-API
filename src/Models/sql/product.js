@@ -1,7 +1,7 @@
 const { ADMINPool } = require('./config')
 
 class ProductModel {
-  static async getAll({ id, sku, name, all }) {
+  static async getAll ({ id, sku, name, all }) {
     try {
       if (sku) {
         const querySku = `SELECT 
@@ -13,42 +13,44 @@ class ProductModel {
                             LEFT JOIN products_images pi ON p.sku = pi.sku  -- Join por sku
                             LEFT JOIN products_prices pp ON p.sku = pp.sku  -- Join por sku
                             WHERE p.sku = ? 
-                            GROUP BY p.id`;
+                            GROUP BY p.id`
 
-        const [results] = await ADMINPool.query(querySku, [sku]);
+        const [results] = await ADMINPool.query(querySku, [sku])
 
         results.forEach(result => {
-          result.prices = result.prices ? result.prices.split(',').reduce((acc, price) => {
-            const [key, value] = price.split(':');
-            const parsedValue = parseFloat(value);
-            if (parsedValue >= 1000) {
-              acc[key] = parsedValue;
-            }
-            return acc;
-          }, {}) : {};
+          result.prices = result.prices
+            ? result.prices.split(',').reduce((acc, price) => {
+              const [key, value] = price.split(':')
+              const parsedValue = parseFloat(value)
+              if (parsedValue >= 1000) {
+                acc[key] = parsedValue
+              }
+              return acc
+            }, {})
+            : {}
 
           result.img_urls = result.img_urls
             ? result.img_urls
-                .split(',')
-                .sort((a, b) => {
-                  const matchA = a.match(/_(\d+)\./);
-                  const numA = parseInt(matchA ? matchA[1] : '0', 10);
+              .split(',')
+              .sort((a, b) => {
+                const matchA = a.match(/_(\d+)\./)
+                const numA = parseInt(matchA ? matchA[1] : '0', 10)
 
-                  const matchB = b.match(/_(\d+)\./);
-                  const numB = parseInt(matchB ? matchB[1] : '0', 10);
+                const matchB = b.match(/_(\d+)\./)
+                const numB = parseInt(matchB ? matchB[1] : '0', 10)
 
-                  return numA - numB;
-                })
-            : [];
+                return numA - numB
+              })
+            : []
 
-          for (let priceKey in result.prices) {
-            result[priceKey] = result.prices[priceKey];
+          for (const priceKey in result.prices) {
+            result[priceKey] = result.prices[priceKey]
           }
 
-          delete result.prices;
-        });
+          delete result.prices
+        })
 
-        return results; // Devolver los productos con sku
+        return results // Devolver los productos con sku
       }
 
       if (all) {
@@ -60,41 +62,43 @@ class ProductModel {
                             FROM products p
                             LEFT JOIN products_images pi ON p.sku = pi.sku  -- Join por sku
                             LEFT JOIN products_prices pp ON p.sku = pp.sku  -- Join por sku
-                            GROUP BY p.id`;
+                            GROUP BY p.id`
 
-        const [results] = await ADMINPool.query(queryAll);
+        const [results] = await ADMINPool.query(queryAll)
 
         results.forEach(result => {
-          result.prices = result.prices ? result.prices.split(',').reduce((acc, price) => {
-            const [key, value] = price.split(':');
-            const parsedValue = parseFloat(value);
-            if (parsedValue >= 1000) {
-              acc[key] = parsedValue;
-            }
-            return acc;
-          }, {}) : {};
+          result.prices = result.prices
+            ? result.prices.split(',').reduce((acc, price) => {
+              const [key, value] = price.split(':')
+              const parsedValue = parseFloat(value)
+              if (parsedValue >= 1000) {
+                acc[key] = parsedValue
+              }
+              return acc
+            }, {})
+            : {}
           result.img_urls = result.img_urls
             ? result.img_urls
-                .split(',')
-                .sort((a, b) => {
-                  const matchA = a.match(/_(\d+)\./);
-                  const numA = parseInt(matchA ? matchA[1] : '0', 10);
+              .split(',')
+              .sort((a, b) => {
+                const matchA = a.match(/_(\d+)\./)
+                const numA = parseInt(matchA ? matchA[1] : '0', 10)
 
-                  const matchB = b.match(/_(\d+)\./);
-                  const numB = parseInt(matchB ? matchB[1] : '0', 10);
+                const matchB = b.match(/_(\d+)\./)
+                const numB = parseInt(matchB ? matchB[1] : '0', 10)
 
-                  return numA - numB;
-                })
-            : [];
+                return numA - numB
+              })
+            : []
 
-          for (let priceKey in result.prices) {
-            result[priceKey] = result.prices[priceKey];
+          for (const priceKey in result.prices) {
+            result[priceKey] = result.prices[priceKey]
           }
 
-          delete result.prices;
-        });
+          delete result.prices
+        })
 
-        return results; // Devolver todos los productos
+        return results // Devolver todos los productos
       }
 
       let query = `SELECT 
@@ -104,174 +108,171 @@ class ProductModel {
                     FROM products p
                     LEFT JOIN products_images pi ON p.sku = pi.sku  -- Join por sku
                     LEFT JOIN products_prices pp ON p.sku = pp.sku  -- Join por sku
-                    WHERE p.sku != 'ENVIO'`;
+                    WHERE p.sku != 'ENVIO'`
 
-      const params = [];
-      const conditions = [];
+      const params = []
+      const conditions = []
 
       if (id) {
-        conditions.push(`p.id = ?`);
-        params.push(id);
+        conditions.push('p.id = ?')
+        params.push(id)
       }
       if (name) {
-        conditions.push(`p.name LIKE ?`);
-        params.push(`%${name}%`);
+        conditions.push('p.name LIKE ?')
+        params.push(`%${name}%`)
       }
 
       if (!all) {
-        conditions.push(`p.adminStatus = 1 AND p.stock > 0 AND p.status = 1`);
+        conditions.push('p.adminStatus = 1 AND p.stock > 0 AND p.status = 1')
       }
 
       if (conditions.length > 0) {
-        query += ` AND ${conditions.join(' AND ')}`;
+        query += ` AND ${conditions.join(' AND ')}`
       }
 
-      query += ' GROUP BY p.id';
+      query += ' GROUP BY p.id'
 
-      const [results] = await ADMINPool.query(query, params);
+      const [results] = await ADMINPool.query(query, params)
 
       if (results && results.length > 0) {
         results.forEach(result => {
-          result.prices = result.prices ? result.prices.split(',').reduce((acc, price) => {
-            const [key, value] = price.split(':');
-            const parsedValue = parseFloat(value);
-            if (parsedValue >= 1000) {
-              acc[key] = parsedValue;
-            }
-            return acc;
-          }, {}) : {};
+          result.prices = result.prices
+            ? result.prices.split(',').reduce((acc, price) => {
+              const [key, value] = price.split(':')
+              const parsedValue = parseFloat(value)
+              if (parsedValue >= 1000) {
+                acc[key] = parsedValue
+              }
+              return acc
+            }, {})
+            : {}
 
-          for (let priceKey in result.prices) {
-            result[priceKey] = result.prices[priceKey];
+          for (const priceKey in result.prices) {
+            result[priceKey] = result.prices[priceKey]
           }
 
-          delete result.prices;
-          delete result.img_urls;
-        });
+          delete result.prices
+          delete result.img_urls
+        })
       }
 
-      return results;
+      return results
     } catch (error) {
-      console.error('Error fetching products:', error);
-      throw error;
+      console.error('Error fetching products:', error)
+      throw error
     }
   }
 
-  static async getNextId() {
+  static async getNextId () {
     try {
-      const [results] = await ADMINPool.query('SELECT MAX(id) as maxId FROM products');
-      return results[0].maxId ? results[0].maxId + 1 : 1;
-    }
-    catch (error) {
-      console.error('Error getting next product ID:', error);
-      throw error;
+      const [results] = await ADMINPool.query('SELECT MAX(id) as maxId FROM products')
+      return results[0].maxId ? results[0].maxId + 1 : 1
+    } catch (error) {
+      console.error('Error getting next product ID:', error)
+      throw error
     }
   }
 
-  static async create({ input }) {
+  static async create ({ input }) {
     try {
-      const existingData = await this.getAll({ sku: input.sku });
+      const existingData = await this.getAll({ sku: input.sku })
       if (existingData.length > 0) {
-        return false; // El producto ya existe
+        return false // El producto ya existe
       }
 
-      const { name, sku, price, stock, category, sub_category, description, brand, ean, img, images } = input;
+      const { name, sku, price, stock, category, sub_category, description, brand, ean, img, images } = input
       const query = `INSERT INTO products (name, sku, price, stock, category, sub_category, description, brand, ean, img, images)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-      const [result] = await ADMINPool.query(query, [name, sku, price, stock, category, sub_category, description, brand, ean, img, images]);
-      return result.insertId;
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      const [result] = await ADMINPool.query(query, [name, sku, price, stock, category, sub_category, description, brand, ean, img, images])
+      return result.insertId
     } catch (error) {
-      console.error('Error creating product:', error);
-      throw error;
+      console.error('Error creating product:', error)
+      throw error
     }
   }
 
-  static async update({ sku, input }) {
+  static async update ({ sku, input }) {
     try {
-      const fields = Object.keys(input).map(field => `${field} = ?`).join(', ');
-      const values = Object.values(input);
-      values.push(sku);
-      
-      const query = `UPDATE products SET ${fields} WHERE sku = ?`;
-      const [result] = await ADMINPool.query(query, values);
-      return result.affectedRows > 0 ? true : false; 
-    } 
-    catch (error) {
-      console.error('Error updating product:', error);
-      throw error;
+      const fields = Object.keys(input).map(field => `${field} = ?`).join(', ')
+      const values = Object.values(input)
+      values.push(sku)
+
+      const query = `UPDATE products SET ${fields} WHERE sku = ?`
+      const [result] = await ADMINPool.query(query, values)
+      return result.affectedRows > 0
+    } catch (error) {
+      console.error('Error updating product:', error)
+      throw error
     }
   }
 
-  static async addProductView({ id }) {
+  static async addProductView ({ id }) {
     try {
       const query = `UPDATE products SET 
                      total_views = total_views + 1, 
                      week_views = week_views + 1 
-                     WHERE id = ?`;
-      const [result] = await ADMINPool.query(query, [id]);
-      return result.affectedRows > 0 ? true : false; 
-    } 
-    catch (error) {
-      console.error('Error updating product views counter:', error);
-      throw error;
+                     WHERE id = ?`
+      const [result] = await ADMINPool.query(query, [id])
+      return result.affectedRows > 0
+    } catch (error) {
+      console.error('Error updating product views counter:', error)
+      throw error
     }
   }
 
-  static async refreshWeekViews() {
+  static async refreshWeekViews () {
     try {
-      const query = `UPDATE products SET week_views = 0`;
-      const [result] = await ADMINPool.query(query);
-      return result.affectedRows > 0 ? true : false; 
-    } 
-    catch (error) {
-      console.error('Error refreshing product views:', error);
-      throw error;
+      const query = 'UPDATE products SET week_views = 0'
+      const [result] = await ADMINPool.query(query)
+      return result.affectedRows > 0
+    } catch (error) {
+      console.error('Error refreshing product views:', error)
+      throw error
     }
   }
 
-  static async updateProductImages(sku, imageUrls) {
+  static async updateProductImages (sku, imageUrls) {
     try {
       // First, delete existing images for this product
-      const deleteQuery = `DELETE FROM products_images WHERE sku = ?`;
-      await ADMINPool.query(deleteQuery, [sku]);
+      const deleteQuery = 'DELETE FROM products_images WHERE sku = ?'
+      await ADMINPool.query(deleteQuery, [sku])
 
       // Then insert new images
-      const insertQuery = `INSERT INTO products_images (sku, img_url) VALUES ?`;
-      const values = imageUrls.map(url => [sku, url]);
-      const [result] = await ADMINPool.query(insertQuery, [values]);
-      
-      return result.affectedRows > 0;
-    } 
-    catch (error) {
-      console.error('Error updating product images:', error);
-      throw error;
+      const insertQuery = 'INSERT INTO products_images (sku, img_url) VALUES ?'
+      const values = imageUrls.map(url => [sku, url])
+      const [result] = await ADMINPool.query(insertQuery, [values])
+
+      return result.affectedRows > 0
+    } catch (error) {
+      console.error('Error updating product images:', error)
+      throw error
     }
   }
 
-  static async deleteProductImages(sku) {
+  static async deleteProductImages (sku) {
     try {
-      const query = 'DELETE FROM products_images WHERE sku = ?';
-      await ADMINPool.query(query, [sku]);
-      return true;
+      const query = 'DELETE FROM products_images WHERE sku = ?'
+      await ADMINPool.query(query, [sku])
+      return true
     } catch (error) {
-      console.error('Error deleting product images:', error);
-      throw error;
+      console.error('Error deleting product images:', error)
+      throw error
     }
   }
-  
-  static async insertProductImages(sku, imageUrls) {
+
+  static async insertProductImages (sku, imageUrls) {
     try {
-      if (imageUrls.length === 0) return true;
-  
-      const values = imageUrls.map(url => [sku, url]);
-      const query = 'INSERT INTO products_images (sku, img_url) VALUES ?';
-      const [result] = await ADMINPool.query(query, [values]);
-      return result.affectedRows > 0;
+      if (imageUrls.length === 0) return true
+
+      const values = imageUrls.map(url => [sku, url])
+      const query = 'INSERT INTO products_images (sku, img_url) VALUES ?'
+      const [result] = await ADMINPool.query(query, [values])
+      return result.affectedRows > 0
     } catch (error) {
-      console.error('Error inserting product images:', error);
-      throw error;
+      console.error('Error inserting product images:', error)
+      throw error
     }
   }
 }
 
-module.exports = ProductModel;
+module.exports = ProductModel

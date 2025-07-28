@@ -34,5 +34,12 @@
   },
   "devDependencies": {
     "standard": "17.1.0"
+  },
+  "eslintConfig": {
+    "extends": "standard",
+    "rules": {
+      "camelcase": "off",
+      "no-unused-vars": "off"
+    }
   }
 }

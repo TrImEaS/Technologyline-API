@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer')
 
 // Configuración del transportador
 const transporter = nodemailer.createTransport({
@@ -9,10 +9,10 @@ const transporter = nodemailer.createTransport({
     user: 'subsistemas@real-color.com.ar', // Tu email
     pass: 'FacuFacu9090' // Tu contraseña
   }
-});
+})
 
-function sendMail({ input }) {
-  const { fullname, email, phone, comentary } = input;
+function sendMail ({ input }) {
+  const { fullname, email, phone, comentary } = input
   const message = `
     Nombre: ${fullname}
     Email: ${email}
@@ -24,16 +24,16 @@ function sendMail({ input }) {
     from: 'subsistemas@real-color.com.ar', // Remitente
     to: 'revendedores@realcolor.com.ar', // Destinatario
     subject: 'Nuevo formulario de revendedor',
-    text: message 
-  };
+    text: message
+  }
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log('Error al enviar el correo:', error);
+      console.log('Error al enviar el correo:', error)
     } else {
-      console.log('Correo enviado:', info.response);
+      console.log('Correo enviado:', info.response)
     }
-  });
+  })
 }
 
 module.exports = sendMail

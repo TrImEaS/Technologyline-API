@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2')
 
 const LIQUIDSPool = mysql.createPool({
   host: 'localhost',
@@ -6,7 +6,7 @@ const LIQUIDSPool = mysql.createPool({
   password: 'Dacarry-123@',
   database: 'LIQUIDS',
   connectionLimit: 10
-}).promise(); 
+}).promise()
 
 const ADMINPool = mysql.createPool({
   host: 'localhost',
@@ -14,7 +14,6 @@ const ADMINPool = mysql.createPool({
   password: 'Dacarry-123@',
   database: 'ADMIN',
   connectionLimit: 10
-}).promise(); 
-
+}).promise()
 
 module.exports = { ADMINPool, LIQUIDSPool }

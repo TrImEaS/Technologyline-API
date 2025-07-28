@@ -4,50 +4,50 @@ const path = require('path')
 const jsonFilePath = path.resolve(__dirname, '../../Data/products.json')
 
 class ProductModel {
-  //Get all data
-  static async getAll({ sku, name, all }) {
-    let jsonData = await this.readJsonFile()
+  // Get all data
+  static async getAll ({ sku, name, all }) {
+    const jsonData = await this.readJsonFile()
 
     if (sku) {
-      return jsonData.filter(data => 
+      return jsonData.filter(data =>
         data.sku.toLowerCase() === sku.toLowerCase())
-    } 
+    }
 
     if (name) {
-      return jsonData.filter(data => 
+      return jsonData.filter(data =>
         data.adminStatus &&
         (
-          data.stock >= 3 && 
-          data.price >= 1000 && 
-          data.status && 
+          data.stock >= 3 &&
+          data.price >= 1000 &&
+          data.status &&
           data.name.toLowerCase().includes(name.toLowerCase())
         )
       )
     }
 
-    if (all){
+    if (all) {
       return jsonData
     }
 
-    return jsonData.filter(data => 
+    return jsonData.filter(data =>
       data.adminStatus &&
       (
-        data.stock >= 3 && 
+        data.stock >= 3 &&
         data.price >= 1000 &&
         data.status
       )
     )
   }
 
-  //Get data by id
-  static async getById(id) {
-    let jsonData = await this.readJsonFile()
+  // Get data by id
+  static async getById (id) {
+    const jsonData = await this.readJsonFile()
     return jsonData.filter(data => parseInt(data.id) === parseInt(id))
   }
 
-  //Get last id
-  static async getNextId() {
-    let jsonData = await this.readJsonFile()
+  // Get last id
+  static async getNextId () {
+    const jsonData = await this.readJsonFile()
 
     // Ordenar los datos por ID en orden descendente
     jsonData.sort((a, b) => b.id - a.id)
@@ -56,19 +56,19 @@ class ProductModel {
     const lastData = jsonData[0]
 
     // Si no hay datos, comenzar desde 1
-    const nextId = lastData ? lastData.id + 1 : 1 
+    const nextId = lastData ? lastData.id + 1 : 1
 
     return nextId
   }
 
-  //Create new billing data
-  static async create({ input }) {
+  // Create new billing data
+  static async create ({ input }) {
     try {
-      let jsonData = await this.readJsonFile()
+      const jsonData = await this.readJsonFile()
 
       // Verificar si ya existe el registro
       const existingData = jsonData.find(data =>
-        data.sku === parseInt(input.sku) && 
+        data.sku === parseInt(input.sku) &&
         data.name === parseInt(input.name)
       )
 
@@ -84,17 +84,16 @@ class ProductModel {
 
       console.log('New product created')
       return input
-    } 
-    catch (error) {
+    } catch (error) {
       console.error('Error creating product:', error)
       throw error
     }
   }
 
-  //Edit product (parcial)
-  static async update({ id, input }) {
+  // Edit product (parcial)
+  static async update ({ id, input }) {
     try {
-      let jsonData = await this.readJsonFile()
+      const jsonData = await this.readJsonFile()
 
       const index = jsonData.findIndex(data => parseInt(data.id) === parseInt(id))
 
@@ -103,17 +102,16 @@ class ProductModel {
       }
 
       // Actualizar los datos encontrados en el índice correspondiente
-      jsonData[index] = { 
-        ...jsonData[index], 
-        ...input 
+      jsonData[index] = {
+        ...jsonData[index],
+        ...input
       }
 
       // Escribir los datos actualizados en el archivo JSON
       await this.writeJsonFile(jsonData)
 
       return jsonData[index]
-    } 
-    catch (error) {
+    } catch (error) {
       console.error('Error updating product:', error)
       throw error
     }
@@ -121,11 +119,11 @@ class ProductModel {
 
   static async addProductView ({ id }) {
     try {
-      let jsonData = await this.readJsonFile()
+      const jsonData = await this.readJsonFile()
 
       const index = jsonData.findIndex(data => parseInt(data.id) === parseInt(id))
 
-      if(index === -1) {
+      if (index === -1) {
         return 'Product not found'
       }
 
@@ -139,16 +137,15 @@ class ProductModel {
       await this.writeJsonFile(jsonData)
 
       return jsonData[index]
-    }
-    catch (e){
+    } catch (e) {
       console.error('Error updating product views counter:', error)
       throw error
     }
   }
-  
-//--> --- --- --- --- --- --- --- --- <--//
-  //Function for readJsonFile
-  static async readJsonFile() {
+
+  // --> --- --- --- --- --- --- --- --- <--//
+  // Function for readJsonFile
+  static async readJsonFile () {
     try {
       const rawData = await fs.promises.readFile(jsonFilePath)
       return JSON.parse(rawData)
@@ -157,9 +154,9 @@ class ProductModel {
       return []
     }
   }
-  
-  //Function for writeJsonFile
-  static async writeJsonFile(data) {
+
+  // Function for writeJsonFile
+  static async writeJsonFile (data) {
     try {
       await fs.promises.writeFile(jsonFilePath, JSON.stringify(data, null, 2))
     } catch (error) {
@@ -168,6 +165,5 @@ class ProductModel {
     }
   }
 }
-
 
 module.exports = ProductModel
