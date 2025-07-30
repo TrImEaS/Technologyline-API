@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const AdminController = require('../Controllers/admin.js')
 const multer = require('multer')
-const upload = multer({ dest: 'uploads/' }) // Carpeta temporal
+const upload = multer({ dest: 'uploads/' })
 
 const adminRouter = Router()
 adminRouter.get('/jirejfdisbjfi4iwurjknvijioeb49/refresh_data', AdminController.refreshDB)

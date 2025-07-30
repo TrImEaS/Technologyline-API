@@ -3,10 +3,15 @@ const ProductController = require('../Controllers/product.js')
 const path = require('path')
 const multer = require('multer')
 
+const isDev = process.env.NODE_ENV !== 'production'
+const STATIC_BASE = isDev
+  ? path.join(__dirname, '../FakeStatic/products-images')
+  : '/home/realcolorweb/public_html/technologyline.com.ar/products-images'
+
 // Multer configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '/home/realcolorweb/public_html/technologyline.com.ar/products-images')
+    cb(null, path.join(STATIC_BASE))
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)

@@ -6,7 +6,7 @@ class ProductModel {
       if (sku) {
         const querySku = `SELECT 
                               p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.status, p.adminStatus, 
-                              p.specifications, p.descriptions, p.total_views, p.week_views, p.tax_percentage,
+                              p.specifications, p.descriptions, p.total_views, p.week_views, p.tax_percentage, p.weight, p.volume,
                               GROUP_CONCAT(DISTINCT pi.img_url) AS img_urls,
                               GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
                             FROM products p
@@ -56,7 +56,7 @@ class ProductModel {
       if (all) {
         const queryAll = `SELECT 
                               p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.status, p.adminStatus, 
-                              p.specifications, p.descriptions, p.total_views, p.week_views, p.tax_percentage,
+                              p.specifications, p.descriptions, p.total_views, p.week_views, p.tax_percentage, p.weight, p.volume,
                               GROUP_CONCAT(DISTINCT pi.img_url) AS img_urls,
                               GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
                             FROM products p
@@ -102,7 +102,7 @@ class ProductModel {
       }
 
       let query = `SELECT 
-                      p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.week_views, p.total_views, p.brand, p.status, p.adminStatus, p.tax_percentage,
+                      p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.week_views, p.total_views, p.brand, p.status, p.adminStatus, p.tax_percentage, p.weight, p.volume,
                       SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT pi.img_url ORDER BY pi.id), ',', 1) AS img_url,
                       GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
                     FROM products p

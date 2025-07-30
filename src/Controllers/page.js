@@ -6,16 +6,12 @@ const nodemailer = require('nodemailer')
 const getOrderNotificationTemplate = require('../Utils/EmailTemplates/orderNotification')
 const getOrderConfirmationTemplate = require('../Utils/EmailTemplates/orderConfirmation')
 const jwt = require('jsonwebtoken')
-console.log('jsonwebtoken version:', require('jsonwebtoken/package').version)
-console.log('signed:', jwt.sign({ foo: 'bar' }, 'testkey'))
 
 const SECRET_KEY = 'trimeasdacarry'
 
 let ipTracking = {}
 
-setInterval(() => {
-  ipTracking = {}
-}, 24 * 60 * 60 * 1000)
+setInterval(() => { ipTracking = {} }, 24 * 60 * 60 * 1000)
 
 // const ipOrdersFile = path.join(__dirname, '../Data/ip_orders.json');
 

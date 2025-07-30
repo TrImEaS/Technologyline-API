@@ -3,6 +3,15 @@ const ProductModel = require('../Models/sql/product.js')
 const fs = require('fs')
 const path = require('path')
 
+const isDev = process.env.NODE_ENV !== 'production'
+const STATIC_BASE = isDev
+  ? path.join(__dirname, '../FakeStatic/products-images')
+  : '/home/realcolorweb/public_html/technologyline.com.ar/products-images'
+
+const IMAGE_PATH = isDev
+  ? 'http://localhost:8080/products-images'
+  : 'https://technologyline.com.ar/products-images/'
+
 function logError (errorMessage) {
   const logFilePath = path.join(__dirname, '../Data/log_error.txt')
   const timestamp = new Date().toISOString()
@@ -131,27 +140,28 @@ class ProductController {
 
       const { sku, index } = req.body
       const extension = path.extname(req.file.originalname)
-
-      // Siempre usar formato con guión bajo e índice empezando desde 1
-      const suffix = `_${parseInt(index) + 1}`
+      const suffix = `_${parseInt(index) + 1}_${Date.now()}`
       const newFileName = `${sku}${suffix}${extension}`
+      const newPath = path.join(STATIC_BASE, newFileName)
 
-      const newPath = path.join('/home/realcolorweb/public_html/technologyline.com.ar/products-images', newFileName)
+      // Usar rename asíncrono con await
+      await fs.promises.rename(req.file.path, newPath)
 
-      fs.renameSync(req.file.path, newPath)
-
-      const imageUrl = `https://technologyline.com.ar/products-images/${newFileName}`
-
+      const imageUrl = `${IMAGE_PATH}/${newFileName}`
       return res.status(200).json({
         message: 'Imagen subida correctamente',
         imageUrl
       })
     } catch (error) {
+      console.error('Error uploading image:', error)
       logError(`Error uploading image: ${error.message}`)
       if (req.file) {
-        fs.unlink(req.file.path, (err) => {
-          if (err) logError(`Error deleting failed upload: ${err.message}`)
-        })
+        try {
+          await fs.promises.unlink(req.file.path)
+        } catch (unlinkErr) {
+          console.error('Error deleting failed upload:', unlinkErr)
+          logError(`Error deleting failed upload: ${unlinkErr.message}`)
+        }
       }
       return res.status(500).json({ error: 'Error interno del servidor al subir la imagen' })
     }
