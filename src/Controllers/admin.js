@@ -1,11 +1,10 @@
 const fs = require('fs')
 const path = require('path')
-const AdminModel = require('../Models/sql/admin.js')
-const ClientModel = require('../Models/json/client.js')
+const AdminModel = require('../Models/sql/admin/index.js')
+const ClientModel = require('../Models/sql/client/index.js')
 const refreshDB = require('../Functions/refreshDB.js')
 const refreshPrices = require('../Functions/refreshPrices.js')
 const refreshImg = require('../Functions/refreshImg.js')
-const XlsxPopulate = require('xlsx-populate')
 const xlsx = require('xlsx')
 const uuidv4 = require('uuid/v4')
 

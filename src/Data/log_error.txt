@@ -141,3 +141,13 @@
 [2025-07-30T15:10:51.813Z] Error uploading image: ENOENT: no such file or directory, rename '/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/src/FakeStatic/products-images/1753888251778-217225812.jpeg' -> '/home/realcolorweb/public_html/technologyline.com.ar/products-images/CKIT02_1.jpeg'
 [2025-07-30T17:58:45.168Z] Error updating product with id CKIT02: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'WHERE sku = 'CKIT02'' at line 1
 [2025-07-30T17:59:37.036Z] Error updating product with id CKIT02: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'WHERE sku = 'CKIT02'' at line 1
+[2025-08-07T20:19:29.473Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
+[2025-08-08T13:55:21.133Z] Error retrieving product with id getSubategories: ProductModel.getById is not a function
+[2025-08-11T12:57:00.717Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
+[2025-08-11T12:57:09.510Z] Error retrieving product with id undefined: connect ECONNREFUSED 127.0.0.1:3306
+[2025-08-11T12:57:09.515Z] Error retrieving product with id undefined: connect ECONNREFUSED 127.0.0.1:3306
+[2025-08-12T15:29:56.167Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
+[2025-08-12T15:32:45.681Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
+[2025-08-12T15:32:46.093Z] Error retrieving product with id undefined: connect ECONNREFUSED 127.0.0.1:3306
+[2025-08-12T15:32:46.096Z] Error retrieving product with id undefined: connect ECONNREFUSED 127.0.0.1:3306
+[2025-08-12T15:32:46.098Z] Error retrieving product with id undefined: connect ECONNREFUSED 127.0.0.1:3306

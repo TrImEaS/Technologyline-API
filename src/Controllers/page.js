@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const PageModel = require('../Models/sql/page')
+const PageModel = require('../Models/sql/page/index.js')
 const { validateResellers_Form } = require('../Schemas/resellers_form')
 const nodemailer = require('nodemailer')
 const getOrderNotificationTemplate = require('../Utils/EmailTemplates/orderNotification')

@@ -1,6 +1,6 @@
-const { validateEmail } = require('../Schemas/email.js')
-const { validateClient, validatePartialClient } = require('../Schemas/client.js')
-const ClientModel = require('../Models/json/client.js')
+// const { validateEmail } = require('../Schemas/email.js')
+// const { validateClient, validatePartialClient } = require('../Schemas/client.js')
+const ClientModel = require('../Models/sql/client/index.js')
 
 class ClientController {
   // Get all product
@@ -36,10 +36,10 @@ class ClientController {
       }
 
       // Validacion de datos
-      const result = validateClient(inputData)
-      if (result.error) {
-        return res.status(422).json({ error: JSON.parse(result.error.message) })
-      }
+      // const result = validateClient(inputData)
+      // if (result.error) {
+      //   return res.status(422).json({ error: JSON.parse(result.error.message) })
+      // }
 
       // Validar si los datos ya existen sino subir los datos
       const existingData = await ClientModel.addClient({ input: inputData })
@@ -79,16 +79,14 @@ class ClientController {
       }
 
       // Validacion de datos
-      const result = validateEmail(inputData)
-      if (result.error) {
-        return res.status(422).json({ error: JSON.parse(result.error.message) })
-      }
+      // const result = validateEmail(inputData)
+      // if (result.error) {
+      //   return res.status(422).json({ error: JSON.parse(result.error.message) })
+      // }
 
       // Validar si los datos ya existen sino subir los datos
       const existingData = await ClientModel.addSubscriber({ input: inputData })
-      if (!existingData) {
-        return res.status(409).json({ error: 'El producto ya se encuentra en el sistema!' })
-      }
+      if (!existingData) { return res.status(409).json({ error: 'El producto ya se encuentra en el sistema!' }) }
 
       return res.status(201).json({ message: 'Product created correctly' })
     } catch (e) {
@@ -100,15 +98,10 @@ class ClientController {
 
   static async deleteSubscriptor (req, res) {
     const { id } = req.query
-
-    if (!id) {
-      return res.status(400).json({ status: 'error', message: 'Falta el id.' })
-    }
+    if (!id) { return res.status(400).json({ status: 'error', message: 'Falta el id.' }) }
 
     const result = await ClientModel.deleteSubscriptor({ id: parseInt(id) })
-    if (!result) {
-      return res.status(403).json({ status: 'error', message: 'Error al procesar la solicitud, verifique datos e intente nuevamente.' })
-    }
+    if (!result) { return res.status(403).json({ status: 'error', message: 'Error al procesar la solicitud, verifique datos e intente nuevamente.' }) }
 
     res.status(200).json({ status: 'success', message: 'Client deleting correctly' })
   }

@@ -24,11 +24,15 @@ const upload = multer({ storage })
 const productRouter = Router()
 
 productRouter.get('/', ProductController.getAll)
+productRouter.get('/getCategories', ProductController.getCategories)
+productRouter.get('/getSubcategories', ProductController.getSubcategories)
+productRouter.get('/getBrands', ProductController.getBrands)
 productRouter.get('/refreshWeekViews', ProductController.refreshWeekViews)
 productRouter.get('/:id', ProductController.getById)
 
 productRouter.post('/', ProductController.create)
 productRouter.post('/addImage', upload.single('image'), ProductController.addImage)
+
 productRouter.patch('/addView/:id', ProductController.addProductView)
 productRouter.patch('/', ProductController.update)
 productRouter.patch('/updateImages', ProductController.updateImages)

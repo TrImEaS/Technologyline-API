@@ -1,5 +1,5 @@
 // const { validatePartialProduct, validateProduct } = require('../Schemas/product.js');
-const ProductModel = require('../Models/sql/product.js')
+const ProductModel = require('../Models/sql/product/index.js')
 const fs = require('fs')
 const path = require('path')
 
@@ -49,24 +49,60 @@ class ProductController {
     }
   }
 
-  static async create (req, res) {
-    const newId = await ProductModel.getNextId()
+  static async getCategories (req, res) {
+    try {
+      const categories = await ProductModel.getCategories()
+      if (categories) return res.json(categories)
 
+      res.status(404).json({ message: 'Categories not found' })
+    } catch (error) {
+      logError(`Error retrieving product with id ${req.params.id}: ${error.message}`)
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+
+  static async getSubcategories (req, res) {
+    try {
+      const { category_id } = req.query
+      const subcategories = await ProductModel.getSubcategories({ category_id })
+      if (subcategories) return res.json(subcategories)
+
+      res.status(404).json({ message: 'Subcategories not found' })
+    } catch (error) {
+      logError(`Error retrieving product with id ${req.params.id}: ${error.message}`)
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+
+  static async getBrands (req, res) {
+    try {
+      const { brand_id } = req.query
+      const brands = await ProductModel.getSubcategories({ brand_id })
+      if (brands) return res.json(brands)
+
+      res.status(404).json({ message: 'Brands not found' })
+    } catch (error) {
+      logError(`Error retrieving product with id ${req.params.id}: ${error.message}`)
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+
+  static async create (req, res) {
     try {
       const inputData = {
-        id: newId,
-        name: req.body.name,
         sku: req.body.sku,
-        price: parseFloat(req.body.price),
+        name: req.body.name,
         stock: parseInt(req.body.stock),
         category: req.body.category,
         sub_category: req.body.sub_category,
-        description: req.body.description,
-        total_views: 0,
         brand: req.body.brand,
-        ean: req.body.ean,
-        img: req.body.img,
-        images: req.body.images
+        descriptions: req.body.descriptions,
+        specifications: req.body.specifications,
+        weight: parseFloat(req.body.weight),
+        volume: parseFloat(req.body.volume),
+        tax_percentage: parseFloat(req.body.tax_percentage),
+        gbp_id: req.body.gbp_id,
+        images: req.body.images || []
       }
 
       // Validacion de datos
@@ -181,9 +217,7 @@ class ProductController {
       // Luego insertar las nuevas URLs
       const success = await ProductModel.insertProductImages(sku, images)
 
-      if (!success) {
-        return res.status(404).json({ error: 'Error al actualizar las imágenes' })
-      }
+      if (!success) { return res.status(404).json({ error: 'Error al actualizar las imágenes' }) }
 
       return res.status(200).json({
         message: 'Imágenes actualizadas correctamente',
