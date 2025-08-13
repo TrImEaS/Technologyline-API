@@ -112,8 +112,7 @@ exports.getClientOrders = async function ({ email, id, movement }) {
 
 exports.getBanners = async function () {
   try {
-    const [results] = await ADMINPool.query('SELECT * FROM banners')
-
+    const [results] = await ADMINPool.query('SELECT * FROM banners ORDER BY position ASC')
     return results
   } catch (error) {
     console.error('Error fetching banners:', error)

@@ -108,7 +108,7 @@ pageRouter.get('/getClientBill', PageController.getClientBill)
 pageRouter.get('/getOrdersStates', PageController.getOrdersStates)
 
 pageRouter.patch('/setBanner', uploadImages.single('image'), PageController.uploadImage)
-pageRouter.patch('/updateBannerPosition', PageController.updateBannerPosition)
+pageRouter.patch('/updateBannerOrder', PageController.updateBannerOrder)
 pageRouter.patch('/changeUserData', PageController.changeUserData)
 pageRouter.patch('/changeUserPassword', PageController.changeUserPassword)
 pageRouter.patch('/check-view/:id', PageController.checkResellerData)

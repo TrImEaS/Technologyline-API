@@ -10,8 +10,14 @@ exports.updateImagePath = async function ({ id, fileUrl, to }) {
   }
 }
 
-exports.updateBannerPosition = async function ({ id, newId, name }) {
-  return 0
+exports.updateBannerPosition = async function ({ id, position }) {
+  try {
+    const [result] = await ADMINPool.query('UPDATE banners SET position = ? WHERE id = ?', [position, id]);
+    return result.affectedRows > 0;
+  } catch (error) {
+    console.error('Error actualizando posición del banner:', error);
+    throw error;
+  }
 }
 
 exports.changeUserData = async function ({ input, email }) {
