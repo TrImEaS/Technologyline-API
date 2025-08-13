@@ -151,3 +151,6 @@
 [2025-08-12T15:32:46.093Z] Error retrieving product with id undefined: connect ECONNREFUSED 127.0.0.1:3306
 [2025-08-12T15:32:46.096Z] Error retrieving product with id undefined: connect ECONNREFUSED 127.0.0.1:3306
 [2025-08-12T15:32:46.098Z] Error retrieving product with id undefined: connect ECONNREFUSED 127.0.0.1:3306
+[2025-08-12T19:45:07.849Z] Error retrieving products: Access denied for user 'Thomas2024az'@'localhost' (using password: YES)
+[2025-08-12T19:46:49.334Z] Error retrieving products: Access denied for user 'Thomas2024az'@'localhost' (using password: YES)
+[2025-08-12T19:47:16.738Z] Error retrieving products: Access denied for user 'Thomas2024az'@'localhost' (using password: YES)

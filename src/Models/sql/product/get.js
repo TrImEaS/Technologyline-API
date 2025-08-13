@@ -182,6 +182,16 @@ exports.getCategories = async function () {
   }
 }
 
+exports.getCategoriesById = async function (id) {
+  try {
+    const [results] = await ADMINPool.query('SELECT * FROM categories WHERE id = ?', [id])
+    return results[0] || null
+  } catch (error) {
+    console.error('Error fetching category by id:', error)
+    throw error
+  }
+}
+
 exports.getSubcategories = async function ({ category_id }) {
   try {
     if (category_id) {
@@ -197,6 +207,16 @@ exports.getSubcategories = async function ({ category_id }) {
   }
 }
 
+exports.getSubcategoriesById = async function (id) {
+  try {
+    const [results] = await ADMINPool.query('SELECT * FROM subcategories WHERE id = ?', [id])
+    return results[0] || null
+  } catch (error) {
+    console.error('Error fetching subcategory by id:', error)
+    throw error
+  }
+}
+
 exports.getBrands = async function ({ brand_id }) {
   try {
     if (brand_id) {
@@ -208,6 +228,16 @@ exports.getBrands = async function ({ brand_id }) {
     return results
   } catch (error) {
     console.error('Error getting brands:', error)
+    throw error
+  }
+}
+
+exports.getBrandById = async function (id) {
+  try {
+    const [results] = await ADMINPool.query('SELECT * FROM brands WHERE id = ?', [id])
+    return results[0] || null
+  } catch (error) {
+    console.error('Error fetching brand by id:', error)
     throw error
   }
 }

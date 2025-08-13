@@ -14,3 +14,56 @@ exports.update = async function ({ sku, input }) {
     throw error
   }
 }
+exports.updateCategories = async function (id, data) {
+  try {
+    const fields = []
+    const values = []
+    for (const key in data) {
+      fields.push(`${key} = ?`)
+      values.push(data[key])
+    }
+    values.push(id)
+    const query = `UPDATE categories SET ${fields.join(', ')} WHERE id = ?`
+    const [result] = await ADMINPool.query(query, values)
+    return result.affectedRows > 0
+  } catch (error) {
+    console.error('Error updating category:', error)
+    throw error
+  }
+}
+
+exports.updateSubcategories = async function (id, data) {
+  try {
+    const fields = []
+    const values = []
+    for (const key in data) {
+      fields.push(`${key} = ?`)
+      values.push(data[key])
+    }
+    values.push(id)
+    const query = `UPDATE subcategories SET ${fields.join(', ')} WHERE id = ?`
+    const [result] = await ADMINPool.query(query, values)
+    return result.affectedRows > 0
+  } catch (error) {
+    console.error('Error updating subcategory:', error)
+    throw error
+  }
+}
+
+  exports.updateBrand = async function (id, data) {
+    try {
+      const fields = []
+      const values = []
+      for (const key in data) {
+        fields.push(`${key} = ?`)
+        values.push(data[key])
+      }
+      values.push(id)
+      const query = `UPDATE brands SET ${fields.join(', ')} WHERE id = ?`
+      const [result] = await ADMINPool.query(query, values)
+      return result.affectedRows > 0
+    } catch (error) {
+      console.error('Error updating brand:', error)
+      throw error
+    }
+  }

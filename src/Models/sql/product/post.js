@@ -63,3 +63,66 @@ exports.updateProductImages = async function (sku, imageUrls) {
     throw error
   }
 }
+
+exports.createCategories = async function (data) {
+  try {
+    const [existing] = await ADMINPool.query('SELECT * FROM categories WHERE name = ?', [data.name])
+    if (existing.length > 0) {
+      if (existing[0].activo === 0) {
+        await ADMINPool.query('UPDATE categories SET activo = 1 WHERE id = ?', [existing[0].id])
+        return existing[0].id
+      }
+      return false
+    }
+    const fields = [...Object.keys(data), 'created_at']
+    const values = [...Object.values(data), new Date()]
+    const query = `INSERT INTO categories (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`
+    const [result] = await ADMINPool.query(query, values)
+    return result.insertId
+  } catch (error) {
+    console.error('Error creating category:', error)
+    throw error
+  }
+}
+
+exports.createSubcategories = async function (data) {
+  try {
+    const [existing] = await ADMINPool.query('SELECT * FROM subcategories WHERE name = ? AND category_id = ?', [data.name, data.category_id])
+    if (existing.length > 0) {
+      if (existing[0].activo === 0) {
+        await ADMINPool.query('UPDATE subcategories SET activo = 1 WHERE id = ?', [existing[0].id])
+        return existing[0].id
+      }
+      return false
+    }
+    const fields = [...Object.keys(data), 'created_at']
+    const values = [...Object.values(data), new Date()]
+    const query = `INSERT INTO subcategories (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`
+    const [result] = await ADMINPool.query(query, values)
+    return result.insertId
+  } catch (error) {
+    console.error('Error creating subcategory:', error)
+    throw error
+  }
+}
+
+exports.createBrand = async function (data) {
+  try {
+    const [existing] = await ADMINPool.query('SELECT * FROM brands WHERE name = ?', [data.name])
+    if (existing.length > 0) {
+      if (existing[0].activo === 0) {
+        await ADMINPool.query('UPDATE brands SET activo = 1 WHERE id = ?', [existing[0].id])
+        return existing[0].id
+      }
+      return false
+    }
+    const fields = [...Object.keys(data), 'created_at']
+    const values = [...Object.values(data), new Date()]
+    const query = `INSERT INTO brands (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`
+    const [result] = await ADMINPool.query(query, values)
+    return result.insertId
+  } catch (error) {
+    console.error('Error creating brand:', error)
+    throw error
+  }
+}

@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 808
 const IP_LOG_FILE_JSON = path.join(__dirname, './src/Data/ip_log.json')
 const STATISTICS_FILE_JSON = path.join(__dirname, './src/Data/statistics.json')
 const app = express()
@@ -29,14 +29,16 @@ const corsOptions = {
 app.disable('x-powered-by')
 app.use(cookieParser())
 app.use(express.json({ limit: '100mb' }))
-app.use(express.static('public', { maxAge: '1y' }))
 app.use(express.urlencoded({ limit: '100mb', extended: true }))
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
+app.use('/api', apiRouter)
+
+app.use(express.static('public', { maxAge: '1y' }))
 app.use(express.static('/home/realcolorweb/public_html/technologyline.com.ar/products-images', { maxAge: '1y' }))
 app.use(express.static('/home/realcolorweb/public_html/technologyline.com.ar/banners-images', { maxAge: '1y' }))
 app.use('/products-images', express.static(path.join(__dirname, './src/FakeStatic/products-images')))
 
-app.use(cors(corsOptions))
-app.options('*', cors(corsOptions))
 
 const loadJSON = (filePath) => {
   if (fs.existsSync(filePath)) {
