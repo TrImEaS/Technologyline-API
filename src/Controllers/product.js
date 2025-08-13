@@ -77,7 +77,7 @@ class ProductController {
   static async getBrands (req, res) {
     try {
       const { brand_id } = req.query
-      const brands = await ProductModel.getSubcategories({ brand_id })
+      const brands = await ProductModel.getBrands({ brand_id })
       if (brands) return res.json(brands)
 
       res.status(404).json({ message: 'Brands not found' })
