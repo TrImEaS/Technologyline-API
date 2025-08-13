@@ -25,6 +25,140 @@ function logError (errorMessage) {
 }
 
 class ProductController {
+  static async getCategoryById(req, res) {
+    try {
+      const { id } = req.params;
+      const category = await ProductModel.getCategoriesById(id);
+      if (!category) return res.status(404).json({ error: 'Categoría no encontrada' });
+      res.json(category);
+    } catch (error) {
+      logError(`Error obteniendo categoría: ${error.message}`);
+      res.status(500).json({ error: 'Error obteniendo categoría' });
+    }
+  }
+
+  static async createCategory(req, res) {
+    try {
+      const id = await ProductModel.createCategories(req.body);
+      if (!id) return res.status(409).json({ error: 'La categoría ya existe y está activa' });
+      res.status(201).json({ id });
+    } catch (error) {
+      logError(`Error creando categoría: ${error.message}`);
+      res.status(500).json({ error: 'Error creando categoría' });
+    }
+  }
+
+  static async updateCategory(req, res) {
+    try {
+      const success = await ProductModel.updateCategories(req.params.id, req.body);
+      if (!success) return res.status(404).json({ error: 'Categoría no encontrada o no actualizada' });
+      res.json({ success: true });
+    } catch (error) {
+      logError(`Error actualizando categoría: ${error.message}`);
+      res.status(500).json({ error: 'Error actualizando categoría' });
+    }
+  }
+
+  static async disableCategory(req, res) {
+    try {
+      const success = await ProductModel.disableCategories(req.params.id);
+      if (!success) return res.status(404).json({ error: 'Categoría no encontrada o no deshabilitada' });
+      res.json({ success: true });
+    } catch (error) {
+      logError(`Error deshabilitando categoría: ${error.message}`);
+      res.status(500).json({ error: 'Error deshabilitando categoría' });
+    }
+  }
+
+  static async getSubcategoryById(req, res) {
+    try {
+      const { id } = req.params;
+      const subcategory = await ProductModel.getSubcategoriesById(id);
+      if (!subcategory) return res.status(404).json({ error: 'Subcategoría no encontrada' });
+      res.json(subcategory);
+    } catch (error) {
+      logError(`Error obteniendo subcategoría: ${error.message}`);
+      res.status(500).json({ error: 'Error obteniendo subcategoría' });
+    }
+  }
+
+  static async createSubcategory(req, res) {
+    try {
+      const id = await ProductModel.createSubcategories(req.body);
+      if (!id) return res.status(409).json({ error: 'La subcategoría ya existe y está activa' });
+      res.status(201).json({ id });
+    } catch (error) {
+      logError(`Error creando subcategoría: ${error.message}`);
+      res.status(500).json({ error: 'Error creando subcategoría' });
+    }
+  }
+
+  static async updateSubcategory(req, res) {
+    try {
+      const success = await ProductModel.updateSubcategories(req.params.id, req.body);
+      if (!success) return res.status(404).json({ error: 'Subcategoría no encontrada o no actualizada' });
+      res.json({ success: true });
+    } catch (error) {
+      logError(`Error actualizando subcategoría: ${error.message}`);
+      res.status(500).json({ error: 'Error actualizando subcategoría' });
+    }
+  }
+
+  static async disableSubcategory(req, res) {
+    try {
+      const success = await ProductModel.disableSubcategories(req.params.id);
+      if (!success) return res.status(404).json({ error: 'Subcategoría no encontrada o no deshabilitada' });
+      res.json({ success: true });
+    } catch (error) {
+      logError(`Error deshabilitando subcategoría: ${error.message}`);
+      res.status(500).json({ error: 'Error deshabilitando subcategoría' });
+    }
+  }
+
+  static async getBrandById(req, res) {
+    try {
+      const { id } = req.params;
+      const brand = await ProductModel.getBrandById(id);
+      if (!brand) return res.status(404).json({ error: 'Marca no encontrada' });
+      res.json(brand);
+    } catch (error) {
+      logError(`Error obteniendo marca: ${error.message}`);
+      res.status(500).json({ error: 'Error obteniendo marca' });
+    }
+  }
+
+  static async createBrand(req, res) {
+    try {
+      const id = await ProductModel.createBrand(req.body);
+      if (!id) return res.status(409).json({ error: 'La marca ya existe y está activa' });
+      res.status(201).json({ id });
+    } catch (error) {
+      logError(`Error creando marca: ${error.message}`);
+      res.status(500).json({ error: 'Error creando marca' });
+    }
+  }
+
+  static async updateBrand(req, res) {
+    try {
+      const success = await ProductModel.updateBrand(req.params.id, req.body);
+      if (!success) return res.status(404).json({ error: 'Marca no encontrada o no actualizada' });
+      res.json({ success: true });
+    } catch (error) {
+      logError(`Error actualizando marca: ${error.message}`);
+      res.status(500).json({ error: 'Error actualizando marca' });
+    }
+  }
+
+  static async disableBrand(req, res) {
+    try {
+      const success = await ProductModel.disableBrands(req.params.id);
+      if (!success) return res.status(404).json({ error: 'Marca no encontrada o no deshabilitada' });
+      res.json({ success: true });
+    } catch (error) {
+      logError(`Error deshabilitando marca: ${error.message}`);
+      res.status(500).json({ error: 'Error deshabilitando marca' });
+    }
+  }
   static async getAll (req, res) {
     try {
       const { sku, name, all } = req.query
