@@ -1,66 +1,179 @@
 const { ADMINPool } = require('../config')
+const { getAll } = require('./get')
 
 exports.create = async function ({ input }) {
+  let connection
   try {
-    const existingData = await this.getAll({ sku: input.sku })
+    connection = await ADMINPool.getConnection()
+    await connection.beginTransaction()
+
+    // 1. Verificar si el producto ya existe
+    const existingData = await getAll({ sku: input.sku })
     if (existingData.length > 0) {
+      await connection.rollback()
+      connection.release()
       return false
     }
 
-    const { name, sku, category, sub_category, brand, descriptions, specifications, weight, volume, tax_percentage, gbp_id } = input
-    const query = `INSERT INTO products  (sku, name, stock, category, sub_category, brand, descriptions, specifications, weight, volume, tax_percentage, status, adminStatus, gbp_id)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-    const [result] = await ADMINPool.query(query, [sku, name, 0, category, sub_category, brand, descriptions, specifications, weight, volume, tax_percentage, 1, 1, gbp_id])
-    return result.insertId
+    // 2. Insertar el producto principal
+    const {
+      name, sku, stock, category, sub_category, brand, descriptions,
+      specifications, weight, volume, tax_percentage, gbp_id, images = []
+    } = input
+
+    const productQuery = `
+      INSERT INTO products 
+        (sku, name, stock, category, sub_category, brand, descriptions, 
+         specifications, weight, volume, tax_percentage, status, adminStatus, gbp_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?)
+    `
+    const [productResult] = await connection.query(productQuery, [
+      sku, name, stock, category, sub_category, brand, descriptions,
+      specifications, weight, volume, tax_percentage, gbp_id
+    ])
+
+    const productId = productResult.insertId
+
+    // 3. Insertar las imágenes si existen
+    if (images.length > 0) {
+      const imageValues = images.map(imgUrl => [productId, sku, imgUrl])
+      const imageQuery = `
+        INSERT INTO products_images 
+          (product_id, sku, img_url) 
+        VALUES ?
+      `
+      await connection.query(imageQuery, [imageValues])
+    }
+
+    await connection.commit()
+    return productId
   } catch (error) {
+    if (connection) {
+      await connection.rollback()
+      connection.release()
+    }
     console.error('Error creating product:', error)
-    throw error
+    throw new Error(`Error creating product: ${error.message}`)
+  } finally {
+    if (connection && connection.release) connection.release()
   }
 }
 
-exports.addProductView = async function ({ id }) {
+exports.create = async function ({ input }) {
+  let connection
   try {
-    const query = `UPDATE products SET 
-                     total_views = total_views + 1, 
-                     week_views = week_views + 1 
-                     WHERE id = ?`
-    const [result] = await ADMINPool.query(query, [id])
-    return result.affectedRows > 0
+    connection = await ADMINPool.getConnection()
+    await connection.beginTransaction()
+
+    // 1. Verificar si el producto ya existe
+    const existingData = await getAll({ sku: input.sku })
+    if (existingData.length > 0) {
+      await connection.rollback()
+      return false
+    }
+
+    // 2. Insertar el producto principal
+    const {
+      name, sku, stock, category, sub_category, brand, descriptions,
+      specifications, weight, volume, tax_percentage, gbp_id, images = []
+    } = input
+
+    const productQuery = `
+      INSERT INTO products 
+        (sku, name, stock, category, sub_category, brand, descriptions, 
+         specifications, weight, volume, tax_percentage, status, adminStatus, gbp_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?)
+    `
+
+    const [productResult] = await connection.query(productQuery, [
+      sku, name, stock, category, sub_category, brand, descriptions,
+      specifications, weight, volume, tax_percentage, gbp_id
+    ])
+
+    const productId = productResult.insertId
+
+    // 3. Insertar las imágenes si existen (todo dentro de la misma transacción)
+    if (images.length > 0) {
+      const imageValues = images.map(imgUrl => [productId, sku, imgUrl])
+      const imageQuery = `
+        INSERT INTO products_images 
+          (product_id, sku, img_url) 
+        VALUES ?
+      `
+      await connection.query(imageQuery, [imageValues])
+    }
+
+    await connection.commit()
+    return productId
   } catch (error) {
-    console.error('Error updating product views counter:', error)
+    if (connection) {
+      await connection.rollback()
+    }
+    console.error('Error en model.create:', error)
     throw error
+  } finally {
+    if (connection) {
+      connection.release()
+    }
   }
 }
 
-exports.insertProductImages = async function (sku, imageUrls) {
+exports.insertProductImages = async function (productId, sku, imageUrls = []) {
+  let connection
   try {
-    if (imageUrls.length === 0) return true
+    connection = await ADMINPool.getConnection()
+    await connection.beginTransaction()
 
-    const values = imageUrls.map(url => [sku, url])
-    const query = 'INSERT INTO products_images (sku, img_url) VALUES ?'
-    const [result] = await ADMINPool.query(query, [values])
-    return result.affectedRows > 0
+    if (imageUrls.length > 0) {
+      const values = imageUrls.map(url => [productId, sku, url])
+      const query = `
+        INSERT INTO products_images 
+          (product_id, sku, img_url) 
+        VALUES ?
+      `
+      await connection.query(query, [values])
+    }
+
+    await connection.commit()
+    return true
   } catch (error) {
+    if (connection) await connection.rollback()
     console.error('Error inserting product images:', error)
-    throw error
+    throw new Error(`Error inserting images: ${error.message}`)
+  } finally {
+    if (connection) connection.release()
   }
 }
 
-exports.updateProductImages = async function (sku, imageUrls) {
+exports.updateProductImages = async function (productId, sku, imageUrls = []) {
+  let connection
   try {
-    // First, delete existing images for this product
-    const deleteQuery = 'DELETE FROM products_images WHERE sku = ?'
-    await ADMINPool.query(deleteQuery, [sku])
+    connection = await ADMINPool.getConnection()
+    await connection.beginTransaction()
 
-    // Then insert new images
-    const insertQuery = 'INSERT INTO products_images (sku, img_url) VALUES ?'
-    const values = imageUrls.map(url => [sku, url])
-    const [result] = await ADMINPool.query(insertQuery, [values])
+    // Eliminar imágenes existentes
+    const deleteQuery = 'DELETE FROM products_images WHERE product_id = ?'
+    await connection.query(deleteQuery, [productId])
 
-    return result.affectedRows > 0
+    // Insertar nuevas imágenes si hay
+    if (imageUrls.length > 0) {
+      const insertQuery = `
+        INSERT INTO products_images 
+          (product_id, sku, img_url) 
+        VALUES ?
+      `
+      const values = imageUrls.map(url => [productId, sku, url])
+      await connection.query(insertQuery, [values])
+    }
+
+    await connection.commit()
+    return true
   } catch (error) {
+    if (connection) await connection.rollback()
     console.error('Error updating product images:', error)
-    throw error
+    throw new Error(`Error updating images: ${error.message}`)
+  } finally {
+    if (connection) connection.release()
   }
 }
 

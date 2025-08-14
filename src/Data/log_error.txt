@@ -154,3 +154,21 @@
 [2025-08-12T19:45:07.849Z] Error retrieving products: Access denied for user 'Thomas2024az'@'localhost' (using password: YES)
 [2025-08-12T19:46:49.334Z] Error retrieving products: Access denied for user 'Thomas2024az'@'localhost' (using password: YES)
 [2025-08-12T19:47:16.738Z] Error retrieving products: Access denied for user 'Thomas2024az'@'localhost' (using password: YES)
+[2025-08-13T20:26:33.937Z] Error to create new product: ProductModel.createProduct is not a function
+[2025-08-13T20:26:37.968Z] Error to create new product: ProductModel.createProduct is not a function
+[2025-08-13T20:27:27.830Z] Error to create new product: ProductModel.createProduct is not a function
+[2025-08-13T20:32:23.697Z] Error to create new product: ProductModel.createProduct is not a function
+[2025-08-13T20:33:47.569Z] Error to create new product: ProductModel.createProduct is not a function
+[2025-08-13T20:34:33.477Z] Error to create new product: ProductModel.createProduct is not a function
+[2025-08-13T20:36:31.096Z] Error al crear producto: ProductModel.createWithImages is not a function
+Stack: TypeError: ProductModel.createWithImages is not a function
+    at create (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/src/Controllers/product.js:251:41)
+    at Layer.handle [as handle_request] (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/layer.js:95:5)
+    at /home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/index.js:284:15
+    at Function.process_params (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/index.js:346:12)
+    at next (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/index.js:280:10)
+    at Function.handle (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/index.js:175:3)
+    at router (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/index.js:47:12)

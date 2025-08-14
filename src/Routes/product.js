@@ -20,8 +20,8 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({ storage })
-
 const productRouter = Router()
+const manageBase = '/manage'
 
 productRouter.get('/', ProductController.getAll)
 productRouter.get('/getCategories', ProductController.getCategories)
@@ -29,39 +29,28 @@ productRouter.get('/getSubcategories', ProductController.getSubcategories)
 productRouter.get('/getBrands', ProductController.getBrands)
 productRouter.get('/refreshWeekViews', ProductController.refreshWeekViews)
 productRouter.get('/:id', ProductController.getById)
+productRouter.get(manageBase + '/categories', ProductController.getCategories)
+productRouter.get(manageBase + '/categories/:id', ProductController.getCategoryById)
+productRouter.get(manageBase + '/subcategories', ProductController.getSubcategories)
+productRouter.get(manageBase + '/subcategories/:id', ProductController.getSubcategoryById)
+productRouter.get(manageBase + '/brands', ProductController.getBrands)
+productRouter.get(manageBase + '/brands/:id', ProductController.getBrandById)
 
-const productGet = require('../Models/sql/product/get');
-const productPost = require('../Models/sql/product/post');
-const productPatch = require('../Models/sql/product/patch');
-const productDelete = require('../Models/sql/product/delete');
-
-const manageBase = '/manage';
-
-
-productRouter.get(manageBase + '/categories', ProductController.getCategories);
-productRouter.get(manageBase + '/categories/:id', ProductController.getCategoryById);
-productRouter.post(manageBase + '/categories', ProductController.createCategory);
-productRouter.patch(manageBase + '/categories/:id', ProductController.updateCategory);
-productRouter.delete(manageBase + '/categories/:id', ProductController.disableCategory);
-
-
-productRouter.get(manageBase + '/subcategories', ProductController.getSubcategories);
-productRouter.get(manageBase + '/subcategories/:id', ProductController.getSubcategoryById);
-productRouter.post(manageBase + '/subcategories', ProductController.createSubcategory);
-productRouter.patch(manageBase + '/subcategories/:id', ProductController.updateSubcategory);
-productRouter.delete(manageBase + '/subcategories/:id', ProductController.disableSubcategory);
-
-
-productRouter.get(manageBase + '/brands', ProductController.getBrands);
-productRouter.get(manageBase + '/brands/:id', ProductController.getBrandById);
-productRouter.post(manageBase + '/brands', ProductController.createBrand);
-productRouter.patch(manageBase + '/brands/:id', ProductController.updateBrand);
-productRouter.delete(manageBase + '/brands/:id', ProductController.disableBrand);
+productRouter.post(manageBase + '/categories', ProductController.createCategory)
+productRouter.post(manageBase + '/subcategories', ProductController.createSubcategory)
+productRouter.post(manageBase + '/brands', ProductController.createBrand)
 productRouter.post('/', ProductController.create)
 productRouter.post('/addImage', upload.single('image'), ProductController.addImage)
 
 productRouter.patch('/addView/:id', ProductController.addProductView)
 productRouter.patch('/', ProductController.update)
 productRouter.patch('/updateImages', ProductController.updateImages)
+productRouter.patch(manageBase + '/categories/:id', ProductController.updateCategory)
+productRouter.patch(manageBase + '/subcategories/:id', ProductController.updateSubcategory)
+productRouter.patch(manageBase + '/brands/:id', ProductController.updateBrand)
+
+productRouter.delete(manageBase + '/brands/:id', ProductController.disableBrand)
+productRouter.delete(manageBase + '/subcategories/:id', ProductController.disableSubcategory)
+productRouter.delete(manageBase + '/categories/:id', ProductController.disableCategory)
 
 module.exports = productRouter

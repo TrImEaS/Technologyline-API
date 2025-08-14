@@ -25,140 +25,141 @@ function logError (errorMessage) {
 }
 
 class ProductController {
-  static async getCategoryById(req, res) {
+  static async getCategoryById (req, res) {
     try {
-      const { id } = req.params;
-      const category = await ProductModel.getCategoriesById(id);
-      if (!category) return res.status(404).json({ error: 'Categoría no encontrada' });
-      res.json(category);
+      const { id } = req.params
+      const category = await ProductModel.getCategoriesById(id)
+      if (!category) return res.status(404).json({ error: 'Categoría no encontrada' })
+      res.json(category)
     } catch (error) {
-      logError(`Error obteniendo categoría: ${error.message}`);
-      res.status(500).json({ error: 'Error obteniendo categoría' });
+      logError(`Error obteniendo categoría: ${error.message}`)
+      res.status(500).json({ error: 'Error obteniendo categoría' })
     }
   }
 
-  static async createCategory(req, res) {
+  static async createCategory (req, res) {
     try {
-      const id = await ProductModel.createCategories(req.body);
-      if (!id) return res.status(409).json({ error: 'La categoría ya existe y está activa' });
-      res.status(201).json({ id });
+      const id = await ProductModel.createCategories(req.body)
+      if (!id) return res.status(409).json({ error: 'La categoría ya existe y está activa' })
+      res.status(201).json({ id })
     } catch (error) {
-      logError(`Error creando categoría: ${error.message}`);
-      res.status(500).json({ error: 'Error creando categoría' });
+      logError(`Error creando categoría: ${error.message}`)
+      res.status(500).json({ error: 'Error creando categoría' })
     }
   }
 
-  static async updateCategory(req, res) {
+  static async updateCategory (req, res) {
     try {
-      const success = await ProductModel.updateCategories(req.params.id, req.body);
-      if (!success) return res.status(404).json({ error: 'Categoría no encontrada o no actualizada' });
-      res.json({ success: true });
+      const success = await ProductModel.updateCategories(req.params.id, req.body)
+      if (!success) return res.status(404).json({ error: 'Categoría no encontrada o no actualizada' })
+      res.json({ success: true })
     } catch (error) {
-      logError(`Error actualizando categoría: ${error.message}`);
-      res.status(500).json({ error: 'Error actualizando categoría' });
+      logError(`Error actualizando categoría: ${error.message}`)
+      res.status(500).json({ error: 'Error actualizando categoría' })
     }
   }
 
-  static async disableCategory(req, res) {
+  static async disableCategory (req, res) {
     try {
-      const success = await ProductModel.disableCategories(req.params.id);
-      if (!success) return res.status(404).json({ error: 'Categoría no encontrada o no deshabilitada' });
-      res.json({ success: true });
+      const success = await ProductModel.disableCategories(req.params.id)
+      if (!success) return res.status(404).json({ error: 'Categoría no encontrada o no deshabilitada' })
+      res.json({ success: true })
     } catch (error) {
-      logError(`Error deshabilitando categoría: ${error.message}`);
-      res.status(500).json({ error: 'Error deshabilitando categoría' });
+      logError(`Error deshabilitando categoría: ${error.message}`)
+      res.status(500).json({ error: 'Error deshabilitando categoría' })
     }
   }
 
-  static async getSubcategoryById(req, res) {
+  static async getSubcategoryById (req, res) {
     try {
-      const { id } = req.params;
-      const subcategory = await ProductModel.getSubcategoriesById(id);
-      if (!subcategory) return res.status(404).json({ error: 'Subcategoría no encontrada' });
-      res.json(subcategory);
+      const { id } = req.params
+      const subcategory = await ProductModel.getSubcategoriesById(id)
+      if (!subcategory) return res.status(404).json({ error: 'Subcategoría no encontrada' })
+      res.json(subcategory)
     } catch (error) {
-      logError(`Error obteniendo subcategoría: ${error.message}`);
-      res.status(500).json({ error: 'Error obteniendo subcategoría' });
+      logError(`Error obteniendo subcategoría: ${error.message}`)
+      res.status(500).json({ error: 'Error obteniendo subcategoría' })
     }
   }
 
-  static async createSubcategory(req, res) {
+  static async createSubcategory (req, res) {
     try {
-      const id = await ProductModel.createSubcategories(req.body);
-      if (!id) return res.status(409).json({ error: 'La subcategoría ya existe y está activa' });
-      res.status(201).json({ id });
+      const id = await ProductModel.createSubcategories(req.body)
+      if (!id) return res.status(409).json({ error: 'La subcategoría ya existe y está activa' })
+      res.status(201).json({ id })
     } catch (error) {
-      logError(`Error creando subcategoría: ${error.message}`);
-      res.status(500).json({ error: 'Error creando subcategoría' });
+      logError(`Error creando subcategoría: ${error.message}`)
+      res.status(500).json({ error: 'Error creando subcategoría' })
     }
   }
 
-  static async updateSubcategory(req, res) {
+  static async updateSubcategory (req, res) {
     try {
-      const success = await ProductModel.updateSubcategories(req.params.id, req.body);
-      if (!success) return res.status(404).json({ error: 'Subcategoría no encontrada o no actualizada' });
-      res.json({ success: true });
+      const success = await ProductModel.updateSubcategories(req.params.id, req.body)
+      if (!success) return res.status(404).json({ error: 'Subcategoría no encontrada o no actualizada' })
+      res.json({ success: true })
     } catch (error) {
-      logError(`Error actualizando subcategoría: ${error.message}`);
-      res.status(500).json({ error: 'Error actualizando subcategoría' });
+      logError(`Error actualizando subcategoría: ${error.message}`)
+      res.status(500).json({ error: 'Error actualizando subcategoría' })
     }
   }
 
-  static async disableSubcategory(req, res) {
+  static async disableSubcategory (req, res) {
     try {
-      const success = await ProductModel.disableSubcategories(req.params.id);
-      if (!success) return res.status(404).json({ error: 'Subcategoría no encontrada o no deshabilitada' });
-      res.json({ success: true });
+      const success = await ProductModel.disableSubcategories(req.params.id)
+      if (!success) return res.status(404).json({ error: 'Subcategoría no encontrada o no deshabilitada' })
+      res.json({ success: true })
     } catch (error) {
-      logError(`Error deshabilitando subcategoría: ${error.message}`);
-      res.status(500).json({ error: 'Error deshabilitando subcategoría' });
+      logError(`Error deshabilitando subcategoría: ${error.message}`)
+      res.status(500).json({ error: 'Error deshabilitando subcategoría' })
     }
   }
 
-  static async getBrandById(req, res) {
+  static async getBrandById (req, res) {
     try {
-      const { id } = req.params;
-      const brand = await ProductModel.getBrandById(id);
-      if (!brand) return res.status(404).json({ error: 'Marca no encontrada' });
-      res.json(brand);
+      const { id } = req.params
+      const brand = await ProductModel.getBrandById(id)
+      if (!brand) return res.status(404).json({ error: 'Marca no encontrada' })
+      res.json(brand)
     } catch (error) {
-      logError(`Error obteniendo marca: ${error.message}`);
-      res.status(500).json({ error: 'Error obteniendo marca' });
+      logError(`Error obteniendo marca: ${error.message}`)
+      res.status(500).json({ error: 'Error obteniendo marca' })
     }
   }
 
-  static async createBrand(req, res) {
+  static async createBrand (req, res) {
     try {
-      const id = await ProductModel.createBrand(req.body);
-      if (!id) return res.status(409).json({ error: 'La marca ya existe y está activa' });
-      res.status(201).json({ id });
+      const id = await ProductModel.createBrand(req.body)
+      if (!id) return res.status(409).json({ error: 'La marca ya existe y está activa' })
+      res.status(201).json({ id })
     } catch (error) {
-      logError(`Error creando marca: ${error.message}`);
-      res.status(500).json({ error: 'Error creando marca' });
+      logError(`Error creando marca: ${error.message}`)
+      res.status(500).json({ error: 'Error creando marca' })
     }
   }
 
-  static async updateBrand(req, res) {
+  static async updateBrand (req, res) {
     try {
-      const success = await ProductModel.updateBrand(req.params.id, req.body);
-      if (!success) return res.status(404).json({ error: 'Marca no encontrada o no actualizada' });
-      res.json({ success: true });
+      const success = await ProductModel.updateBrand(req.params.id, req.body)
+      if (!success) return res.status(404).json({ error: 'Marca no encontrada o no actualizada' })
+      res.json({ success: true })
     } catch (error) {
-      logError(`Error actualizando marca: ${error.message}`);
-      res.status(500).json({ error: 'Error actualizando marca' });
+      logError(`Error actualizando marca: ${error.message}`)
+      res.status(500).json({ error: 'Error actualizando marca' })
     }
   }
 
-  static async disableBrand(req, res) {
+  static async disableBrand (req, res) {
     try {
-      const success = await ProductModel.disableBrands(req.params.id);
-      if (!success) return res.status(404).json({ error: 'Marca no encontrada o no deshabilitada' });
-      res.json({ success: true });
+      const success = await ProductModel.disableBrands(req.params.id)
+      if (!success) return res.status(404).json({ error: 'Marca no encontrada o no deshabilitada' })
+      res.json({ success: true })
     } catch (error) {
-      logError(`Error deshabilitando marca: ${error.message}`);
-      res.status(500).json({ error: 'Error deshabilitando marca' });
+      logError(`Error deshabilitando marca: ${error.message}`)
+      res.status(500).json({ error: 'Error deshabilitando marca' })
     }
   }
+
   static async getAll (req, res) {
     try {
       const { sku, name, all } = req.query
@@ -226,7 +227,7 @@ class ProductController {
       const inputData = {
         sku: req.body.sku,
         name: req.body.name,
-        stock: parseInt(req.body.stock),
+        stock: parseInt(req.body.stock) || 0,
         category: req.body.category,
         sub_category: req.body.sub_category,
         brand: req.body.brand,
@@ -239,22 +240,29 @@ class ProductController {
         images: req.body.images || []
       }
 
-      // Validacion de datos
-      // const result = validateProduct(inputData);
-      // if (result.error) {
-      //   return res.status(422).json({ error: JSON.parse(result.error.message) });
-      // }
-
-      // Validar si los datos ya existen sino subir los datos
-      const existingData = await ProductModel.create({ input: inputData })
-      if (!existingData) {
-        return res.status(409).json({ error: 'El producto ya se encuentra en el sistema!' })
+      // Validación básica
+      if (!inputData.sku || !inputData.name) {
+        return res.status(400).json({ error: 'SKU y nombre son requeridos' })
       }
 
-      return res.status(201).json({ message: 'Product created correctly' })
+      // Crear producto (el modelo maneja la transacción completa)
+      const productId = await ProductModel.create({ input: inputData })
+
+      if (!productId) {
+        return res.status(409).json({ error: 'El producto ya existe en el sistema' })
+      }
+
+      return res.status(201).json({
+        message: 'Producto creado correctamente',
+        productId
+      })
     } catch (e) {
-      logError(`Error to create new product: ${e.message}`)
-      return res.status(500).json({ error: 'Internal server error' })
+      console.error('Error en ProductController.create:', e)
+      logError(`Error al crear nuevo producto: ${e.message}`)
+      return res.status(500).json({
+        error: 'Error interno del servidor',
+        details: e.message // Solo para desarrollo, quitar en producción
+      })
     }
   }
 

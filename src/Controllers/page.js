@@ -16,23 +16,24 @@ setInterval(() => { ipTracking = {} }, 24 * 60 * 60 * 1000)
 // const ipOrdersFile = path.join(__dirname, '../Data/ip_orders.json');
 
 class PageController {
-  static async updateBannerOrder(req, res) {
-    const { banners } = req.body;
+  static async updateBannerOrder (req, res) {
+    const { banners } = req.body
     if (!Array.isArray(banners) || banners.length === 0) {
-      return res.status(400).json({ error: 'No se recibieron banners para actualizar.' });
+      return res.status(400).json({ error: 'No se recibieron banners para actualizar.' })
     }
     try {
       for (const banner of banners) {
-        if (!banner.id || typeof banner.position !== 'number') continue;
-        await PageModel.updateBannerPosition({ id: banner.id, position: banner.position });
-        console.log(`Banner actualizado: id=${banner.id}, nueva posición=${banner.position}`);
+        if (!banner.id || typeof banner.position !== 'number') continue
+        await PageModel.updateBannerPosition({ id: banner.id, position: banner.position })
+        console.log(`Banner actualizado: id=${banner.id}, nueva posición=${banner.position}`)
       }
-      res.json({ status: 'success' });
+      res.json({ status: 'success' })
     } catch (error) {
-      console.error('Error actualizando el orden de los banners:', error);
-      res.status(500).json({ error: 'Error actualizando el orden de los banners.' });
+      console.error('Error actualizando el orden de los banners:', error)
+      res.status(500).json({ error: 'Error actualizando el orden de los banners.' })
     }
   }
+
   static async getResellersData (req, res) {
     try {
       const { id, name } = req.query
