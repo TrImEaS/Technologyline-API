@@ -1,6 +1,6 @@
 ﻿const express = require('express')
 const cors = require('cors')
-const apiRouter = require('./src/Routes/apiRouter')
+const apiRouter = require('./src/Routes/apiRouter.js')
 const fs = require('fs')
 const path = require('path')
 const cookieParser = require('cookie-parser')
