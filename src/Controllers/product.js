@@ -296,7 +296,7 @@ class ProductController {
       return res.json(updatedata)
     } catch (e) {
       logError(`Error adding view to product with id ${req.query.id}: ${e.message}`)
-      return res.status(500).json({ error: 'Internal server error' })
+      return res.status(500).json({ error: `Internal server error, ${e.message}` })
     }
   }
 
@@ -312,18 +312,19 @@ class ProductController {
 
   static async addImage (req, res) {
     try {
-      if (!req.file || !req.body.sku || !req.body.index) {
+      if (!req.file || !req.body.index) {
         return res.status(400).json({ error: 'Faltan datos requeridos (imagen, SKU o índice)' })
       }
 
-      const { sku, index } = req.body
+      const { sku, index, newPath } = req.body
+      const realPath = newPath
       const extension = path.extname(req.file.originalname)
       const suffix = `_${parseInt(index) + 1}_${Date.now()}`
       const newFileName = `${sku}${suffix}${extension}`
-      const newPath = path.join(STATIC_BASE, newFileName)
+      const lastPath = path.join(realPath, newFileName)
 
       // Usar rename asíncrono con await
-      await fs.promises.rename(req.file.path, newPath)
+      await fs.promises.rename(req.file.path, lastPath)
 
       const imageUrl = `${IMAGE_PATH}/${newFileName}`
       return res.status(200).json({

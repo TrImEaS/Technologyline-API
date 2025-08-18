@@ -172,3 +172,10 @@ Stack: TypeError: ProductModel.createWithImages is not a function
     at next (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/index.js:280:10)
     at Function.handle (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/index.js:175:3)
     at router (/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/node_modules/express/lib/router/index.js:47:12)
+[2025-08-15T12:59:22.293Z] Error retrieving product with id getCategoriesForCarrousel: ProductModel.getById is not a function
+[2025-08-15T20:29:55.158Z] Error uploading image: ENOENT: no such file or directory, rename '/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/src/FakeStatic/products-images/1755289795151-111903926.jpg' -> '/home/realcolorweb/public_html/technologyline.com.ar/banners-images/Assets/CategoriesCarousel-images/CAT_2_1755289795152.jpg'
+[2025-08-15T20:30:54.248Z] Error uploading image: ENOENT: no such file or directory, rename '/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/src/FakeStatic/products-images/1755289854245-533387535.jpg' -> '/home/realcolorweb/public_html/technologyline.com.ar/banners-images/Assets/CategoriesCarousel-images/CAT_2_1755289854247.jpg'
+[2025-08-18T18:02:13.295Z] Error adding view to product with id undefined: ProductModel.addProductView is not a function
+[2025-08-18T18:02:52.830Z] Error adding view to product with id undefined: ProductModel.addProductView is not a function
+[2025-08-18T19:47:13.402Z] Error uploading image: ENOENT: no such file or directory, rename '/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/src/FakeStatic/products-images/1755546433392-954615813.png' -> '/home/subsistemas/documents/GitHub/Realcolor/Technologyline-API/src/FakeStatic/CAT_2_1755546433400.png'
+[2025-08-18T19:48:03.441Z] Error uploading image: ENOENT: no such file or directory, rename '/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/src/FakeStatic/products-images/1755546483438-300731069.png' -> '/home/subsistemas/documents/GitHub/Realcolor/Technologyline-API/src/FakeStatic/CAT_2_1755546483440.png'

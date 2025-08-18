@@ -524,6 +524,17 @@ class PageController {
     }
   }
 
+  static async updateCategoriesForCarrousel (req, res) {
+    try {
+      const data = await PageModel.updateCategoriesForCarrousel({ input: req.body })
+
+      res.json(data)
+    } catch (error) {
+      console.error('Error retrieving products:', error)
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+
   static async uploadClientBill (req, res) {
     try {
       const { invoice_number, clientId, movement } = req.body

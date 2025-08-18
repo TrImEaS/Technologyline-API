@@ -59,65 +59,6 @@ exports.create = async function ({ input }) {
   }
 }
 
-exports.create = async function ({ input }) {
-  let connection
-  try {
-    connection = await ADMINPool.getConnection()
-    await connection.beginTransaction()
-
-    // 1. Verificar si el producto ya existe
-    const existingData = await getAll({ sku: input.sku })
-    if (existingData.length > 0) {
-      await connection.rollback()
-      return false
-    }
-
-    // 2. Insertar el producto principal
-    const {
-      name, sku, stock, category, sub_category, brand, descriptions,
-      specifications, weight, volume, tax_percentage, gbp_id, images = []
-    } = input
-
-    const productQuery = `
-      INSERT INTO products 
-        (sku, name, stock, category, sub_category, brand, descriptions, 
-         specifications, weight, volume, tax_percentage, status, adminStatus, gbp_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?)
-    `
-
-    const [productResult] = await connection.query(productQuery, [
-      sku, name, stock, category, sub_category, brand, descriptions,
-      specifications, weight, volume, tax_percentage, gbp_id
-    ])
-
-    const productId = productResult.insertId
-
-    // 3. Insertar las imágenes si existen (todo dentro de la misma transacción)
-    if (images.length > 0) {
-      const imageValues = images.map(imgUrl => [productId, sku, imgUrl])
-      const imageQuery = `
-        INSERT INTO products_images 
-          (product_id, sku, img_url) 
-        VALUES ?
-      `
-      await connection.query(imageQuery, [imageValues])
-    }
-
-    await connection.commit()
-    return productId
-  } catch (error) {
-    if (connection) {
-      await connection.rollback()
-    }
-    console.error('Error en model.create:', error)
-    throw error
-  } finally {
-    if (connection) {
-      connection.release()
-    }
-  }
-}
-
 exports.insertProductImages = async function (productId, sku, imageUrls = []) {
   let connection
   try {

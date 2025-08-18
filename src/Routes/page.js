@@ -113,6 +113,7 @@ pageRouter.patch('/changeUserData', PageController.changeUserData)
 pageRouter.patch('/changeUserPassword', PageController.changeUserPassword)
 pageRouter.patch('/check-view/:id', PageController.checkResellerData)
 pageRouter.patch('/changeOrderState', PageController.changeOrderState)
+pageRouter.patch('/updateCategoriesForCarrousel', PageController.updateCategoriesForCarrousel)
 
 pageRouter.post('/', PageController.saveResellersData)
 pageRouter.post('/uploadExcel', uploadExcel.single('file'), PageController.uploadExcel)

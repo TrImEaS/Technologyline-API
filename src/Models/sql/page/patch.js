@@ -90,3 +90,14 @@ exports.changeOrderState = async function ({ orderId, state, user, observations 
     throw error
   }
 }
+
+exports.updateCategoriesForCarrousel = async function ({ input }) {
+  try {
+    const { name, position, active, img_url, id } = input
+    const [result] = await ADMINPool.query('UPDATE categories_carousel SET category = ?, img_url = ?, position = ?, active = ? WHERE id = ?', [name, img_url, position, active, id])
+    return result.affectedRows > 0
+  } catch (error) {
+    console.error('Error al cambiar el categoria:', error)
+    throw error
+  }
+}

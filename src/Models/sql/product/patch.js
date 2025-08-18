@@ -1,5 +1,19 @@
 const { ADMINPool } = require('../config')
 
+exports.addProductView = async function ({ id }) {
+  try {
+    const query = `UPDATE products SET 
+                     total_views = total_views + 1, 
+                     week_views = week_views + 1 
+                     WHERE id = ?`
+    const [result] = await ADMINPool.query(query, [id])
+    return result.affectedRows > 0
+  } catch (error) {
+    console.error('Error updating product views counter:', error)
+    throw error
+  }
+}
+
 exports.update = async function ({ sku, input }) {
   try {
     const fields = Object.keys(input).map(field => `${field} = ?`).join(', ')
