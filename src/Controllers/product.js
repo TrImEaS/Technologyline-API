@@ -317,7 +317,7 @@ class ProductController {
       }
 
       const { sku, index, newPath } = req.body
-      const realPath = newPath
+      const realPath = newPath || STATIC_BASE
       const extension = path.extname(req.file.originalname)
       const suffix = `_${parseInt(index) + 1}_${Date.now()}`
       const newFileName = `${sku}${suffix}${extension}`

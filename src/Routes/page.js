@@ -98,6 +98,7 @@ const uploadExcel = multer({
 })
 
 pageRouter.get('/getCategoriesForCarrousel', PageController.getCategoriesForCarrousel)
+pageRouter.get('/getBrandsForCarousel', PageController.getBrandsForCarousel)
 pageRouter.get('/getOrderMovement', PageController.getOrderMovement)
 pageRouter.get('/getClientOrders', PageController.getClientOrders)
 pageRouter.get('/getIp', PageController.getIp)

@@ -15,6 +15,17 @@ exports.getCategoriesForCarrousel = async function () {
   }
 }
 
+exports.getBrandsForCarousel = async function () {
+  try {
+    const [results] = await ADMINPool.query('SELECT * FROM brands_carousel WHERE active = 1')
+
+    return results
+  } catch (error) {
+    console.error('Error fetching categories_carousel:', error)
+    throw error
+  }
+}
+
 exports.getOrderMovement = async function () {
   try {
     const jsonData = await readJsonFile(movementPath)

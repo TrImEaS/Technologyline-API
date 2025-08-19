@@ -179,3 +179,6 @@ Stack: TypeError: ProductModel.createWithImages is not a function
 [2025-08-18T18:02:52.830Z] Error adding view to product with id undefined: ProductModel.addProductView is not a function
 [2025-08-18T19:47:13.402Z] Error uploading image: ENOENT: no such file or directory, rename '/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/src/FakeStatic/products-images/1755546433392-954615813.png' -> '/home/subsistemas/documents/GitHub/Realcolor/Technologyline-API/src/FakeStatic/CAT_2_1755546433400.png'
 [2025-08-18T19:48:03.441Z] Error uploading image: ENOENT: no such file or directory, rename '/home/subsistemas/Documents/GitHub/Realcolor/Technologyline-API/src/FakeStatic/products-images/1755546483438-300731069.png' -> '/home/subsistemas/documents/GitHub/Realcolor/Technologyline-API/src/FakeStatic/CAT_2_1755546483440.png'
+[2025-08-19T14:12:30.491Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
+[2025-08-19T16:02:33.942Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
+[2025-08-19T16:04:44.318Z] Error uploading image: The "path" argument must be of type string. Received undefined

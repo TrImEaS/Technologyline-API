@@ -9,6 +9,11 @@ const jwt = require('jsonwebtoken')
 
 const SECRET_KEY = 'trimeasdacarry'
 
+const isDev = process.env.NODE_ENV !== 'production'
+const STATIC_BASE_BRANDS = isDev
+  ? path.join(__dirname, '../FakeStatic/products-images')
+  : '/home/realcolorweb/public_html/technologyline.com.ar/banners-images/Assets/Brands'
+
 let ipTracking = {}
 
 setInterval(() => { ipTracking = {} }, 24 * 60 * 60 * 1000)
@@ -512,6 +517,21 @@ class PageController {
   static async getCategoriesForCarrousel (req, res) {
     try {
       const data = await PageModel.getCategoriesForCarrousel()
+
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+      res.setHeader('Expires', '0')
+      res.setHeader('Pragma', 'no-cache')
+
+      res.json(data)
+    } catch (error) {
+      console.error('Error retrieving products:', error)
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+
+  static async getBrandsForCarousel (req, res) {
+    try {
+      const data = await PageModel.getBrandsForCarousel()
 
       res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
       res.setHeader('Expires', '0')
