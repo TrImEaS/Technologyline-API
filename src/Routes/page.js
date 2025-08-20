@@ -1,3 +1,4 @@
+// ...existing code...
 const { Router } = require('express')
 const PageController = require('../Controllers/page')
 const multer = require('multer')
@@ -5,6 +6,8 @@ const path = require('path')
 const fs = require('fs')
 
 const pageRouter = Router()
+// ...existing code...
+pageRouter.post('/addBrandForCarousel', PageController.addBrandForCarousel);
 const isDev = process.env.NODE_ENV !== 'production'
 
 // const billsBase = path.join(__dirname, '../Data/bills');
@@ -129,3 +132,12 @@ pageRouter.post('/uploadClientBill', uploadBill.single('bill'), PageController.u
 pageRouter.delete('/deleteUser', PageController.deleteUser)
 
 module.exports = pageRouter
+// Rutas PATCH (después de inicializar pageRouter y configurar multer)
+pageRouter.patch('/setBanner', uploadImages.single('image'), PageController.uploadImage)
+pageRouter.patch('/updateBannerOrder', PageController.updateBannerOrder)
+pageRouter.patch('/changeUserData', PageController.changeUserData)
+pageRouter.patch('/changeUserPassword', PageController.changeUserPassword)
+pageRouter.patch('/check-view/:id', PageController.checkResellerData)
+pageRouter.patch('/changeOrderState', PageController.changeOrderState)
+pageRouter.patch('/updateCategoriesForCarrousel', PageController.updateCategoriesForCarrousel)
+pageRouter.patch('/updateBrandsForCarousel', PageController.updateBrandsForCarousel)

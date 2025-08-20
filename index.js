@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 808 
 const IP_LOG_FILE_JSON = path.join(__dirname, './src/Data/ip_log.json')
 const STATISTICS_FILE_JSON = path.join(__dirname, './src/Data/statistics.json')
 const app = express()

@@ -1,3 +1,29 @@
+exports.updateBrandsForCarousel = async function ({ input }) {
+  try {
+    const { id_brand, image_path, active, id } = input
+    const [result] = await ADMINPool.query(
+      'UPDATE brands_carousel SET brand_id = ?, image_path = ?, active = ? WHERE id = ?',
+      [id_brand, image_path, active, id]
+    )
+    return result.affectedRows > 0
+  } catch (error) {
+    console.error('Error al actualizar brands_carousel:', error)
+    throw error
+  }
+}
+exports.updateBrandsForCarousel = async function ({ input }) {
+  try {
+    const { id_brand, image_path, active, id } = input
+    const [result] = await ADMINPool.query(
+      'UPDATE brands_carousel SET brand_id = ?, image_path = ?, active = ? WHERE id = ?',
+      [id_brand, image_path, active, id]
+    )
+    return result.affectedRows > 0
+  } catch (error) {
+    console.error('Error al actualizar brands_carousel:', error)
+    throw error
+  }
+}
 const { ADMINPool } = require('../config')
 
 exports.updateImagePath = async function ({ id, fileUrl, to }) {
