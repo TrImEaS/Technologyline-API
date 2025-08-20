@@ -1,5 +1,6 @@
 // const { validatePartialProduct, validateProduct } = require('../Schemas/product.js');
 const ProductModel = require('../Models/sql/product/index.js')
+const { ADMINPool } = require('../Models/sql/config');
 const fs = require('fs')
 const path = require('path')
 
@@ -333,12 +334,13 @@ class ProductController {
       // Obtener el product_id por SKU
       const [product] = await ProductModel.getAll({ sku });
       if (product && product.id) {
-        // Obtener la posición máxima actual para ese SKU
-        const maxPos = product.img_urls ? product.img_urls.length : 0;
-        const posicion = maxPos + 1;
+        // Obtener la posición máxima actual para ese SKU desde la base de datos
+        const getMaxPosQuery = 'SELECT MAX(posicion) AS maxPos FROM products_images WHERE sku = ?';
+        const [[{ maxPos }]] = await ADMINPool.query(getMaxPosQuery, [sku]);
+        const posicion = (maxPos || 0) + 1;
         // Insertar en la tabla products_images
         const insertQuery = `INSERT INTO products_images (product_id, sku, img_url, posicion) VALUES (?, ?, ?, ?)`;
-        await ProductModel.ADMINPool.query(insertQuery, [product.id, sku, imageUrl, posicion]);
+        await ADMINPool.query(insertQuery, [product.id, sku, imageUrl, posicion]);
       }
 
       return res.status(200).json({

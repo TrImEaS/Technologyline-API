@@ -185,3 +185,5 @@ Stack: TypeError: ProductModel.createWithImages is not a function
 [2025-08-20T14:42:35.218Z] Error updating image positions: Error updating image positions: Unknown column 'posicion' in 'field list'
 [2025-08-20T15:14:19.902Z] Error uploading image: Cannot read properties of undefined (reading 'query')
 [2025-08-20T15:14:19.917Z] Error deleting failed upload: ENOENT: no such file or directory, unlink 'E:\Xampp\htdocs\Technologyline-API\src\FakeStatic\products-images\1755702859745-796151419.webp'
+[2025-08-20T15:39:04.146Z] Error uploading image: Cannot read properties of undefined (reading 'query')
+[2025-08-20T15:39:04.150Z] Error deleting failed upload: ENOENT: no such file or directory, unlink 'E:\Xampp\htdocs\Technologyline-API\src\FakeStatic\products-images\1755704344109-91492615.png'
