@@ -1,3 +1,27 @@
+// Actualiza la posición de las imágenes de un producto
+exports.updateProductImagesPosition = async function (sku, imageUrls = []) {
+  let connection;
+  try {
+    connection = await ADMINPool.getConnection();
+    await connection.beginTransaction();
+
+    // Para cada imagen, actualizar su posición según el orden recibido
+    for (let i = 0; i < imageUrls.length; i++) {
+      const url = imageUrls[i];
+      const updateQuery = 'UPDATE products_images SET posicion = ? WHERE sku = ? AND img_url = ?';
+      await connection.query(updateQuery, [i + 1, sku, url]);
+    }
+
+    await connection.commit();
+    return true;
+  } catch (error) {
+    if (connection) await connection.rollback();
+    console.error('Error updating image positions:', error);
+    throw new Error(`Error updating image positions: ${error.message}`);
+  } finally {
+    if (connection) connection.release();
+  }
+}
 const { ADMINPool } = require('../config')
 const { getAll } = require('./get')
 

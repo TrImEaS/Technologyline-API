@@ -182,3 +182,6 @@ Stack: TypeError: ProductModel.createWithImages is not a function
 [2025-08-19T14:12:30.491Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
 [2025-08-19T16:02:33.942Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
 [2025-08-19T16:04:44.318Z] Error uploading image: The "path" argument must be of type string. Received undefined
+[2025-08-20T14:42:35.218Z] Error updating image positions: Error updating image positions: Unknown column 'posicion' in 'field list'
+[2025-08-20T15:14:19.902Z] Error uploading image: Cannot read properties of undefined (reading 'query')
+[2025-08-20T15:14:19.917Z] Error deleting failed upload: ENOENT: no such file or directory, unlink 'E:\Xampp\htdocs\Technologyline-API\src\FakeStatic\products-images\1755702859745-796151419.webp'

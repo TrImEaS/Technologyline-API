@@ -6,7 +6,7 @@ exports.getAll = async function ({ id, sku, name, all }) {
       const querySku = `SELECT 
                             p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.status, p.adminStatus, 
                             p.specifications, p.descriptions, p.total_views, p.week_views, p.tax_percentage, p.weight, p.volume,
-                            GROUP_CONCAT(DISTINCT pi.img_url) AS img_urls,
+                            GROUP_CONCAT(DISTINCT pi.img_url ORDER BY pi.posicion ASC) AS img_urls,
                             GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
                           FROM products p
                           LEFT JOIN products_images pi ON p.sku = pi.sku  -- Join por sku
@@ -29,17 +29,7 @@ exports.getAll = async function ({ id, sku, name, all }) {
           : {}
 
         result.img_urls = result.img_urls
-          ? result.img_urls
-            .split(',')
-            .sort((a, b) => {
-              const matchA = a.match(/_(\d+)\./)
-              const numA = parseInt(matchA ? matchA[1] : '0', 10)
-
-              const matchB = b.match(/_(\d+)\./)
-              const numB = parseInt(matchB ? matchB[1] : '0', 10)
-
-              return numA - numB
-            })
+          ? result.img_urls.split(',')
           : []
 
         for (const priceKey in result.prices) {
