@@ -187,3 +187,13 @@ Stack: TypeError: ProductModel.createWithImages is not a function
 [2025-08-20T15:14:19.917Z] Error deleting failed upload: ENOENT: no such file or directory, unlink 'E:\Xampp\htdocs\Technologyline-API\src\FakeStatic\products-images\1755702859745-796151419.webp'
 [2025-08-20T15:39:04.146Z] Error uploading image: Cannot read properties of undefined (reading 'query')
 [2025-08-20T15:39:04.150Z] Error deleting failed upload: ENOENT: no such file or directory, unlink 'E:\Xampp\htdocs\Technologyline-API\src\FakeStatic\products-images\1755704344109-91492615.png'
+[2025-08-22T16:41:40.470Z] Error retrieving products: Unknown column 'pi.posicion' in 'field list'
+[2025-08-22T16:50:56.558Z] Error retrieving products: Unknown column 'pi.posicion' in 'field list'
+[2025-08-22T16:51:12.430Z] Error retrieving products: Unknown column 'pi.posicion' in 'field list'
+[2025-08-22T16:51:14.805Z] Error retrieving products: Unknown column 'pi.posicion' in 'field list'
+[2025-08-22T16:51:22.209Z] Error retrieving products: Unknown column 'pi.posicion' in 'field list'
+[2025-08-22T16:51:24.086Z] Error retrieving products: Unknown column 'pi.posicion' in 'field list'
+[2025-08-22T19:25:51.287Z] Error retrieving products: Unknown column 'pi.posicion' in 'field list'
+[2025-08-22T19:28:45.842Z] Error retrieving products: Unknown column 'pi.posicion' in 'field list'
+[2025-08-22T19:36:26.458Z] Error retrieving products: Table 'ADMIN.products' doesn't exist
+[2025-08-22T19:36:29.303Z] Error retrieving products: Table 'ADMIN.products' doesn't exist
