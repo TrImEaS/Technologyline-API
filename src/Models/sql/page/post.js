@@ -1,6 +1,5 @@
 const { ADMINPool } = require('../config')
 const path = require('path')
-
 const movementPath = path.resolve(__dirname, '../../Data/order_movements.json')
 const sendMail = require('../../../Utils/mail_send')
 
@@ -158,3 +157,17 @@ exports.setClientInvoice = async function ({ clientId, invoiceNumber, movement }
   }
   return true
 }
+
+exports.addBrandForCarousel = async function ({ id_brand, image_path, active }) {
+  const query = 'INSERT INTO brands_carousel (brand_id, image_path, active, created_at) VALUES (?, ?, ?, NOW())';
+  const values = [id_brand, image_path, active || 1];
+  const [result] = await ADMINPool.query(query, values);
+  return {
+    id: result.insertId,
+    brand_id: id_brand,
+    image_path,
+    active: active || 1,
+    created_at: new Date().toISOString()
+  };
+};
+

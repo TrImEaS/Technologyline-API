@@ -1,5 +1,3 @@
-const addBrandForCarousel = require('../Models/sql/page/addBrandForCarousel');
-
 const path = require("path");
 const fs = require('fs');
 const PageModel = require('../Models/sql/page/index.js');
@@ -34,12 +32,13 @@ class PageController {
       if (!image_path.startsWith('/') && !image_path.includes('://')) {
         finalImagePath = STATIC_BASE_BRANDS + '/' + image_path;
       }
-      const newBrand = await addBrandForCarousel.addBrandForCarousel({ id_brand, image_path: finalImagePath, active });
+      const newBrand = await PageModel.addBrandForCarousel({ id_brand, image_path: finalImagePath, active });
       return res.status(200).json(newBrand);
     } catch (err) {
       return res.status(500).json({ error: 'Error al agregar la marca al carousel' });
     }
   }
+
   static async updateBrandsForCarousel (req, res) {
     try {
       const data = await PageModel.updateBrandsForCarousel({ input: req.body })
@@ -49,6 +48,7 @@ class PageController {
       res.status(500).json({ error: 'Internal server error' })
     }
   }
+
   static async updateBannerOrder (req, res) {
     const { banners } = req.body
     if (!Array.isArray(banners) || banners.length === 0) {

@@ -1,4 +1,6 @@
-// Actualiza la posición de las imágenes de un producto
+const { ADMINPool } = require('../config')
+const { getAll } = require('./get')
+
 exports.updateProductImagesPosition = async function (sku, imageUrls = []) {
   let connection;
   try {
@@ -22,8 +24,6 @@ exports.updateProductImagesPosition = async function (sku, imageUrls = []) {
     if (connection) connection.release();
   }
 }
-const { ADMINPool } = require('../config')
-const { getAll } = require('./get')
 
 exports.create = async function ({ input }) {
   let connection

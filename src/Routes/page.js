@@ -129,10 +129,6 @@ pageRouter.post('/setOrderMovement', PageController.setOrderMovement)
 pageRouter.post('/deleteBanner', PageController.deleteImage)
 pageRouter.post('/uploadClientBill', uploadBill.single('bill'), PageController.uploadClientBill)
 
-pageRouter.delete('/deleteUser', PageController.deleteUser)
-
-module.exports = pageRouter
-// Rutas PATCH (después de inicializar pageRouter y configurar multer)
 pageRouter.patch('/setBanner', uploadImages.single('image'), PageController.uploadImage)
 pageRouter.patch('/updateBannerOrder', PageController.updateBannerOrder)
 pageRouter.patch('/changeUserData', PageController.changeUserData)
@@ -141,3 +137,7 @@ pageRouter.patch('/check-view/:id', PageController.checkResellerData)
 pageRouter.patch('/changeOrderState', PageController.changeOrderState)
 pageRouter.patch('/updateCategoriesForCarrousel', PageController.updateCategoriesForCarrousel)
 pageRouter.patch('/updateBrandsForCarousel', PageController.updateBrandsForCarousel)
+
+pageRouter.delete('/deleteUser', PageController.deleteUser)
+
+module.exports = pageRouter
