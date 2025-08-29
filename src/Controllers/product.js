@@ -1,6 +1,6 @@
 // const { validatePartialProduct, validateProduct } = require('../Schemas/product.js');
 const ProductModel = require('../Models/sql/product/index.js')
-const { ADMINPool } = require('../Models/sql/config');
+const { ADMINPool } = require('../Models/sql/config')
 const fs = require('fs')
 const path = require('path')
 
@@ -10,7 +10,7 @@ const STATIC_BASE = isDev
   : '/home/realcolorweb/public_html/technologyline.com.ar/products-images'
 
 const IMAGE_PATH = isDev
-  ? 'http://localhost:808/products-images'
+  ? 'http://localhost:8080/products-images'
   : 'https://technologyline.com.ar/products-images/'
 
 function logError (errorMessage) {
@@ -317,36 +317,36 @@ class ProductController {
         return res.status(400).json({ error: 'Faltan datos requeridos (imagen, SKU o índice)' })
       }
 
-      const { sku, index } = req.body;
+      const { sku, index } = req.body
       // Usar STATIC_BASE para la ruta física y IMAGE_PATH para la URL pública
-      const realPath = STATIC_BASE;
-      const extension = path.extname(req.file.originalname);
-      const suffix = `_${parseInt(index) + 1}_${Date.now()}`;
-      const newFileName = `${sku}${suffix}${extension}`;
-      const lastPath = path.join(realPath, newFileName);
+      const realPath = STATIC_BASE
+      const extension = path.extname(req.file.originalname)
+      const suffix = `_${parseInt(index) + 1}_${Date.now()}`
+      const newFileName = `${sku}${suffix}${extension}`
+      const lastPath = path.join(realPath, newFileName)
 
       // Usar rename asíncrono con await
-      await fs.promises.rename(req.file.path, lastPath);
+      await fs.promises.rename(req.file.path, lastPath)
 
-      const imageUrl = `${IMAGE_PATH}/${newFileName}`;
+      const imageUrl = `${IMAGE_PATH}/${newFileName}`
 
       // Insertar la imagen en la base de datos
       // Obtener el product_id por SKU
-      const [product] = await ProductModel.getAll({ sku });
+      const [product] = await ProductModel.getAll({ sku })
       if (product && product.id) {
         // Obtener la posición máxima actual para ese SKU desde la base de datos
-        const getMaxPosQuery = 'SELECT MAX(posicion) AS maxPos FROM products_images WHERE sku = ?';
-        const [[{ maxPos }]] = await ADMINPool.query(getMaxPosQuery, [sku]);
-        const posicion = (maxPos || 0) + 1;
+        const getMaxPosQuery = 'SELECT MAX(posicion) AS maxPos FROM products_images WHERE sku = ?'
+        const [[{ maxPos }]] = await ADMINPool.query(getMaxPosQuery, [sku])
+        const posicion = (maxPos || 0) + 1
         // Insertar en la tabla products_images
-        const insertQuery = `INSERT INTO products_images (product_id, sku, img_url, posicion) VALUES (?, ?, ?, ?)`;
-        await ADMINPool.query(insertQuery, [product.id, sku, imageUrl, posicion]);
+        const insertQuery = 'INSERT INTO products_images (product_id, sku, img_url, posicion) VALUES (?, ?, ?, ?)'
+        await ADMINPool.query(insertQuery, [product.id, sku, imageUrl, posicion])
       }
 
       return res.status(200).json({
         message: 'Imagen subida correctamente',
         imageUrl
-      });
+      })
     } catch (error) {
       console.error('Error uploading image:', error)
       logError(`Error uploading image: ${error.message}`)
@@ -364,23 +364,23 @@ class ProductController {
 
   static async updateImages (req, res) {
     try {
-      const { sku, images } = req.body;
+      const { sku, images } = req.body
       if (!sku || !Array.isArray(images)) {
-        return res.status(400).json({ error: 'Datos inválidos' });
+        return res.status(400).json({ error: 'Datos inválidos' })
       }
 
       // Actualizar solo la posición de cada imagen
-      const success = await ProductModel.updateProductImagesPosition(sku, images);
+      const success = await ProductModel.updateProductImagesPosition(sku, images)
       if (!success) {
-        return res.status(404).json({ error: 'Error al actualizar las posiciones de las imágenes' });
+        return res.status(404).json({ error: 'Error al actualizar las posiciones de las imágenes' })
       }
       return res.status(200).json({
         message: 'Posiciones de imágenes actualizadas correctamente',
         images
-      });
+      })
     } catch (error) {
-      logError(`Error updating image positions: ${error.message}`);
-      return res.status(500).json({ error: 'Error interno del servidor' });
+      logError(`Error updating image positions: ${error.message}`)
+      return res.status(500).json({ error: 'Error interno del servidor' })
     }
   }
 }
