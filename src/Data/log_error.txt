@@ -197,3 +197,5 @@ Stack: TypeError: ProductModel.createWithImages is not a function
 [2025-08-22T19:28:45.842Z] Error retrieving products: Unknown column 'pi.posicion' in 'field list'
 [2025-08-22T19:36:26.458Z] Error retrieving products: Table 'ADMIN.products' doesn't exist
 [2025-08-22T19:36:29.303Z] Error retrieving products: Table 'ADMIN.products' doesn't exist
+[2025-09-01T17:02:25.954Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
+[2025-09-01T17:02:30.813Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
