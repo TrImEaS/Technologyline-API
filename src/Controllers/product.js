@@ -10,7 +10,7 @@ const STATIC_BASE = isDev
   : '/home/realcolorweb/public_html/technologyline.com.ar/products-images'
 
 const IMAGE_PATH = isDev
-  ? 'http://localhost:8080/products-images'
+  ? 'http://localhost:8080/products-images' // <-- corregido a 8080
   : 'https://technologyline.com.ar/products-images/'
 
 function logError (errorMessage) {
@@ -369,14 +369,58 @@ class ProductController {
         return res.status(400).json({ error: 'Datos inválidos' })
       }
 
-      // Actualizar solo la posición de cada imagen
-      const success = await ProductModel.updateProductImagesPosition(sku, images)
-      if (!success) {
-        return res.status(404).json({ error: 'Error al actualizar las posiciones de las imágenes' })
+      // Normaliza URL (quita slashes duplicados en pathname) y limpia espacios
+      const normalizeUrl = (u) => {
+        if (!u || typeof u !== 'string') return u
+        try {
+          const urlObj = new URL(u.trim())
+          urlObj.pathname = urlObj.pathname.replace(/\/+/g, '/')
+          return urlObj.toString().replace(/\/+$/, '')
+        } catch (e) {
+          return u.trim().replace(/\/+/g, '/')
+        }
       }
+
+      // Aplicar normalización y mantener orden eliminando duplicados
+      const seen = new Set()
+      const normalized = []
+      for (const img of images) {
+        const n = normalizeUrl(img)
+        if (!seen.has(n)) {
+          seen.add(n)
+          normalized.push(n)
+        }
+      }
+
+      // Obtener producto por SKU
+      const [product] = await ProductModel.getAll({ sku })
+      if (!product || !product.id) {
+        return res.status(404).json({ error: 'Producto no encontrado para el SKU proporcionado' })
+      }
+      const productId = product.id
+
+      // Reemplazar las imágenes en DB: eliminar existentes y reinsertar únicas con posición
+      try {
+        await ADMINPool.query('DELETE FROM products_images WHERE sku = ?', [sku])
+
+        const insertQuery = 'INSERT INTO products_images (product_id, sku, img_url, posicion) VALUES (?, ?, ?, ?)'
+        for (let i = 0; i < normalized.length; i++) {
+          const imgUrl = normalized[i]
+          const posicion = i + 1
+          await ADMINPool.query(insertQuery, [productId, sku, imgUrl, posicion])
+        }
+      } catch (dbErr) {
+        logError(`DB error updating images for SKU ${sku}: ${dbErr.message}`)
+        throw dbErr
+      }
+
+      const duplicatesRemoved = normalized.length !== images.length
+
       return res.status(200).json({
         message: 'Posiciones de imágenes actualizadas correctamente',
-        images
+        sku,
+        images: normalized,
+        duplicatesRemoved
       })
     } catch (error) {
       logError(`Error updating image positions: ${error.message}`)
