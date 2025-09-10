@@ -1,7 +1,8 @@
 const { ADMINPool } = require('../config')
 const path = require('path')
-const movementPath = path.resolve(__dirname, '../../Data/order_movements.json')
+const movementPath = path.resolve(__dirname, '../../../Data/order_movements.json')
 const sendMail = require('../../../Utils/mail_send')
+const { writeJsonFile, readJsonFile } = require('../../../Utils/handle_json.js')
 
 exports.saveResellersData = async function ({ input }) {
   try {
@@ -125,10 +126,10 @@ exports.registerUser = async function ({ name, username, dni, address, location,
 
 exports.setOrderMovement = async function () {
   try {
-    const jsonData = await this.readJsonFile(movementPath)
+    const jsonData = await readJsonFile(movementPath)
 
     jsonData.movement += 1 // Incrementamos correctamente
-    await this.writeJsonFile(movementPath, jsonData) // Guardamos el archivo
+    await writeJsonFile(movementPath, jsonData) // Guardamos el archivo
 
     console.log('Movimiento actualizado:', jsonData.movement) // Log para depurar
     return jsonData
@@ -159,15 +160,14 @@ exports.setClientInvoice = async function ({ clientId, invoiceNumber, movement }
 }
 
 exports.addBrandForCarousel = async function ({ id_brand, image_path, active }) {
-  const query = 'INSERT INTO brands_carousel (brand_id, image_path, active, created_at) VALUES (?, ?, ?, NOW())';
-  const values = [id_brand, image_path, active || 1];
-  const [result] = await ADMINPool.query(query, values);
+  const query = 'INSERT INTO brands_carousel (brand_id, image_path, active, created_at) VALUES (?, ?, ?, NOW())'
+  const values = [id_brand, image_path, active || 1]
+  const [result] = await ADMINPool.query(query, values)
   return {
     id: result.insertId,
     brand_id: id_brand,
     image_path,
     active: active || 1,
     created_at: new Date().toISOString()
-  };
-};
-
+  }
+}

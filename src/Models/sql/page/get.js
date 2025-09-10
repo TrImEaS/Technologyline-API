@@ -2,7 +2,7 @@ const { ADMINPool } = require('../config')
 const { readJsonFile } = require('../../../Utils/handle_json.js')
 
 const path = require('path')
-const movementPath = path.resolve(__dirname, '../../Data/order_movements.json')
+const movementPath = path.resolve(__dirname, '../../../Data/order_movements.json')
 
 exports.getCategoriesForCarrousel = async function () {
   try {
