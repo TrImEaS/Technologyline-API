@@ -91,13 +91,15 @@ exports.getAll = async function ({ id, sku, name, all }) {
     }
 
     let query = `SELECT 
-                      p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.week_views, p.total_views, p.brand, p.status, p.adminStatus, p.tax_percentage, p.weight, p.volume,
-                      SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT pi.img_url ORDER BY pi.id), ',', 1) AS img_url,
-                      GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
-                    FROM products p
-                    LEFT JOIN products_images pi ON p.sku = pi.sku
-                    LEFT JOIN products_prices pp ON p.sku = pp.sku
-                    WHERE p.sku != 'ENVIO'`
+      p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.week_views, p.total_views, 
+      p.brand, p.status, p.adminStatus, p.tax_percentage, p.weight, p.volume,
+      MAX(CASE WHEN pi.posicion = 1 THEN pi.img_url END) AS img_url,
+      MAX(CASE WHEN pi.posicion = 2 THEN pi.img_url END) AS img_url_2,
+      GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
+    FROM products p
+    LEFT JOIN products_images pi ON p.sku = pi.sku AND pi.posicion IN (1,2)
+    LEFT JOIN products_prices pp ON p.sku = pp.sku
+    WHERE p.sku != 'ENVIO'`
 
     const params = []
     const conditions = []
@@ -141,7 +143,7 @@ exports.getAll = async function ({ id, sku, name, all }) {
         }
 
         delete result.prices
-        delete result.img_urls
+        // delete result.img_urls
       })
     }
 

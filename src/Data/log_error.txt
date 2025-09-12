@@ -199,3 +199,10 @@ Stack: TypeError: ProductModel.createWithImages is not a function
 [2025-08-22T19:36:29.303Z] Error retrieving products: Table 'ADMIN.products' doesn't exist
 [2025-09-01T17:02:25.954Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
 [2025-09-01T17:02:30.813Z] Error retrieving products: connect ECONNREFUSED 127.0.0.1:3306
+[2025-09-11T16:05:00.979Z] Error retrieving products: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS pr...' at line 4
+[2025-09-11T17:41:30.328Z] Error retrieving products: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'GROUP BY p.id' at line 16
+[2025-09-11T17:42:27.247Z] Error retrieving products: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'GROUP BY p.id' at line 16
+[2025-09-11T17:42:47.600Z] Error retrieving products: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'GROUP BY p.id' at line 16
+[2025-09-11T17:43:46.878Z] Error retrieving products: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'AND p.adminStatus = 1 AND p.stock > 0 AND p.status = 1 GROUP BY p.id' at line 13
+[2025-09-11T17:44:58.000Z] Error retrieving products: FUNCTION admin.JSON_ARRAYAGG does not exist
+[2025-09-11T17:48:09.321Z] Error retrieving products: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'GROUP BY p.id' at line 9
