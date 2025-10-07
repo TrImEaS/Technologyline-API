@@ -1,41 +1,41 @@
-const path = require("path");
-const fs = require('fs');
-const PageModel = require('../Models/sql/page/index.js');
-const { validateResellers_Form } = require('../Schemas/resellers_form');
-const nodemailer = require('nodemailer');
-const getOrderNotificationTemplate = require('../Utils/EmailTemplates/orderNotification');
-const getOrderConfirmationTemplate = require('../Utils/EmailTemplates/orderConfirmation');
-const jwt = require('jsonwebtoken');
+const path = require('path')
+const fs = require('fs')
+const PageModel = require('../Models/sql/page/index.js')
+const { validateResellers_Form } = require('../Schemas/resellers_form')
+const nodemailer = require('nodemailer')
+const getOrderNotificationTemplate = require('../Utils/EmailTemplates/orderNotification')
+const getOrderConfirmationTemplate = require('../Utils/EmailTemplates/orderConfirmation')
+const jwt = require('jsonwebtoken')
 
-const SECRET_KEY = 'trimeasdacarry';
+const SECRET_KEY = 'trimeasdacarry'
 
-const isDev = process.env.NODE_ENV !== 'production';
+const isDev = process.env.NODE_ENV !== 'production'
 const STATIC_BASE_BRANDS = isDev
   ? path.join(__dirname, '../FakeStatic/products-images')
-  : '/home/realcolorweb/public_html/technologyline.com.ar/banners-images/Assets/Brands';
+  : '/home/realcolorweb/public_html/technologyline.com.ar/banners-images/Assets/Brands'
 
-let ipTracking = {};
+let ipTracking = {}
 
-setInterval(() => { ipTracking = {} }, 24 * 60 * 60 * 1000);
+setInterval(() => { ipTracking = {} }, 24 * 60 * 60 * 1000)
 
 // const ipOrdersFile = path.join(__dirname, '../Data/ip_orders.json');
 
 class PageController {
-  static async addBrandForCarousel(req, res) {
+  static async addBrandForCarousel (req, res) {
     try {
-      const { id_brand, image_path, active } = req.body;
+      const { id_brand, image_path, active } = req.body
       if (!id_brand || !image_path) {
-        return res.status(400).json({ error: 'Faltan datos requeridos' });
+        return res.status(400).json({ error: 'Faltan datos requeridos' })
       }
-      //verificar si la ruta de la imagen es relativa o absoluta
-      let finalImagePath = image_path;
+      // verificar si la ruta de la imagen es relativa o absoluta
+      let finalImagePath = image_path
       if (!image_path.startsWith('/') && !image_path.includes('://')) {
-        finalImagePath = STATIC_BASE_BRANDS + '/' + image_path;
+        finalImagePath = STATIC_BASE_BRANDS + '/' + image_path
       }
-      const newBrand = await PageModel.addBrandForCarousel({ id_brand, image_path: finalImagePath, active });
-      return res.status(200).json(newBrand);
+      const newBrand = await PageModel.addBrandForCarousel({ id_brand, image_path: finalImagePath, active })
+      return res.status(200).json(newBrand)
     } catch (err) {
-      return res.status(500).json({ error: 'Error al agregar la marca al carousel' });
+      return res.status(500).json({ error: 'Error al agregar la marca al carousel' })
     }
   }
 

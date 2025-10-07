@@ -5,7 +5,7 @@ exports.getAll = async function ({ id, sku, name, all }) {
     if (sku) {
       const querySku = `SELECT 
                             p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.status, p.adminStatus, 
-                            p.specifications, p.descriptions, p.total_views, p.week_views, p.tax_percentage, p.weight, p.volume,
+                            p.specifications, p.descriptions, p.faq, p.total_views, p.week_views, p.tax_percentage, p.weight, p.volume,
                             GROUP_CONCAT(DISTINCT pi.img_url ORDER BY pi.posicion ASC) AS img_urls,
                             GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
                           FROM products p

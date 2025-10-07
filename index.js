@@ -13,6 +13,7 @@ const corsOptions = {
   origin: [
     'http://localhost:5173',
     'http://localhost:8080',
+    'http://72.60.245.14/',
     'https://www.technologyline.com.ar',
     'https://technologyline.com.ar',
     'https://www.line-technology.com.ar',
