@@ -1,0 +1,314 @@
+[
+  {
+    "id": "1",
+    "name": "Basico",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "2",
+    "name": "Presentismo",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "3",
+    "name": "Antiguedad",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "4",
+    "name": "Aguinaldo Prop",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "5",
+    "name": "Dia comercio",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "6",
+    "name": "Preaviso",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "7",
+    "name": "Feriados Nacionales",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "8",
+    "name": "SAC Preaviso",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "9",
+    "name": "Vacaciones",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "10",
+    "name": "Dia del gremio",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "11",
+    "name": "Premios",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "12",
+    "name": "Decreto 14-2020 acuerdo solidario",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "13",
+    "name": "Comisiones por ventas",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "14",
+    "name": "Gratificacion Rem",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "15",
+    "name": "SAC / Vacac no gozadas",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "16",
+    "name": "Vacac no gozadas",
+    "type": "REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "17",
+    "name": "Embargo Sueldo",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "18",
+    "name": "Pres. Norem Acue. Oct",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "19",
+    "name": "Vacaciones norem",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "20",
+    "name": "Aguinaldo Prop norem",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "21",
+    "name": "Preaviso",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "22",
+    "name": "SAC Preaviso",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "23",
+    "name": "Feriados nac no rem",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "24",
+    "name": "Indemnizacion por Antiguedad",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "25",
+    "name": "Integracion mes despido",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "26",
+    "name": "sac/SvacNoG  2021",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "27",
+    "name": "Vacac no goz 2021",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "28",
+    "name": "Gratificacion Extraord no rem",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "29",
+    "name": "Anti. Acue. Norem Oct",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "30",
+    "name": "SAC Integr mes despido",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "31",
+    "name": "Bono norem",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "32",
+    "name": "INCREMENTO Norem Octubre 2023",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "33",
+    "name": "Acuerdo Mayo 2019",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "34",
+    "name": "decreto 665/19 no rem",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "35",
+    "name": "Descuento DTO 561/19",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "36",
+    "name": "Adelanto de Liquidacion Final",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "37",
+    "name": "Asig norem Comp AC 2021",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "38",
+    "name": "Asig. No Rem. Acuerdo  04/23",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "39",
+    "name": "Acuerdo Feb-20 Comercio",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "40",
+    "name": "Asig. No Rem. Dto  438/2023 cuota 1/2",
+    "type": "NO REMUNERATIVO",
+    "active": 1
+  },
+  {
+    "id": "41",
+    "name": "Jubilacion",
+    "type": "DESCUENTO",
+    "active": 1
+  },
+  {
+    "id": "42",
+    "name": "Obra Social",
+    "type": "DESCUENTO",
+    "active": 1
+  },
+  {
+    "id": "43",
+    "name": "Sindicato",
+    "type": "DESCUENTO",
+    "active": 1
+  },
+  {
+    "id": "44",
+    "name": "Faecys",
+    "type": "DESCUENTO",
+    "active": 1
+  },
+  {
+    "id": "45",
+    "name": "Ley 19032",
+    "type": "DESCUENTO",
+    "active": 1
+  },
+  {
+    "id": "46",
+    "name": "Desc. O. Social",
+    "type": "DESCUENTO",
+    "active": 1
+  },
+  {
+    "id": "47",
+    "name": "Faecys norem",
+    "type": "DESCUENTO",
+    "active": 1
+  },
+  {
+    "id": "48",
+    "name": "O.social J.completa",
+    "type": "DESCUENTO",
+    "active": 1
+  },
+  {
+    "id": "49",
+    "name": "O.social J.comp norem",
+    "type": "DESCUENTO",
+    "active": 1
+  },
+  {
+    "id": "50",
+    "name": "Sindicato norem",
+    "type": "DESCUENTO",
+    "active": 1
+  },
+  {
+    "id": "51",
+    "name": "Aporte Osecac",
+    "type": "DESCUENTO",
+    "active": 1
+  },
+  {
+    "id": "52",
+    "name": "Descuento DTO 561/19",
+    "type": "DESCUENTO",
+    "active": 1
+  }
+]

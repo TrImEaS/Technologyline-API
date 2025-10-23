@@ -1,0 +1,34 @@
+{
+  "users":[
+    {
+      "id": 1,
+      "user": "julio",
+      "password": "Paloma2024"
+    },
+    {
+      "id": 2,
+      "user": "carla",
+      "password": "Gato2024"
+    },
+    {
+      "id": 3,
+      "user": "alejandro",
+      "password": "Monitor2024"
+    },
+    {
+      "id": 4,
+      "user": "lizandro",
+      "password": "Zapallo2024"
+    },
+    {
+      "id": 5,
+      "user": "fernando",
+      "password": "Leon2024"
+    },
+    {
+      "id": 6,
+      "user": "thomas",
+      "password": "Perro2024"
+    }
+  ]
+}
