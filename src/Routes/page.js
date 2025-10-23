@@ -7,18 +7,18 @@ const fs = require('fs')
 
 const pageRouter = Router()
 // ...existing code...
-pageRouter.post('/addBrandForCarousel', PageController.addBrandForCarousel);
+pageRouter.post('/addBrandForCarousel', PageController.addBrandForCarousel)
 const isDev = process.env.NODE_ENV !== 'production'
 
 // const billsBase = path.join(__dirname, '../Data/bills');
 const dataFolder = path.join(__dirname, '../Data')
 const billsBase = isDev
   ? path.join(__dirname, '../Data/bills')
-  : '/home/realcolorweb/public_html/technologyline.com.ar/bills'
+  : '/home/technologyline/public_html/bills'
 
 const imagesFolder = isDev
   ? path.join(__dirname, '../Data/images')
-  : '/home/realcolorweb/public_html/technologyline.com.ar/banners-images'
+  : '/home/technologyline/public_html/banners-images'
 
 if (!fs.existsSync(dataFolder)) fs.mkdirSync(dataFolder, { recursive: true })
 if (!fs.existsSync(imagesFolder)) fs.mkdirSync(imagesFolder, { recursive: true })

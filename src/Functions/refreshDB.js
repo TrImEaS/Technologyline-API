@@ -53,8 +53,8 @@ async function refreshDB () {
 
       if (existingProductMap[sku]) {
         updateProductQueries.push(connection.query(
-          'UPDATE products SET gbp_id = ?, sku = ?, name = ?, stock = ?, category = ?, sub_category = ?, brand = ?, status = ?, tax_percentage = ? WHERE sku = ?',
-          [p.id, sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.stock < 0 ? 0 : 1, p.tax_percentage, sku]
+          'UPDATE products SET gbp_id = ?, sku = ?, name = ?, stock = ?, status = ?, tax_percentage = ? WHERE sku = ?',
+          [p.id, sku, p.name, p.stock, p.stock < 0 ? 0 : 1, p.tax_percentage, sku]
         ))
       } else {
         insertProductQueries.push(connection.query(

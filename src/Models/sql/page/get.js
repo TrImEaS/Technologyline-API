@@ -17,11 +17,16 @@ exports.getCategoriesForCarrousel = async function () {
 
 exports.getBrandsForCarousel = async function () {
   try {
-    const [results] = await ADMINPool.query('SELECT * FROM brands_carousel WHERE active = 1')
+    const [results] = await ADMINPool.query(`
+      SELECT bc.*, b.name AS brand_name
+      FROM brands_carousel bc
+      JOIN brands b ON b.id = bc.brand_id
+      WHERE bc.active = 1
+    `)
 
     return results
   } catch (error) {
-    console.error('Error fetching categories_carousel:', error)
+    console.error('Error fetching brands_carousel:', error)
     throw error
   }
 }

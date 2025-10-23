@@ -12,7 +12,7 @@ const SECRET_KEY = 'trimeasdacarry'
 const isDev = process.env.NODE_ENV !== 'production'
 const STATIC_BASE_BRANDS = isDev
   ? path.join(__dirname, '../FakeStatic/products-images')
-  : '/home/realcolorweb/public_html/technologyline.com.ar/banners-images/Assets/Brands'
+  : '/home/technologyline/public_html/banners-images/Assets/Brands'
 
 let ipTracking = {}
 
@@ -225,7 +225,7 @@ class PageController {
 
   static async getClientBill (req, res) {
     const { id, movement, invoice_number } = req.query
-    const filePath = `/home/realcolorweb/public_html/technologyline.com.ar/bills/client_${id}/fc-${invoice_number}_movement-${movement}.pdf`
+    const filePath = `/home/technologyline/public_html/bills/client_${id}/fc-${invoice_number}_movement-${movement}.pdf`
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ error: 'Factura no encontrada' })
     }
@@ -494,7 +494,7 @@ class PageController {
 
     try {
       // Ruta absoluta del directorio
-      const directoryPath = '/home/realcolorweb/public_html/technologyline.com.ar/banners-images/'
+      const directoryPath = '/home/technologyline/public_html/banners-images/'
 
       // Verifica si el directorio existe
       if (!fs.existsSync(directoryPath)) {

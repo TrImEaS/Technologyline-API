@@ -6,7 +6,7 @@ const multer = require('multer')
 const isDev = process.env.NODE_ENV !== 'production'
 const STATIC_BASE = isDev
   ? path.join(__dirname, '../FakeStatic/products-images')
-  : '/home/realcolorweb/public_html/technologyline.com.ar/products-images'
+  : '/home/technologyline/public_html/products-images'
 
 // Multer configuration
 const storage = multer.diskStorage({

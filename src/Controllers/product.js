@@ -7,10 +7,10 @@ const path = require('path')
 const isDev = process.env.NODE_ENV !== 'production'
 const STATIC_BASE = isDev
   ? path.join(__dirname, '../FakeStatic/products-images')
-  : '/home/realcolorweb/public_html/technologyline.com.ar/products-images'
+  : '/home/technologyline/public_html/products-images'
 
 const IMAGE_PATH = isDev
-  ? 'http://localhost:8080/products-images' // <-- corregido a 8080
+  ? 'http://localhost:8080/products-images'
   : 'https://technologyline.com.ar/products-images/'
 
 function logError (errorMessage) {
