@@ -3,11 +3,16 @@ const nodemailer = require('nodemailer')
 // Configuración del transportador
 const transporter = nodemailer.createTransport({
   host: 'mail.real-color.com.ar',
-  port: 587,
-  secure: false, // true para 465, false para otros puertos
+  port: 465,
+  secure: true,
   auth: {
-    user: 'subsistemas@real-color.com.ar', // Tu email
-    pass: 'FacuFacu9090' // Tu contraseña
+    user: 'subsistemas@real-color.com.ar',
+    pass: 'Thomas20309090!'
+  },
+  requireTLS: true,
+  tls: {
+    // Permite certificados self-signed — solo si confías en el servidor
+    rejectUnauthorized: false
   }
 })
 

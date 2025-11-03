@@ -335,11 +335,16 @@ class PageController {
 
       const transporter = nodemailer.createTransport({
         host: 'mail.real-color.com.ar',
-        port: 587,
-        secure: false,
+        port: 465,
+        secure: true,
         auth: {
           user: 'subsistemas@real-color.com.ar',
-          pass: 'FacuFacu9090'
+          pass: 'Thomas20309090!'
+        },
+        requireTLS: true,
+        tls: {
+          // Permite certificados self-signed — solo si confías en el servidor
+          rejectUnauthorized: false
         }
       })
 
