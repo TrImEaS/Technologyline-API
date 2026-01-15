@@ -105,6 +105,10 @@ app.get('/admin/page/*', (req, res) => { res.sendFile('/home/technologyline/publ
 app.use('/admin/remitos', express.static('/home/technologyline/public_html/admin/remitos', { maxAge: '1y' }))
 app.get('/admin/remitos/*', (req, res) => { res.sendFile('/home/technologyline/public_html/admin/remitos/index.html') })
 
+// Static routes for remitos-ml-app
+app.use('/admin/remitos-ml', express.static('/home/technologyline/public_html/admin/remitos-ml', { maxAge: '1y' }))
+app.get('/admin/remitos-ml/*', (req, res) => { res.sendFile('/home/technologyline/public_html/admin/remitos-ml/index.html') })
+
 // Static routes for QRGen-app
 app.use('/admin/QRGen-App/app', express.static('/home/technologyline/public_html/admin/QRGen-App/app', { maxAge: '1y' }))
 app.get('/admin/QRGen-App/app/*', (req, res) => { res.sendFile('/home/technologyline/public_html/admin/QRGen-App/app/index.html') })
