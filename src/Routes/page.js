@@ -110,6 +110,7 @@ pageRouter.get('/resellersData', PageController.getResellersData)
 pageRouter.get('/getUserData', PageController.getUserData)
 pageRouter.get('/getClientBill', PageController.getClientBill)
 pageRouter.get('/getOrdersStates', PageController.getOrdersStates)
+pageRouter.get('/getCPValues', PageController.getCPValues)
 
 pageRouter.patch('/setBanner', uploadImages.single('image'), PageController.uploadImage)
 pageRouter.patch('/updateBannerOrder', PageController.updateBannerOrder)

@@ -5,7 +5,7 @@ exports.getAll = async function ({ id, sku, name, all }) {
     if (sku) {
       const querySku = `SELECT 
                             p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.status, p.adminStatus, 
-                            p.specifications, p.descriptions, p.faq, p.total_views, p.week_views, p.tax_percentage, p.weight, p.volume,
+                            p.specifications, p.descriptions, p.faq, p.total_views, p.week_views, p.tax_percentage, p.pre_sell, p.weight, p.volume,
                             GROUP_CONCAT(DISTINCT pi.img_url ORDER BY pi.posicion ASC) AS img_urls,
                             GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
                           FROM products p
@@ -45,7 +45,7 @@ exports.getAll = async function ({ id, sku, name, all }) {
     if (all) {
       const queryAll = `SELECT 
                               p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.brand, p.status, p.adminStatus, 
-                              p.specifications, p.descriptions, p.total_views, p.week_views, p.tax_percentage, p.weight, p.volume,
+                              p.specifications, p.descriptions, p.total_views, p.week_views, p.tax_percentage, p.pre_sell, p.weight, p.volume,
                               GROUP_CONCAT(DISTINCT pi.img_url) AS img_urls,
                               GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
                             FROM products p
@@ -92,7 +92,7 @@ exports.getAll = async function ({ id, sku, name, all }) {
 
     let query = `SELECT 
       p.id, p.sku, p.name, p.stock, p.category, p.sub_category, p.week_views, p.total_views, 
-      p.brand, p.status, p.adminStatus, p.tax_percentage, p.weight, p.volume,
+      p.brand, p.status, p.adminStatus, p.tax_percentage, p.pre_sell, p.weight, p.volume,
       MAX(CASE WHEN pi.posicion = 1 THEN pi.img_url END) AS img_url,
       MAX(CASE WHEN pi.posicion = 2 THEN pi.img_url END) AS img_url_2,
       GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
@@ -148,7 +148,8 @@ exports.getAll = async function ({ id, sku, name, all }) {
     }
 
     return results
-  } catch (error) {
+  } 
+  catch (error) {
     console.error('Error fetching products:', error)
     throw error
   }

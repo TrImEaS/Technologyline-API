@@ -562,6 +562,17 @@ class PageController {
     }
   }
 
+  static async getCPValues (req, res) {
+    try {
+      const { id, cp } = req.query
+      const data = await PageModel.getCPValues({ id, cp })
+      res.json(data)
+    } catch (error) {
+      console.error('Error retrieving products:', error)
+      res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+
   static async getBrandsForCarousel (req, res) {
     try {
       const data = await PageModel.getBrandsForCarousel()

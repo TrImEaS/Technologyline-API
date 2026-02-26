@@ -173,3 +173,24 @@ exports.getOrdersStates = async function () {
     throw error
   }
 }
+
+exports.getCPValues = async function ({ id, cp }) {
+  try {
+    if (id) {
+      const [results] = await ADMINPool.query('SELECT * FROM zona_envio WHERE id = ?', [id])
+      return results
+    }
+
+    if (cp) {
+      const [results] = await ADMINPool.query('SELECT * FROM zona_envio WHERE ? BETWEEN cp_start AND cp_end', [cp])
+      return results
+    }
+
+    const [results] = await ADMINPool.query('SELECT * FROM zona_envio')
+
+    return results
+  } catch (error) {
+    console.error('Error fetching order states:', error)
+    throw error
+  }
+}

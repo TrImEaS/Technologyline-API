@@ -206,3 +206,7 @@ Stack: TypeError: ProductModel.createWithImages is not a function
 [2025-09-11T17:43:46.878Z] Error retrieving products: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'AND p.adminStatus = 1 AND p.stock > 0 AND p.status = 1 GROUP BY p.id' at line 13
 [2025-09-11T17:44:58.000Z] Error retrieving products: FUNCTION admin.JSON_ARRAYAGG does not exist
 [2025-09-11T17:48:09.321Z] Error retrieving products: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'GROUP BY p.id' at line 9
+[2026-01-23T18:08:23.796Z] Error retrieving products: 
+[2026-01-23T18:08:24.075Z] Error retrieving products: 
+[2026-01-23T18:08:25.533Z] Error retrieving products: 
+[2026-01-23T19:03:06.310Z] Error updating product with id ART: Unknown column 'preSell' in 'field list'
