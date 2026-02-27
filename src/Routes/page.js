@@ -129,6 +129,7 @@ pageRouter.post('/registerUser', PageController.registerUser)
 pageRouter.post('/setOrderMovement', PageController.setOrderMovement)
 pageRouter.post('/deleteBanner', PageController.deleteImage)
 pageRouter.post('/uploadClientBill', uploadBill.single('bill'), PageController.uploadClientBill)
+pageRouter.post('/regretData', PageController.regretData)
 
 pageRouter.patch('/setBanner', uploadImages.single('image'), PageController.uploadImage)
 pageRouter.patch('/updateBannerOrder', PageController.updateBannerOrder)

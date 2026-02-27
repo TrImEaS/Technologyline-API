@@ -171,3 +171,31 @@ exports.addBrandForCarousel = async function ({ id_brand, image_path, active }) 
     created_at: new Date().toISOString()
   }
 }
+
+exports.regretData = async function ({ data }) {
+  if (!data) return false;
+
+  const formData = JSON.parse(data);
+  
+  const trackingCode = `REV-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+  const query = `
+    INSERT INTO regret_requests 
+    (fullname, dni, order_number, email, comments, tracking_code, status) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+  
+  const values = [
+    formData.nombre,              
+    formData.dni,                 
+    formData.pedido || null,      
+    formData.email,               
+    formData.comentarios || null, 
+    trackingCode,                  
+    'recibido'                      
+  ];
+
+  const [result] = await ADMINPool.query(query, values);
+
+  return result.affectedRows > 0 ? trackingCode : false;
+};

@@ -303,34 +303,6 @@ class PageController {
 
   static async sendOrderEmail (req, res) {
     try {
-      // const clientIp = req.ip;
-      // const now = Date.now();
-      // const oneHourAgo = now - 3600000;
-      // const ALLOWED_IP = "190.245.167.220";
-
-      // Leer archivo de registros de IPs
-      // let ipOrders = {};
-      // if (fs.existsSync(ipOrdersFile)) {
-      //   const rawData = fs.readFileSync(ipOrdersFile, 'utf-8');
-      //   ipOrders = rawData ? JSON.parse(rawData) : {};
-      // }
-
-      // if (clientIp !== ALLOWED_IP || clientIp === "::ffff:127.0.0.1") {
-      //   if (!ipOrders[clientIp]) ipOrders[clientIp] = [];
-      //   ipOrders[clientIp] = ipOrders[clientIp].filter(timestamp => timestamp > oneHourAgo);
-
-      //   // Verificar si superó el límite de 3 pedidos por hora
-      //   if (ipOrders[clientIp].length >= 3) {
-      //     return res.status(403).json({ error: 'Excedió el límite de pedidos por hora, intente más tarde!' });
-      //   }
-
-      //   ipOrders[clientIp].push(now);
-      //   fs.writeFileSync(ipOrdersFile, JSON.stringify(ipOrders, null, 2));
-      // }
-      // else {
-      //   console.log(`La IP ${clientIp} está exenta del límite de pedidos.`);
-      // }
-
       const { datos_de_orden, mails } = req.body
 
       const transporter = nodemailer.createTransport({
@@ -632,6 +604,94 @@ class PageController {
     } catch (error) {
       console.error('Error al actualizar el estado del pedido:', error)
       res.status(500).json({ error: 'Error interno del servidor' })
+    }
+  }
+
+  static async regretData(req, res) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: 'mail.real-color.com.ar',
+        port: 465,
+        secure: true,
+        auth: {
+          user: 'subsistemas@real-color.com.ar',
+          pass: 'Dacarry-123@'
+        },
+        requireTLS: true,
+        tls: {
+          rejectUnauthorized: false
+        }
+      })
+
+      const mails = ['subsistemas@real-color.com.ar', 'fvivado@real-color.com.ar', 'p.camio@real-color.com.ar']
+
+      const { data } = req.query; 
+      
+      if (!data) return res.status(400).json({ error: 'Datos son requeridos' });
+
+      const trackingCode = await PageModel.regretData({ data });
+      const formData = JSON.parse(data);
+
+      if (trackingCode) {
+        const mailOptions = {
+          from: `"${formData.company}" <subsistemas@real-color.com.ar>`,
+          to: mails.join(','),
+          subject: `¡Nuevo reclamo de ${formData.company} - Boton de arrepentimiento!`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; padding: 20px; border-radius: 10px;">
+              <h2 style="color: #d9534f; text-align: center;">🛡️ Solicitud de Arrepentimiento</h2>
+              <p style="font-size: 16px; color: #333;">Se ha recibido una nueva solicitud de revocación de compra.</p>
+              
+              <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                <p style="margin: 5px 0;"><strong>Código de Trámite:</strong> <span style="color: #2c3e50; font-size: 1.1em;">${trackingCode}</span></p>
+                <p style="margin: 5px 0;"><strong>Fecha:</strong> ${new Date().toLocaleString('es-AR')}</p>
+              </div>
+
+              <h3 style="color: #333; border-bottom: 2px solid #d9534f; padding-bottom: 10px;">Datos del Cliente</h3>
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <tr>
+                  <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Nombre:</strong></td>
+                  <td style="padding: 8px; border-bottom: 1px solid #eee;">${formData.nombre}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>DNI:</strong></td>
+                  <td style="padding: 8px; border-bottom: 1px solid #eee;">${formData.dni}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Email:</strong></td>
+                  <td style="padding: 8px; border-bottom: 1px solid #eee;">${formData.email}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Pedido Nro:</strong></td>
+                  <td style="padding: 8px; border-bottom: 1px solid #eee;">${formData.pedido || 'No especificado'}</td>
+                </tr>
+              </table>
+
+              <h3 style="color: #333;">Comentarios adicionales</h3>
+              <div style="background-color: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 5px; color: #856404;">
+                ${formData.comentarios || 'Sin comentarios.'}
+              </div>
+
+              <p style="font-size: 12px; color: #777; margin-top: 30px; text-align: center;">
+                Este es un correo automático. Por favor, gestione esta solicitud dentro de las próximas 24 horas según la Ley 24.240.
+              </p>
+            </div>
+          `
+        }
+
+        await transporter.sendMail(mailOptions)
+
+        return res.status(200).json({ 
+          message: 'Formulario recibido y guardado correctamente',
+          codigo: trackingCode
+        });
+      } else {
+        throw new Error('No se pudo guardar en la base de datos');
+      }
+
+    } catch (error) {
+      console.error('Error al guardar los formulario:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
     }
   }
 }
