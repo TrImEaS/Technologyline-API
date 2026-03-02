@@ -175,8 +175,7 @@ exports.addBrandForCarousel = async function ({ id_brand, image_path, active }) 
 exports.regretData = async function ({ formData }) {
   if (!formData) return false;
 
-  const trackingCode = `REV-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-
+  // 1. Preparamos la consulta INSERT (con tracking_code temporal)
   const query = `
     INSERT INTO regret_requests 
     (fullname, dni, order_number, email, phone, comments, tracking_code, status) 
@@ -190,11 +189,28 @@ exports.regretData = async function ({ formData }) {
     formData.email,               
     formData.telefono || null,    
     formData.comentarios || null, 
-    trackingCode,                  
-    'recibido'                      
+    'PENDIENTE', // Temporal
+    'recibido'                    
   ];
 
+  // 2. Ejecutamos la inserción en la base de datos
   const [result] = await ADMINPool.query(query, values);
 
-  return result.affectedRows > 0 ? trackingCode : false;
+  if (result.affectedRows > 0) {
+    // 3. Obtenemos el ID numérico generado automáticamente (AUTO_INCREMENT)
+    const newId = result.insertId;
+    
+    // 4. Creamos el código secuencial con formato RE-000000000X
+    const sequentialCode = `RE-${String(newId).padStart(10, '0')}`;
+    
+    // 5. Actualizamos el registro con el código secuencial real
+    await ADMINPool.query(
+      'UPDATE regret_requests SET tracking_code = ? WHERE id = ?',
+      [sequentialCode, newId]
+    );
+
+    return sequentialCode;
+  }
+
+  return false;
 };
