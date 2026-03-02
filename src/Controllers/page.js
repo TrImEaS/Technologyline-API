@@ -625,23 +625,22 @@ class PageController {
 
       const mails = ['subsistemas@real-color.com.ar', 'fvivado@real-color.com.ar', 'p.camio@real-color.com.ar']
 
-      const { data } = req.query; 
+      const { formData, esQueja } = req.body; 
       
-      if (!data) return res.status(400).json({ error: 'Datos son requeridos' });
+      if (!formData) return res.status(400).json({ error: 'Datos son requeridos' });
 
-      const trackingCode = await PageModel.regretData({ data });
-      const formData = JSON.parse(data);
+      const trackingCode = await PageModel.regretData({ formData });
 
       if (trackingCode) {
         const mailOptions = {
           from: `"${formData.company}" <subsistemas@real-color.com.ar>`,
           to: mails.join(','),
-          subject: `¡Nuevo reclamo de ${formData.company} - Boton de arrepentimiento!`,
+          subject: `¡${esQueja ? 'Nueva sugerencia/queja' : 'Nuevo reclamo ingresado'} de ${formData.company}!`,
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; padding: 20px; border-radius: 10px;">
-              <h2 style="color: #d9534f; text-align: center;">🛡️ Solicitud de Arrepentimiento</h2>
-              <p style="font-size: 16px; color: #333;">Se ha recibido una nueva solicitud de revocación de compra.</p>
-              
+              <h2 style="color: #d9534f; text-align: center;">${esQueja ? '🛡️ Solicitud de Queja' : '🛡️ Solicitud de Arrepentimiento'}</h2>
+              <p style="font-size: 16px; color: #333;">${esQueja ? 'Se ha recibido una nueva sugerencia/queja.' : 'Se ha recibido una nueva solicitud de revocación de compra.'}</p>
+
               <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
                 <p style="margin: 5px 0;"><strong>Código de Trámite:</strong> <span style="color: #2c3e50; font-size: 1.1em;">${trackingCode}</span></p>
                 <p style="margin: 5px 0;"><strong>Fecha:</strong> ${new Date().toLocaleString('es-AR')}</p>
@@ -664,6 +663,10 @@ class PageController {
                 <tr>
                   <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Pedido Nro:</strong></td>
                   <td style="padding: 8px; border-bottom: 1px solid #eee;">${formData.pedido || 'No especificado'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>Celular:</strong></td>
+                  <td style="padding: 8px; border-bottom: 1px solid #eee;">${formData.telefono || 'No especificado'}</td>
                 </tr>
               </table>
 

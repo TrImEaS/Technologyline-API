@@ -172,17 +172,15 @@ exports.addBrandForCarousel = async function ({ id_brand, image_path, active }) 
   }
 }
 
-exports.regretData = async function ({ data }) {
-  if (!data) return false;
+exports.regretData = async function ({ formData }) {
+  if (!formData) return false;
 
-  const formData = JSON.parse(data);
-  
   const trackingCode = `REV-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
   const query = `
     INSERT INTO regret_requests 
-    (fullname, dni, order_number, email, comments, tracking_code, status) 
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    (fullname, dni, order_number, email, phone, comments, tracking_code, status) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
   
   const values = [
@@ -190,6 +188,7 @@ exports.regretData = async function ({ data }) {
     formData.dni,                 
     formData.pedido || null,      
     formData.email,               
+    formData.telefono || null,    
     formData.comentarios || null, 
     trackingCode,                  
     'recibido'                      
