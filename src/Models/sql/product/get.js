@@ -96,10 +96,10 @@ exports.getAll = async function ({ id, sku, name, all }) {
       MAX(CASE WHEN pi.posicion = 1 THEN pi.img_url END) AS img_url,
       MAX(CASE WHEN pi.posicion = 2 THEN pi.img_url END) AS img_url_2,
       GROUP_CONCAT(DISTINCT CONCAT('price_list_', pp.list_id, ':', pp.price)) AS prices
-    FROM products p
-    LEFT JOIN products_images pi ON p.sku = pi.sku AND pi.posicion IN (1,2)
-    LEFT JOIN products_prices pp ON p.sku = pp.sku
-    WHERE p.sku != 'ENVIO'`
+      FROM products p
+      LEFT JOIN products_images pi ON p.sku = pi.sku AND pi.posicion IN (1,2)
+      LEFT JOIN products_prices pp ON p.sku = pp.sku
+      WHERE p.sku != 'ENVIO'`
 
     const params = []
     const conditions = []
@@ -114,7 +114,7 @@ exports.getAll = async function ({ id, sku, name, all }) {
     }
 
     if (!all) {
-      conditions.push('p.adminStatus = 1 AND p.stock > 0 AND p.status = 1')
+      conditions.push('p.adminStatus = 1 AND (p.stock > 0 OR pp.price IS NOT NULL)')
     }
 
     if (conditions.length > 0) {
